@@ -18,7 +18,7 @@
 
     <title>
       
-        Lul
+        Home &middot; Application theme &middot; Official Bootstrap Themes
       
     </title>
 
