@@ -18,7 +18,7 @@
 
     <title>
       
-        Home &middot; Application theme &middot; Official Bootstrap Themes
+        Tst
       
     </title>
 
