@@ -12,6 +12,7 @@ public class ClienteBean {
 
     public ClienteBean(){
     }
+    
             
     public String getCpf() {
         return cpf;
