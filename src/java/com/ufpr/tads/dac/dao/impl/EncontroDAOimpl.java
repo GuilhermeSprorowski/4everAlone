@@ -6,18 +6,16 @@
 package com.ufpr.tads.dac.dao.impl;
 
 import com.ufpr.tads.dac.exceptions.EncontroException;
-import com.ufpr.tads.dac.beans.ClienteBean;
 import com.ufpr.tads.dac.beans.EncontroBean;
-import com.ufpr.tads.dac.beans.EnderecoBean;
 import com.ufpr.tads.dac.dao.ConnectionFactory;
 import com.ufpr.tads.dac.dao.EncontroDAO;
+import com.ufpr.tads.dac.exceptions.ClienteException;
+import com.ufpr.tads.dac.exceptions.EnderecoException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 public class EncontroDAOimpl implements EncontroDAO {
 
@@ -44,7 +42,7 @@ public class EncontroDAOimpl implements EncontroDAO {
     }
 
     @Override
-    public ArrayList<EncontroBean> getEncontrosPendentesByIdCliente(int clienteId) throws EncontroException {
+    public ArrayList<EncontroBean> getEncontrosPendentesByIdCliente(int clienteId) throws EncontroException, ClienteException, EnderecoException {
         PreparedStatement pst = null;
         ResultSet rs = null;
         try {
@@ -54,12 +52,18 @@ public class EncontroDAOimpl implements EncontroDAO {
             rs = pst.executeQuery();
             final ArrayList<EncontroBean> al = new ArrayList<EncontroBean>();
             while (rs.next()) {
-                al.add(new EncontroBean(rs.getInt("id"), rs.getDate("data"), rs.getDate("data"), rs.getDate("data"), new ClienteBean(), new EnderecoBean(), rs.getBoolean("")));
+                al.add(new EncontroBean(rs.getInt("id"), rs.getDate("dataSolicitacao"), rs.getDate("dataEncontro"), rs.getDate("dataResposta"),
+                        new ClienteDAOimpl().getClienteById(rs.getInt("codCSolicitado")), 
+                        new EnderecoDAOimpl().getEnderecoById(rs.getInt("codEndereco")), rs.getBoolean("aceito")));
 
             }
         } catch (SQLException ex) {
-            Logger.getLogger(EncontroDAOimpl.class.getName()).log(Level.SEVERE, null, ex);
-        }
+            throw new EncontroException("Erro encontro: comando sql invalido");
+        } catch (ClienteException ex) {
+            throw new ClienteException("Erro: Cliente Solicitado não encontrado");
+        } catch (EnderecoException ex) {
+            throw new EnderecoException("Erro: Endereco não encontrado");
+        }finally{ if (pst!= null) {try {pst.close(); } catch (SQLException ex) {}}}
         return null;
     }
 

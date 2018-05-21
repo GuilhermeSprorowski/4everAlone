@@ -1,36 +1,68 @@
 package com.ufpr.tads.dac.beans;
 
+import java.util.Date;
+
 public class ClienteBean {
 
+    private int clienteId;
+    private String nome;
     private String cpf;
-    private String endereco;
-    private String dataNasc;
-    private char sexo;
+    private Date dataNasc;
+    private String sexo;
     private String descricao;
     private String corPele;
     private String corCabelo;
-    private byte[] foto;
+    private EnderecoBean endereco;
 
     public ClienteBean() {
     }
 
+    public ClienteBean(int clienteId, String nome, String cpf, Date dataNasc, String sexo, String descricao, String corPele, String corCabelo, EnderecoBean endereco) {
+        this.clienteId = clienteId;
+        this.nome = nome;
+        this.cpf = cpf;
+        this.dataNasc = dataNasc;
+        this.sexo = sexo;
+        this.descricao = descricao;
+        this.corPele = corPele;
+        this.corCabelo = corCabelo;
+        this.endereco = endereco;
+    }
+    
+    
     public String getCpf() {
         return cpf;
+    }
+
+    public int getClienteId() {
+        return clienteId;
+    }
+
+    public String getNome() {
+        return nome;
+    }
+
+    public void setClienteId(int clienteId) {
+        this.clienteId = clienteId;
+    }
+
+    public void setNome(String nome) {
+        this.nome = nome;
     }
 
     public void setCpf(String cpf) {
         this.cpf = cpf;
     }
 
-    public void setEndereco(String endereco) {
+    public void setEndereco(EnderecoBean endereco) {
         this.endereco = endereco;
     }
 
-    public void setDataNasc(String dataNasc) {
+    public void setDataNasc(Date dataNasc) {
         this.dataNasc = dataNasc;
     }
 
-    public void setSexo(char sexo) {
+    public void setSexo(String sexo) {
         this.sexo = sexo;
     }
 
@@ -46,15 +78,15 @@ public class ClienteBean {
         this.corCabelo = corCabelo;
     }
 
-    public String getEndereco() {
+    public EnderecoBean getEndereco() {
         return endereco;
     }
 
-    public String getDataNasc() {
+    public Date getDataNasc() {
         return dataNasc;
     }
 
-    public char getSexo() {
+    public String getSexo() {
         return sexo;
     }
 
@@ -70,11 +102,4 @@ public class ClienteBean {
         return corCabelo;
     }
 
-    public void setFoto(byte[] foto) {
-        this.foto = foto;
-    }
-
-    public byte[] getFoto() {
-        return foto;
-    }
 }

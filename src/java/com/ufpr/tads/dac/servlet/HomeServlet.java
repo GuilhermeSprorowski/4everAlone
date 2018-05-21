@@ -1,9 +1,13 @@
 package com.ufpr.tads.dac.servlet;
 
+import com.ufpr.tads.dac.beans.EncontroBean;
 import com.ufpr.tads.dac.beans.UserBean;
-import java.io.File;
+import com.ufpr.tads.dac.exceptions.ClienteException;
+import com.ufpr.tads.dac.exceptions.EncontroException;
+import com.ufpr.tads.dac.exceptions.EnderecoException;
+import com.ufpr.tads.dac.facade.EncontroFacade;
 import java.io.IOException;
-import java.util.List;
+import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.servlet.ServletException;
@@ -12,25 +16,35 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import org.apache.commons.fileupload.FileItem;
-import org.apache.commons.fileupload.disk.DiskFileItemFactory;
-import org.apache.commons.fileupload.servlet.ServletFileUpload;
 
 @WebServlet(name = "HomeServlet", urlPatterns = {"/HomeServlet"})
 public class HomeServlet extends HttpServlet {
 
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-
         HttpSession session = request.getSession();
         UserBean login = (UserBean) session.getAttribute("user");
         if (login == null) {
             request.setAttribute("msg", "É necessario esta logado para acessar essa pagina");
             request.getRequestDispatcher("index.jsp").forward(request, response);
         } else {
+            EncontroFacade ef = new EncontroFacade();
+            try {
+                ArrayList<EncontroBean> encontroList = ef.getEncontrosPendentes(login.getUserId());
+                request.setAttribute("encontroList", encontroList);
+            } catch (EncontroException ex) {
+                request.setAttribute("msg", ex);
+            request.getRequestDispatcher("erro.jsp").forward(request, response);
+            } catch (ClienteException ex) {                
+                request.setAttribute("msg", ex);
+                request.getRequestDispatcher("erro.jsp").forward(request, response);
+            } catch (EnderecoException ex) {
+                request.setAttribute("msg", ex);
+                request.getRequestDispatcher("erro.jsp").forward(request, response);
+            }
             
             System.out.println("getConvites");
-            System.out.println("getEncontros");
+            
         }
 
     }

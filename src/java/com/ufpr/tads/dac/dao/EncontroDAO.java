@@ -3,6 +3,8 @@ package com.ufpr.tads.dac.dao;
 
 import com.ufpr.tads.dac.exceptions.EncontroException;
 import com.ufpr.tads.dac.beans.EncontroBean;
+import com.ufpr.tads.dac.exceptions.ClienteException;
+import com.ufpr.tads.dac.exceptions.EnderecoException;
 import java.util.ArrayList;
 
 
@@ -12,5 +14,5 @@ public interface EncontroDAO {
     public void updateEncontro(EncontroBean encontro) throws EncontroException;    
     public EncontroBean getEncontro(int encontroId) throws EncontroException; 
     public ArrayList<EncontroBean> getAllEncontrosByIdCliente(int clienteId) throws EncontroException;
-    public ArrayList<EncontroBean> getEncontrosPendentesByIdCliente(int clienteId) throws EncontroException;
+    public ArrayList<EncontroBean> getEncontrosPendentesByIdCliente(int clienteId) throws EncontroException, ClienteException, EnderecoException ;
 }

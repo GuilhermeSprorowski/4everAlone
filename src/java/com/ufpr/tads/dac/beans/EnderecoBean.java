@@ -4,10 +4,17 @@ package com.ufpr.tads.dac.beans;
 public class EnderecoBean {
     
     private int enderecoId;
+    private String rua;
     private String cidade;
     private String uF;
-    private String rua;
 
+    public EnderecoBean(int enderecoId, String rua, String cidade, String uF) {
+        this.enderecoId = enderecoId;
+        this.rua = rua;
+        this.cidade = cidade;
+        this.uF = uF;
+    }
+    
     public EnderecoBean() {
     }
 
