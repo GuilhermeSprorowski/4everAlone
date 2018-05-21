@@ -1,7 +1,7 @@
 
 package com.ufpr.tads.dac.dao;
 
-import com.tads.web2.dac.exceptions.EncontroException;
+import com.ufpr.tads.dac.exceptions.EncontroException;
 import com.ufpr.tads.dac.beans.EncontroBean;
 import java.util.ArrayList;
 

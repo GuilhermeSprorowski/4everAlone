@@ -1,5 +1,5 @@
 
-package com.tads.web2.dac.exceptions;
+package com.ufpr.tads.dac.exceptions;
 
 
 public class EncontroException extends Exception{
