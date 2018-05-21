@@ -1,6 +1,8 @@
-package com.ufpr.tads.dac.dao;
+package com.ufpr.tads.dac.dao.impl;
 
 import com.ufpr.tads.dac.beans.UserBean;
+import com.ufpr.tads.dac.dao.ConnectionFactory;
+import com.ufpr.tads.dac.dao.UserDAO;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;

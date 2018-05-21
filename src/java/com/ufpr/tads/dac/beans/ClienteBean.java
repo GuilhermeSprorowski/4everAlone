@@ -1,19 +1,19 @@
-
 package com.ufpr.tads.dac.beans;
 
 public class ClienteBean {
+
     private String cpf;
     private String endereco;
     private String dataNasc;
     private char sexo;
     private String descricao;
-    private String corPele;    
+    private String corPele;
     private String corCabelo;
+    private byte[] foto;
 
-    public ClienteBean(){
+    public ClienteBean() {
     }
-    
-            
+
     public String getCpf() {
         return cpf;
     }
@@ -68,5 +68,13 @@ public class ClienteBean {
 
     public String getCorCabelo() {
         return corCabelo;
+    }
+
+    public void setFoto(byte[] foto) {
+        this.foto = foto;
+    }
+
+    public byte[] getFoto() {
+        return foto;
     }
 }

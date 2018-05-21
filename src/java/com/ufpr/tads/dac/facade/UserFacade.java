@@ -2,7 +2,7 @@
 package com.ufpr.tads.dac.facade;
 
 import com.ufpr.tads.dac.beans.UserBean;
-import com.ufpr.tads.dac.dao.UserDAOimpl;
+import com.ufpr.tads.dac.dao.impl.UserDAOimpl;
 import java.sql.SQLException;
 
 public class UserFacade {

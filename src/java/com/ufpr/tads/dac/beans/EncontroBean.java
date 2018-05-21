@@ -7,12 +7,27 @@ public class EncontroBean {
     
     private int encontroId;
     private Date dataSolicitacao;
-    private String local;
     private Date dataEncontro;
-    private Date dataRecusado;
+    private Date dataResposta;
     private ClienteBean solicitado;
     private EnderecoBean endereco;
+    private Boolean aceito;
 
+    public EncontroBean() {        
+    }
+
+    public EncontroBean(int encontroId, Date dataSolicitacao, Date dataEncontro, Date dataResposta, ClienteBean solicitado, EnderecoBean endereco, Boolean aceito) {
+        this.encontroId = encontroId;
+        this.dataSolicitacao = dataSolicitacao;
+        this.dataEncontro = dataEncontro;
+        this.dataResposta = dataResposta;
+        this.solicitado = solicitado;
+        this.endereco = endereco;
+        this.aceito = aceito;
+    }
+    
+        
+    
     public int getEncontroId() {
         return encontroId;
     }
@@ -25,18 +40,26 @@ public class EncontroBean {
         this.dataSolicitacao = dataSolicitacao;
     }
 
-    public void setLocal(String local) {
-        this.local = local;
+    public void setDataResposta(Date dataResposta) {
+        this.dataResposta = dataResposta;
+    }
+
+    public void setAceito(Boolean aceito) {
+        this.aceito = aceito;
+    }
+
+    public Date getDataResposta() {
+        return dataResposta;
+    }
+
+    public Boolean isAceito() {
+        return aceito;
     }
 
     public void setDataEncontro(Date dataEncontro) {
         this.dataEncontro = dataEncontro;
     }
-
-    public void setDataRecusado(Date dataRecusado) {
-        this.dataRecusado = dataRecusado;
-    }
-
+    
     public void setSolicitado(ClienteBean solicitado) {
         this.solicitado = solicitado;
     }
@@ -48,17 +71,8 @@ public class EncontroBean {
     public Date getDataSolicitacao() {
         return dataSolicitacao;
     }
-
-    public String getLocal() {
-        return local;
-    }
-
     public Date getDataEncontro() {
         return dataEncontro;
-    }
-
-    public Date getDataRecusado() {
-        return dataRecusado;
     }
 
     public ClienteBean getSolicitado() {

@@ -1,7 +1,7 @@
 
 package com.ufpr.tads.dac.beans;
 
-class EnderecoBean {
+public class EnderecoBean {
     
     private int enderecoId;
     private String cidade;
