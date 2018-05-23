@@ -1,0 +1,16 @@
+.navbar-item.is-active {
+    font-weight: 600;
+}
+.card-content-limit {
+    max-height: 100px;
+    overflow-y: auto;
+}
+.margem {
+    margin: 20px auto;
+}
+.card-header-title.title {
+    font-weight: 400;
+}
+.column.card {
+    margin: 5px;
+}
