@@ -10,13 +10,13 @@ public class EncontroBean {
     private Date dataEncontro;
     private Date dataResposta;
     private ClienteBean solicitado;
-    private EnderecoBean endereco;
+    private String endereco;
     private Boolean aceito;
 
     public EncontroBean() {        
     }
 
-    public EncontroBean(int encontroId, Date dataSolicitacao, Date dataEncontro, Date dataResposta, ClienteBean solicitado, EnderecoBean endereco, Boolean aceito) {
+    public EncontroBean(int encontroId, Date dataSolicitacao, Date dataEncontro, Date dataResposta, ClienteBean solicitado, String endereco, Boolean aceito) {
         this.encontroId = encontroId;
         this.dataSolicitacao = dataSolicitacao;
         this.dataEncontro = dataEncontro;
@@ -64,7 +64,7 @@ public class EncontroBean {
         this.solicitado = solicitado;
     }
 
-    public void setEndereco(EnderecoBean endereco) {
+    public void setEndereco(String endereco) {
         this.endereco = endereco;
     }
 
@@ -79,7 +79,7 @@ public class EncontroBean {
         return solicitado;
     }
 
-    public EnderecoBean getEndereco() {
+    public String getEndereco() {
         return endereco;
     }
     

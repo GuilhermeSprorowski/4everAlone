@@ -5,6 +5,7 @@
  */
 package com.ufpr.tads.dac.dao.impl;
 
+import com.ufpr.tads.dac.beans.ClienteBean;
 import com.ufpr.tads.dac.exceptions.EncontroException;
 import com.ufpr.tads.dac.beans.EncontroBean;
 import com.ufpr.tads.dac.dao.ConnectionFactory;
@@ -42,29 +43,32 @@ public class EncontroDAOimpl implements EncontroDAO {
     }
 
     @Override
-    public ArrayList<EncontroBean> getEncontrosPendentesByIdCliente(int clienteId) throws EncontroException, ClienteException, EnderecoException {
+    public ArrayList<EncontroBean> getEncontrosPendentesByIdCliente(int clienteId) throws EncontroException{
         PreparedStatement pst = null;
         ResultSet rs = null;
         try {
             con = new ConnectionFactory().getConnection();
-            pst = con.prepareStatement("SELECT id, dataSolicitacao, dataEncontro, dataResposta, aceito, codCSolicitado, codEndereco FROM bd4everalone.encontro WHERE aceito AND dataEncontro > CURDATE() AND codCSolicitante = ?;");
+            pst = con.prepareStatement("SELECT encontro.id, dataSolicitacao, dataEncontro,dataResposta,aceito,codCSolicitado idSolicitado, solicitado.nome nomeSolicitado, solicitado.descricao descricaoSolicitado, encontro.codEndereco as idEndereco, getEndereco.Endereco as local "
+                    + "FROM bd4everalone.encontro "
+                    + "INNER JOIN bd4everalone.cliente solicitado ON codCSolicitado = solicitado.id "
+                    + "INNER JOIN bd4everalone.getEndereco ON getEndereco.id = encontro.codEndereco "
+                    + "WHERE aceito AND dataEncontro > CURDATE() AND codCSolicitante = ?;");
             pst.setInt(1, clienteId);
             rs = pst.executeQuery();
             final ArrayList<EncontroBean> al = new ArrayList<EncontroBean>();
             while (rs.next()) {
-                al.add(new EncontroBean(rs.getInt("id"), rs.getDate("dataSolicitacao"), rs.getDate("dataEncontro"), rs.getDate("dataResposta"),
-                        new ClienteDAOimpl().getClienteById(rs.getInt("codCSolicitado")), 
-                        new EnderecoDAOimpl().getEnderecoById(rs.getInt("codEndereco")), rs.getBoolean("aceito")));
-
+                ClienteBean c = new ClienteBean(rs.getInt("idSolicitado"), rs.getString("nomeSolicitado"), rs.getString("descricaoSolicitado"));
+                al.add(new EncontroBean(rs.getInt("id"), rs.getDate("dataSolicitacao"), rs.getDate("dataEncontro"),
+                        rs.getDate("dataResposta"),c, rs.getString("local"), rs.getBoolean("aceito")));
             }
+            return al;
         } catch (SQLException ex) {
             throw new EncontroException("Erro encontro: comando sql invalido");
-        } catch (ClienteException ex) {
-            throw new ClienteException("Erro: Cliente Solicitado não encontrado");
-        } catch (EnderecoException ex) {
-            throw new EnderecoException("Erro: Endereco não encontrado");
-        }finally{ if (pst!= null) {try {pst.close(); } catch (SQLException ex) {}}}
-        return null;
+        } finally {
+            if (pst != null) {try { pst.close();} catch (SQLException ex) {
+                throw new EncontroException("Erro encontro: erro ao fechar conexão");
+            }}
+        }
     }
 
 }

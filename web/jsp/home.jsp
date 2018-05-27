@@ -7,8 +7,8 @@
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <title>Home</title>
         
-        <link rel="stylesheet" href="../lib/bulma-0.7.1/css/bulma.min.css"/>
-        <link rel="stylesheet" href="../css/style.css"/>
+        <link rel="stylesheet" href="lib/bulma-0.7.1/css/bulma.min.css"/>
+        <link rel="stylesheet" href="css/style.css"/>
     </head>
     <body>
         <c:import url="../components/header.html" ></c:import>

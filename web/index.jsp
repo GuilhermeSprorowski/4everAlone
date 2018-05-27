@@ -9,9 +9,9 @@
         <title>Login</title>
     </head>
     <body>
-        <form class="form-signin" action="LoginServlet">
+        <form class="form-signin" action="Login" method="POST">
             <div class="text-center mb-4">
-                <img class="mb-5" src="images/logo4everlone.png" alt="" width="268" height="103">
+                <img class="mb-5" src="images/logo4everalone.png" alt="" width="268" height="103">
                 <h1 class="h3 mb-3 font-weight-normal">Forever Alone</h1>
             </div>
             <div class="form-label-group">

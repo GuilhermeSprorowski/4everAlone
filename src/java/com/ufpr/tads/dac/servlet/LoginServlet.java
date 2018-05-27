@@ -15,7 +15,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-@WebServlet(name = "LoginServlet", urlPatterns = {"/LoginServlet"})
+@WebServlet(name = "LoginServlet", urlPatterns = {"/Login"})
 public class LoginServlet extends HttpServlet {
 
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
@@ -43,12 +43,14 @@ public class LoginServlet extends HttpServlet {
             //Confere Login
             UserBean user = userFacade.getUserByLogin(email, senhaMd5);
             if (user != null) {
+                System.out.println("usuario valido");
                 //USUARIO VALIDO
                 HttpSession session = request.getSession();
                 session.setAttribute("user", user);
                 request.getRequestDispatcher("/HomeServlet").forward(request, response);
             } else {
                 //USUARIO INVALIDO
+                System.out.println("ususario invalido");
                 request.setAttribute("msg", "Usuario Invalido");
                 request.getRequestDispatcher("index.jsp").forward(request, response);
             }

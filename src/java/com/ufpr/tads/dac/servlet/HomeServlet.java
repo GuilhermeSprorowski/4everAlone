@@ -1,10 +1,13 @@
 package com.ufpr.tads.dac.servlet;
 
+import com.ufpr.tads.dac.beans.ConviteBean;
 import com.ufpr.tads.dac.beans.EncontroBean;
 import com.ufpr.tads.dac.beans.UserBean;
 import com.ufpr.tads.dac.exceptions.ClienteException;
+import com.ufpr.tads.dac.exceptions.ConviteException;
 import com.ufpr.tads.dac.exceptions.EncontroException;
 import com.ufpr.tads.dac.exceptions.EnderecoException;
+import com.ufpr.tads.dac.facade.ConviteFacade;
 import com.ufpr.tads.dac.facade.EncontroFacade;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -22,29 +25,34 @@ public class HomeServlet extends HttpServlet {
 
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        //Essa servlet passa duas listas para a home page como os nomes encontroList & conviteList
+        
         HttpSession session = request.getSession();
         UserBean login = (UserBean) session.getAttribute("user");
         if (login == null) {
+            //envia para fazer login
             request.setAttribute("msg", "É necessario esta logado para acessar essa pagina");
             request.getRequestDispatcher("index.jsp").forward(request, response);
         } else {
+            //usuario logado
             EncontroFacade ef = new EncontroFacade();
             try {
                 ArrayList<EncontroBean> encontroList = ef.getEncontrosPendentes(login.getUserId());
                 request.setAttribute("encontroList", encontroList);
             } catch (EncontroException ex) {
                 request.setAttribute("msg", ex);
-            request.getRequestDispatcher("erro.jsp").forward(request, response);
-            } catch (ClienteException ex) {                
-                request.setAttribute("msg", ex);
                 request.getRequestDispatcher("erro.jsp").forward(request, response);
-            } catch (EnderecoException ex) {
+            }
+            ConviteFacade cf = new ConviteFacade();
+            try {
+                ArrayList<ConviteBean> conviteList = cf.getAllConvites(login.getUserId());
+                request.setAttribute("conviteList", conviteList);
+            } catch (ConviteException ex) {
                 request.setAttribute("msg", ex);
                 request.getRequestDispatcher("erro.jsp").forward(request, response);
             }
-            
-            System.out.println("getConvites");
-            
+            request.getRequestDispatcher("/jsp/home.jsp").forward(request, response);
+
         }
 
     }
