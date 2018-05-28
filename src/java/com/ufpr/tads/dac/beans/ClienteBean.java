@@ -13,6 +13,7 @@ public class ClienteBean {
     private String corPele;
     private String corCabelo;
     private EnderecoBean endereco;
+    private PreferenciaBean preferencias;
 
     public ClienteBean() {
     }
@@ -37,6 +38,14 @@ public class ClienteBean {
     
     public String getCpf() {
         return cpf;
+    }
+
+    public void setPreferencias(PreferenciaBean preferencias) {
+        this.preferencias = preferencias;
+    }
+
+    public PreferenciaBean getPreferencias() {
+        return preferencias;
     }
 
     public int getClienteId() {

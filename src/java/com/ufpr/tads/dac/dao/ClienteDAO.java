@@ -11,7 +11,6 @@ public interface ClienteDAO {
     
     public void setCliente(ClienteBean c) throws ClienteException, EnderecoException;
     public void updateCliente(ClienteBean c) throws ClienteException, EnderecoException;
-    public void deleteCliente(int clienteId) throws ClienteException, EnderecoException;
     public ClienteBean getClienteById(int clienteId) throws ClienteException, EnderecoException;
     public ArrayList<ClienteBean> getAllClientes() throws ClienteException, EnderecoException;
 }

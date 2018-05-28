@@ -9,6 +9,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 
 public class ClienteDAOimpl implements ClienteDAO {
@@ -17,18 +18,74 @@ public class ClienteDAOimpl implements ClienteDAO {
 
     @Override
     public void setCliente(ClienteBean c) throws ClienteException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        PreparedStatement pst = null;
+        ResultSet rs= null;
+        int idGerado =0;
+        try {
+            con = new ConnectionFactory().getConnection();
+            pst = con.prepareStatement("", Statement.RETURN_GENERATED_KEYS);
+            int resp = pst.executeUpdate();
+            rs = pst.getGeneratedKeys();
+            while(rs.next()){
+               idGerado = rs.getInt(1);
+            }
+            resp = 0;
+            if(idGerado == 0){
+                throw new ClienteException("Erro cliente: não foi possivel salvar as informações do cliente.");
+            }else{
+                pst = con.prepareStatement("");
+                resp = pst.executeUpdate();
+                if (resp == 0) {
+                    throw new ClienteException("Erro cliente: não foi possivel salvar as informações do endereço do cliente.");
+                }
+            }   
+        } catch (SQLException e) {
+            throw new ClienteException("Erro cliente: comando sql invalido");
+        }finally {if (pst != null) {try { pst.close();} catch (SQLException ex) {throw new ClienteException("Erro cliente: erro ao fechar conecxão");}}
+        }
     }
 
     @Override
     public void updateCliente(ClienteBean c) throws ClienteException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        PreparedStatement pst = null;
+        ResultSet rs= null;
+        try {
+            con = new ConnectionFactory().getConnection();
+            pst = con.prepareStatement("UPDATE cliente");
+            int resp = pst.executeUpdate();
+            pst.setInt(1, c.getClienteId());
+            if (resp == 0) {
+              throw new ClienteException("Erro cliente: não foi possivel salvar as informações do cliente.");
+            }
+            resp = 0;
+            pst = con.prepareStatement("UPDATE endereco");
+            resp = pst.executeUpdate();
+            pst.setInt(1, c.getEndereco().getEnderecoId());
+            if (resp == 0) {
+              throw new ClienteException("Erro cliente: não foi possivel salvar as informações do endereço do cliente.");
+            }              
+        } catch (SQLException e) {
+            throw new ClienteException("Erro cliente: comando sql invalido");
+        }finally {if (pst != null) {try { pst.close();} catch (SQLException ex) {throw new ClienteException("Erro cliente: erro ao fechar conecxão");}}
+        }
     }
 
-    @Override
-    public void deleteCliente(int clienteId) throws ClienteException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
+//    public void deleteCliente(int clienteId) throws ClienteException {
+//        PreparedStatement pst = null;
+//        ResultSet rs = null;
+//        try {
+//            con = new ConnectionFactory().getConnection();
+//            pst = con.prepareStatement("");
+//            pst.setInt(1, clienteId);
+//            int resp = pst.executeUpdate();
+//            if(resp == 0){
+//                throw new ClienteException("Erro cliente: não foi possivel excluir esse cliente."); 
+//            }
+//        } catch (SQLException e) {            
+//            throw new ClienteException("Erro cliente: comando sql invalido."); 
+//        } finally {if (pst != null) {try { pst.close();} catch (SQLException ex) {throw new ClienteException("Erro cliente: erro ao fechar conecxão");}}
+//        }       
+//    }
 
     @Override
     public ClienteBean getClienteById(int clienteId) throws ClienteException, EnderecoException {
@@ -51,14 +108,28 @@ public class ClienteDAOimpl implements ClienteDAO {
             throw new ClienteException("Erro cliente: comando sql invalido");
         } catch (EnderecoException ex) {
             throw new EnderecoException("Erro ao carregar endereço do cliente");
-        } finally {if (pst != null) {try { pst.close();} catch (SQLException ex) {}}
+        } finally {if (pst != null) {try { pst.close();} catch (SQLException ex) {throw new ClienteException("Erro cliente: erro ao fechar conecxão");}}
         }
         return null;
     }
 
     @Override
     public ArrayList<ClienteBean> getAllClientes() throws ClienteException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        PreparedStatement pst = null;
+        ResultSet rs = null;
+        try {
+            con = new ConnectionFactory().getConnection();
+            pst = con.prepareStatement("");
+            rs = pst.executeQuery();
+            final ArrayList<ClienteBean> al = new ArrayList<ClienteBean>();
+            while(rs.next()){
+                al.add(new ClienteBean());
+            }
+            return al;
+        } catch (SQLException e) {
+            throw new ClienteException("Erro cliente: comando sql invalido");
+        } finally {if (pst != null) {try { pst.close();} catch (SQLException ex) {throw new ClienteException("Erro cliente: erro ao fechar conecxão");}}
+        }      
     }
 
 }
