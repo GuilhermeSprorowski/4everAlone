@@ -3,16 +3,12 @@ package com.ufpr.tads.dac.servlet;
 import com.ufpr.tads.dac.beans.ConviteBean;
 import com.ufpr.tads.dac.beans.EncontroBean;
 import com.ufpr.tads.dac.beans.UserBean;
-import com.ufpr.tads.dac.exceptions.ClienteException;
 import com.ufpr.tads.dac.exceptions.ConviteException;
 import com.ufpr.tads.dac.exceptions.EncontroException;
-import com.ufpr.tads.dac.exceptions.EnderecoException;
 import com.ufpr.tads.dac.facade.ConviteFacade;
 import com.ufpr.tads.dac.facade.EncontroFacade;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -30,6 +26,7 @@ public class HomeServlet extends HttpServlet {
         HttpSession session = request.getSession();
         UserBean login = (UserBean) session.getAttribute("user");
         if (login == null) {
+            
             //envia para fazer login
             request.setAttribute("msg", "É necessario esta logado para acessar essa pagina");
             request.getRequestDispatcher("index.jsp").forward(request, response);

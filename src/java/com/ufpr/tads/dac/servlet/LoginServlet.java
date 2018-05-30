@@ -1,6 +1,7 @@
 package com.ufpr.tads.dac.servlet;
 
 import com.ufpr.tads.dac.beans.UserBean;
+import com.ufpr.tads.dac.exceptions.UserException;
 import com.ufpr.tads.dac.facade.UserFacade;
 import java.io.IOException;
 import java.security.MessageDigest;
@@ -54,8 +55,7 @@ public class LoginServlet extends HttpServlet {
                 request.setAttribute("msg", "Usuario Invalido");
                 request.getRequestDispatcher("index.jsp").forward(request, response);
             }
-        } catch (SQLException ex) {
-
+        } catch (UserException ex) {
             Logger.getLogger(LoginServlet.class.getName()).log(Level.SEVERE, null, ex);
         }
 

@@ -8,6 +8,11 @@ public class CidadeBean {
     public CidadeBean() {
     }
 
+    public CidadeBean(int idCidade, String nome) {
+        this.idCidade = idCidade;
+        this.nome = nome;
+    }
+
     public void setIdCidade(int idCidade) {
         this.idCidade = idCidade;
     }
