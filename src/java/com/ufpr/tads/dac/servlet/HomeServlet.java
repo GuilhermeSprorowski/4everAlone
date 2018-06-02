@@ -32,9 +32,11 @@ public class HomeServlet extends HttpServlet {
             request.getRequestDispatcher("index.jsp").forward(request, response);
         } else {
             //usuario logado
-            EncontroFacade ef = new EncontroFacade();
+            if (login.isCliente()) {
+                // usuarioCliente
+                EncontroFacade ef = new EncontroFacade();
             try {
-                ArrayList<EncontroBean> encontroList = ef.getEncontrosPendentes(login.getUserId());
+                ArrayList<EncontroBean> encontroList = ef.getEncontrosPendentes(login.getClienteId());
                 request.setAttribute("encontroList", encontroList);
             } catch (EncontroException ex) {
                 request.setAttribute("msg", ex);
@@ -42,16 +44,25 @@ public class HomeServlet extends HttpServlet {
             }
             ConviteFacade cf = new ConviteFacade();
             try {
-                ArrayList<ConviteBean> conviteList = cf.getAllConvites(login.getUserId());
+                ArrayList<ConviteBean> conviteList = cf.getAllConvites(login.getClienteId());
                 request.setAttribute("conviteList", conviteList);
             } catch (ConviteException ex) {
                 request.setAttribute("msg", ex);
                 request.getRequestDispatcher("erro.jsp").forward(request, response);
             }
             request.getRequestDispatcher("/jsp/home.jsp").forward(request, response);
-
+            } else {
+                //usuarioFuncionario
+                if (login.isAdm()) {
+                    //usuarioAdm
+                    
+                } else {
+                    //UsuarioFuncionario
+                }
+            }
+            
+            
         }
-
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">

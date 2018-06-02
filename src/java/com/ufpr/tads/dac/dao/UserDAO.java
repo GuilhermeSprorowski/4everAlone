@@ -9,4 +9,5 @@ public interface UserDAO {
     public UserBean getUserLogin(String login, String senha) throws UserException;    
     public void setSenha(String login, String senhaAntiga, String novaSenha) throws UserException;
     public void deleteUser(String login, String senha) throws UserException;
+    public boolean isEmailDisponivel(String email) throws UserException;
 }

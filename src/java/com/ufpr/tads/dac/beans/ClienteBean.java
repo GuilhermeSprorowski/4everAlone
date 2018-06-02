@@ -14,10 +14,20 @@ public class ClienteBean {
     private String corCabelo;
     private EnderecoBean endereco;
     private PreferenciaBean preferencias;
+    private String escolaridade;
 
     public ClienteBean() {
     }
 
+    public String getEscolaridade() {
+        return escolaridade;
+    }
+
+    public void setEscolaridade(String escolaridade) {
+        this.escolaridade = escolaridade;
+    }
+
+    
     public ClienteBean(int clienteId, String nome, String descricao) {
         this.clienteId = clienteId;
         this.nome = nome;

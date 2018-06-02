@@ -14,7 +14,7 @@ public class CidadeDAOimpl implements CidadeDAO {
     
     private Connection con;
     @Override
-    public ArrayList<CidadeBean> getAllCidades(String idEstado) throws CidadeException {
+    public ArrayList<CidadeBean> getAllCidades(int idEstado) throws CidadeException {
         PreparedStatement pst = null;
         ResultSet rs = null;
         final ArrayList<CidadeBean> al = new ArrayList<CidadeBean>();
@@ -22,7 +22,7 @@ public class CidadeDAOimpl implements CidadeDAO {
             con = new ConnectionFactory().getConnection();
             
             pst = con.prepareStatement("SELECT id, nome FROM db4everalone.cidade WHERE codEstado = ?");
-            pst.setString(1, idEstado);
+            pst.setInt(1, idEstado);
             rs = pst.executeQuery();            
             while(rs.next()) {
                 al.add(new CidadeBean(rs.getInt("id"),rs.getString("nome")));

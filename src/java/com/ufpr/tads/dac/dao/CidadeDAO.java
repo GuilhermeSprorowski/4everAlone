@@ -8,5 +8,5 @@ import java.util.ArrayList;
 
 
 public interface CidadeDAO {
-    public ArrayList<CidadeBean> getAllCidades(String idEstado)throws CidadeException;
+    public ArrayList<CidadeBean> getAllCidades(int idEstado)throws CidadeException;
 }

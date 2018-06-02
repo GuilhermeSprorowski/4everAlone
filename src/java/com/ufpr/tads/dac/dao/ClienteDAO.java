@@ -13,4 +13,5 @@ public interface ClienteDAO {
     public void updateCliente(ClienteBean c) throws ClienteException, EnderecoException;
     public ClienteBean getClienteById(int clienteId) throws ClienteException, EnderecoException;
     public ArrayList<ClienteBean> getAllClientes() throws ClienteException, EnderecoException;
+    public boolean isCpfDisponivel(String cpf) throws ClienteException;
 }

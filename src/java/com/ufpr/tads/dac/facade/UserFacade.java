@@ -10,7 +10,9 @@ public class UserFacade {
     static UserDAOimpl UserDAO = new UserDAOimpl();
     
     public static UserBean getUserByLogin(String email, String senha) throws UserException{
-        
         return UserDAO.getUserLogin(email, senha);
     }    
+    public static boolean isEmailDisponivel(String email) throws UserException{
+        return UserDAO.isEmailDisponivel(email);
+    }
 }

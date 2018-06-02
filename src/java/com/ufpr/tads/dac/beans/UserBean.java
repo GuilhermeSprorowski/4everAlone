@@ -4,17 +4,36 @@ public class UserBean {
 
     private String email;
     private String nome;
-    private int userId;
+    private int clienteId;
+    private Boolean cliente;
+    private Boolean adm;
 
     public UserBean() {
     }
 
-    public UserBean(String email, String nome,  int userId) {
+    public UserBean(String email, String nome,  int clienteId) {
         this.email = email;
         this.nome = nome;
-        this.userId = userId;
+        this.clienteId = clienteId;
     }
 
+    public Boolean isCliente() {
+        return cliente;
+    }
+
+    public void setCliente(Boolean cliente) {
+        this.cliente = cliente;
+    }
+
+    public Boolean isAdm() {
+        return adm;
+    }
+
+    public void setAdm(Boolean adm) {
+        this.adm = adm;
+    }
+    
+    
     public void setEmail(String email) {
         this.email = email;
     }
@@ -31,10 +50,10 @@ public class UserBean {
         return nome;
     }
 
-    public void setUserId(int userId) {
-        this.userId = userId;
+    public void setclienteId(int clienteId) {
+        this.clienteId = clienteId;
     }
-    public int getUserId() {
-        return userId;
+    public int getClienteId() {
+        return clienteId;
     }
 }

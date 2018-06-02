@@ -19,14 +19,18 @@ public class UserDAOimpl implements UserDAO {
         ResultSet rs = null;
         try {
             con = new ConnectionFactory().getConnection();
-            pst = con.prepareStatement("SELECT cliente.id as id, email, nome FROM bd4everalone.usuario\n"
-                    + "INNER JOIN bd4everalone.cliente ON cliente.codUser = usuario.id WHERE (email = ?) AND (senha = ?) ");
+            pst = con.prepareStatement("SELECT cliente.id as id, email, nome,\n"
+                    + "(SELECT true FROM bd4everalone.cliente a WHERE a.codUser = usuario.id) as isCliente,\n"
+                    + "ifnull((SELECT true FROM bd4everalone.funcionario F WHERE F.codUser = usuario.id AND adm), false) as isAdm FROM bd4everalone.usuario\n"
+                    + "INNER JOIN bd4everalone.cliente ON cliente.codUser = usuario.id (email = ?) AND (senha = ?) ");
             pst.setString(1, email);
             pst.setString(2, senha);
             rs = pst.executeQuery();
             UserBean u = null;
             while (rs.next()) {
                 u = new UserBean(rs.getString("email"), rs.getString("nome"), rs.getInt("id"));
+                u.setAdm(rs.getBoolean("isAdm"));
+                u.setCliente(rs.getBoolean("isCliente"));
             }
             return u;
         } catch (SQLException e) {
@@ -46,15 +50,15 @@ public class UserDAOimpl implements UserDAO {
             rs = pst.executeQuery();
             int idUsuario = 0;
             while (rs.next()) {
-               idUsuario = rs.getInt("id");
+                idUsuario = rs.getInt("id");
             }
-            if (idUsuario != 0 ) {
+            if (idUsuario != 0) {
                 pst = con.prepareStatement("update");
                 pst.setInt(1, idUsuario);
                 pst.setString(2, novaSenha);
                 int resp = 0;
                 resp = pst.executeUpdate();
-                if(resp == 0){
+                if (resp == 0) {
                     throw new UserException("Erro cliente: não foi possivel trocar a senha");
                 }
             }
@@ -65,7 +69,7 @@ public class UserDAOimpl implements UserDAO {
 
     @Override
     public void deleteUser(String login, String senha) throws UserException {
-        
+
         PreparedStatement pst = null;
         ResultSet rs = null;
         try {
@@ -83,13 +87,32 @@ public class UserDAOimpl implements UserDAO {
                 pst.setInt(1, idUsuario);
                 int resp = 0;
                 resp = pst.executeUpdate();
-                if(resp == 0){
+                if (resp == 0) {
                     throw new UserException("Erro cliente: não foi possivel trocar a senha");
                 }
             }
         } catch (SQLException e) {
             throw new UserException("Erro cliente: comando sql invalido");
         }
+    }
+    
+    @Override
+    public boolean isEmailDisponivel(String email) throws UserException{
+        PreparedStatement pst = null;
+        ResultSet rs = null;
+        try {
+            con = new ConnectionFactory().getConnection();
+            pst = con.prepareStatement("SELECT false as emailvalido FROM bd4everalone.usuario WHERE email = ?");
+            pst.setString(1, email);
+            rs = pst.executeQuery();
+            while (rs.next()) {
+               return rs.getBoolean("emailValido");
+            }
+            return true;
+        } catch (SQLException e) {
+            throw new UserException("Erro user: comando sql invalido");
+        }finally {if (pst != null) {try { pst.close();} catch (SQLException ex) {throw new UserException("Erro user: erro ao fechar conecxão");}}
+        }   
     }
 
 }

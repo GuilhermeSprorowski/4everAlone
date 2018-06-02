@@ -5,6 +5,7 @@ import com.ufpr.tads.dac.dao.ClienteDAO;
 import com.ufpr.tads.dac.dao.ConnectionFactory;
 import com.ufpr.tads.dac.exceptions.ClienteException;
 import com.ufpr.tads.dac.exceptions.EnderecoException;
+import com.ufpr.tads.dac.exceptions.UserException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -70,33 +71,17 @@ public class ClienteDAOimpl implements ClienteDAO {
         }
     }
 
-//    public void deleteCliente(int clienteId) throws ClienteException {
-//        PreparedStatement pst = null;
-//        ResultSet rs = null;
-//        try {
-//            con = new ConnectionFactory().getConnection();
-//            pst = con.prepareStatement("");
-//            pst.setInt(1, clienteId);
-//            int resp = pst.executeUpdate();
-//            if(resp == 0){
-//                throw new ClienteException("Erro cliente: não foi possivel excluir esse cliente."); 
-//            }
-//        } catch (SQLException e) {            
-//            throw new ClienteException("Erro cliente: comando sql invalido."); 
-//        } finally {if (pst != null) {try { pst.close();} catch (SQLException ex) {throw new ClienteException("Erro cliente: erro ao fechar conecxão");}}
-//        }       
-//    }
-
     @Override
     public ClienteBean getClienteById(int clienteId) throws ClienteException, EnderecoException {
         PreparedStatement pst = null;
         ResultSet rs = null;
         try {
             con = new ConnectionFactory().getConnection();
-            pst = con.prepareStatement("SELECT Cli.id as id, nome, cpf, dataNasc, sexo, Cli.descricao as descricao, E.descricao as escolaridade,  c.descricao as corCabelo, p.descricao as corPele, codEndereco FROM bd4everalone.cliente Cli\n"
+            pst = con.prepareStatement("SELECT Cli.id as id, nome, cpf, dataNasc, sexo, Cli.descricao as descricao, E.descricao as escolaridade,  c.descricao as corCabelo, p.descricao as corPele, codEndereco, pref.* FROM bd4everalone.cliente Cli\n"
                     + "INNER JOIN bd4everalone.escolaridade E ON codEscolaridade = E.id\n"
                     + "INNER JOIN bd4everalone.corcabelo c ON codCabelo = c.id\n"
                     + "INNER JOIN bd4everalone.corpele p ON codPele = p.id\n"
+                    + "INNER JOIN bd4everalone.preferencia pref ON Cli.id = codCliente\n"
                     + "WHERE Cli.id = ?;");
             pst.setInt(1, clienteId);
             rs = pst.executeQuery();
@@ -130,6 +115,25 @@ public class ClienteDAOimpl implements ClienteDAO {
             throw new ClienteException("Erro cliente: comando sql invalido");
         } finally {if (pst != null) {try { pst.close();} catch (SQLException ex) {throw new ClienteException("Erro cliente: erro ao fechar conecxão");}}
         }      
+    }
+
+    @Override
+    public boolean isCpfDisponivel(String cpf) throws ClienteException {
+        PreparedStatement pst = null;
+        ResultSet rs = null;
+        try {
+            con = new ConnectionFactory().getConnection();
+            pst = con.prepareStatement("SELECT false as cpfValido FROM bd4everalone.cliente WHERE cpf = ?");
+            pst.setString(1, cpf);
+            rs = pst.executeQuery();
+            while (rs.next()) {
+               return rs.getBoolean("cpfValido");
+            }
+            return true;
+        } catch (SQLException e) {
+            throw new ClienteException("Erro cliente: comando sql invalido");
+        }finally {if (pst != null) {try { pst.close();} catch (SQLException ex) {throw new ClienteException("Erro cliente: erro ao fechar conecxão");}}
+        }   
     }
 
 }
