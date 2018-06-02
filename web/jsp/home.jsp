@@ -16,7 +16,7 @@
         <div class="container margem">
             <div class="columns is-2">
                 <div class="column card">
-                    <h1 class="notification is-info">Eventos marcados</h1>
+                    <h1 class="notification is-info">Convites para encontros</h1>
                     <!-- Será feito o foreach Aqui -->
                     <div class="card">
                       <header class="card-header">
@@ -36,10 +36,11 @@
                     </div>
                 </div>
                 <div class="column card">
-                    <h1 class="notification is-success" >Encontros Pendentes </h1>
+                    <h1 class="notification is-success" >Encontros Pendentes</h1>
                     <!-- Será feito o foreach Aqui -->
                     <div class="card">
                       <header class="card-header">
+                          <img/>
                         <p class="card-header-title title">
                           Titulo
                         </p>

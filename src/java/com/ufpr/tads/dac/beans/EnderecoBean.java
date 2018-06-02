@@ -6,6 +6,7 @@ public class EnderecoBean {
     private int enderecoId;
     private String rua;
     private int cidadeId;
+    private int estadoId;
     private String cidade;
     private String uF;
 
@@ -17,6 +18,14 @@ public class EnderecoBean {
     }
     
     public EnderecoBean() {
+    }
+    
+    public void setEstadoId(int estadoId) {
+        this.estadoId = estadoId;
+    }
+
+    public int getEstadoId() {
+        return estadoId;
     }
 
     public void setCidadeId(int cidadeId) {

@@ -24,7 +24,7 @@ public class CorPeleDAOimpl implements CorPeleDAO{
         final ArrayList<CorPeleBean> al = new ArrayList<CorPeleBean>();
         try {
             con = new ConnectionFactory().getConnection();
-            pst = con.prepareStatement("SELECT id, descricao FROM db4everalone.corpele");
+            pst = con.prepareStatement("SELECT id, descricao FROM bd4everalone.corpele");
             rs = pst.executeQuery();
             while (rs.next()) {
                 al.add(new CorPeleBean(rs.getInt("id"), rs.getString("descricao")));

@@ -19,16 +19,22 @@ public class EnderecoDAOimpl implements EnderecoDAO {
         ResultSet rs = null;
         try {
             con = new ConnectionFactory().getConnection();
-            pst = con.prepareStatement("SELECT endereco.id as id, rua, cidade.nome as cidade, estado.sigla as uf FROM bd4everalone.endereco\n"
-                    + "INNER JOIN bd4everalone.cidade ON codCidade = cidade.id\n"
-                    + "INNER JOIN bd4everalone.estado ON codEstado = estado.id\n"
-                    + "WHERE endereco.id = ?;");
+            pst = con.prepareStatement("SELECT endereco.id as id, rua, cidade.nome as cidade, cidade.id as cidadeId, "
+                    + "estado.sigla as uf, estado.id as estadoId FROM bd4everalone.endereco "
+                    + "INNER JOIN bd4everalone.cidade ON codCidade = cidade.id "
+                    + "INNER JOIN bd4everalone.estado ON codEstado = estado.id "
+                    + "WHERE endereco.id = ?");
             pst.setInt(1, enderecoId);
             rs = pst.executeQuery();
             while (rs.next()) {
-                return new EnderecoBean(rs.getInt("id"),rs.getString("rua"),rs.getString("cidade"),rs.getString("uf"));
+                EnderecoBean end = new EnderecoBean(rs.getInt("id"),rs.getString("rua"),rs.getString("cidade"),rs.getString("uf"));
+                end.setEstadoId(rs.getInt("estadoId"));
+                end.setCidadeId(rs.getInt("cidadeId"));
+                
+                return end;
             }           
         } catch(SQLException e){
+            System.out.println(e);
             throw new EnderecoException("Erro: comando sql invalido");
         }finally{ if (pst!= null) {try {pst.close(); } catch (SQLException ex) {}}}
         return null;

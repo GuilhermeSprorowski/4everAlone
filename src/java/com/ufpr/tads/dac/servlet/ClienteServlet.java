@@ -3,8 +3,16 @@ package com.ufpr.tads.dac.servlet;
 import com.ufpr.tads.dac.beans.ClienteBean;
 import com.ufpr.tads.dac.beans.UserBean;
 import com.ufpr.tads.dac.exceptions.ClienteException;
+import com.ufpr.tads.dac.exceptions.CorCabeloException;
+import com.ufpr.tads.dac.exceptions.CorPeleException;
 import com.ufpr.tads.dac.exceptions.EnderecoException;
+import com.ufpr.tads.dac.exceptions.EscolaridadeException;
+import com.ufpr.tads.dac.exceptions.EstadoException;
 import com.ufpr.tads.dac.facade.ClienteFacade;
+import com.ufpr.tads.dac.facade.CorCabeloFacade;
+import com.ufpr.tads.dac.facade.CorPeleFacade;
+import com.ufpr.tads.dac.facade.EscolaridadeFacade;
+import com.ufpr.tads.dac.facade.EstadoFacade;
 import com.ufpr.tads.dac.facade.PreferenciaFacade;
 import java.io.IOException;
 import java.util.logging.Level;
@@ -35,12 +43,15 @@ public class ClienteServlet extends HttpServlet {
             switch (action) {
                 case "view":
                     try {
+                        request.setAttribute("form", "alterar");
                         request.setAttribute("cliente", cf.getClienteById(login.getClienteId()));
+                        request.setAttribute("escolaridade", EscolaridadeFacade.getAllEscolaridade());
+                        request.setAttribute("corPele", CorPeleFacade.getAllCoresPele());
+                        request.setAttribute("corCabelo", CorCabeloFacade.getAllCoresCabelo());
+                        request.setAttribute("estados", EstadoFacade.getAllEstados());
                         request.getRequestDispatcher("jsp/perfil.jsp").forward(request, response);
-                    } catch (ClienteException ex) {
-                        request.setAttribute("msg", ex);
-                        request.getRequestDispatcher("jsp/erro.jsp").forward(request, response);
-                    } catch (EnderecoException ex) {
+                    } catch (ClienteException | EnderecoException | EscolaridadeException 
+                            | CorPeleException | CorCabeloException | EstadoException ex) {
                         request.setAttribute("msg", ex);
                         request.getRequestDispatcher("jsp/erro.jsp").forward(request, response);
                     }
@@ -51,9 +62,20 @@ public class ClienteServlet extends HttpServlet {
                     cliente.setCorCabelo(request.getParameter("corCabelo"));
                     cliente.setCorPele(request.getParameter("corPele"));
                     cliente.setEscolaridade(request.getParameter("escolaridade"));
-                    cliente.getEndereco().setCidadeId(Integer.parseInt(request.getParameter("codCidade")));
-                    cliente.getEndereco().setRua(request.getParameter("edereco"));
                     cliente.setDescricao(request.getParameter("descricao"));
+
+                    cliente.getEndereco().setCidadeId(Integer.parseInt(request.getParameter("endereco.cidadeId")));
+                    cliente.getEndereco().setRua(request.getParameter("endereco.rua"));
+                    //cliente.getPreferencias().setSexo(Integer.parseInt(request.getParameter("preferencias.cidadeId")));
+                    //cliente.getPreferencias().setCorCabeloId(Integer.parseInt(request.getParameter("preferencias.corCabelo")));
+                    //cliente.getPreferencias().setCorPeleId(Integer.parseInt(request.getParameter("preferencias.corPele")));
+                    //String idadeStr[] = request.getParameter("preferencias.idade").split(" - ");
+                    //int[] idade = { Integer.parseInt(idadeStr[0]), Integer.parseInt(idadeStr[1]) };
+                    //cliente.getPreferencias().setIdade(idade);
+                    
+                    //String alturaStr[] = request.getParameter("preferencias.altura").split(" - ");
+                    //int[] altura = { Integer.parseInt(alturaStr[0]), Integer.parseInt(alturaStr[1]) };
+                    //cliente.getPreferencias().setAltura(altura);
                     try {
                         cf.updateCliente(cliente);
                         request.setAttribute("salvo", true);

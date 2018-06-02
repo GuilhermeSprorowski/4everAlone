@@ -23,7 +23,7 @@ public class CorCabeloDAOimpl implements CorCabeloDAO{
         final ArrayList<CorCabeloBean> al = new ArrayList<CorCabeloBean>();
         try {
             con = new ConnectionFactory().getConnection();
-            pst = con.prepareStatement("SELECT id, descricao FROM db4everalone.corcabelo");
+            pst = con.prepareStatement("SELECT id, descricao FROM bd4everalone.corcabelo");
             rs = pst.executeQuery();
             while (rs.next()) {
                 al.add(new CorCabeloBean(rs.getInt("id"), rs.getString("descricao")));

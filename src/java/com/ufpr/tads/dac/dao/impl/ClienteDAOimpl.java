@@ -77,17 +77,19 @@ public class ClienteDAOimpl implements ClienteDAO {
         ResultSet rs = null;
         try {
             con = new ConnectionFactory().getConnection();
-            pst = con.prepareStatement("SELECT Cli.id as id, nome, cpf, dataNasc, sexo, Cli.descricao as descricao, E.descricao as escolaridade,  c.descricao as corCabelo, p.descricao as corPele, codEndereco, pref.* FROM bd4everalone.cliente Cli\n"
-                    + "INNER JOIN bd4everalone.escolaridade E ON codEscolaridade = E.id\n"
-                    + "INNER JOIN bd4everalone.corcabelo c ON codCabelo = c.id\n"
-                    + "INNER JOIN bd4everalone.corpele p ON codPele = p.id\n"
-                    + "INNER JOIN bd4everalone.preferencia pref ON Cli.id = codCliente\n"
-                    + "WHERE Cli.id = ?;");
+            pst = con.prepareStatement("SELECT Cli.id as id, Cli.nome, Cli.cpf, Cli.dataNasc, Cli.sexo, Cli.descricao as descricao, "
+                    + "E.descricao as escolaridade, c.descricao as corCabelo, p.descricao as corPele, "
+                    + "Cli.codEndereco, pref.* FROM bd4everalone.cliente Cli "
+                    + "INNER JOIN bd4everalone.escolaridade E ON codEscolaridade = E.id "
+                    + "INNER JOIN bd4everalone.corcabelo c ON codCabelo = c.id "
+                    + "INNER JOIN bd4everalone.corpele p ON codPele = p.id "
+                    + "INNER JOIN bd4everalone.preferencia pref ON Cli.id = pref.codCliente "
+                    + "WHERE Cli.id = ?");
             pst.setInt(1, clienteId);
             rs = pst.executeQuery();
             while (rs.next()) {
                 return new ClienteBean(rs.getInt("id"), rs.getString("nome"), rs.getString("cpf"), rs.getDate("dataNasc"), rs.getString("sexo"),
-                rs.getString("descricao"), rs.getString("corPele"), rs.getString("corCabelo"), new EnderecoDAOimpl().getEnderecoById(rs.getInt("codEndececo")));
+                rs.getString("descricao"), rs.getString("corPele"), rs.getString("corCabelo"), new EnderecoDAOimpl().getEnderecoById(rs.getInt("codEndereco")));
             }
         } catch (SQLException ex) {
             throw new ClienteException("Erro cliente: comando sql invalido");
