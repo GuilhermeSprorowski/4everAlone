@@ -9,6 +9,10 @@ public class CorCabeloBean {
     public CorCabeloBean() {
     }
 
+    public CorCabeloBean(int idCorCabelo) {
+        this.idCorCabelo = idCorCabelo;
+    }
+
     public CorCabeloBean(int idCorCabelo, String cor) {
         this.idCorCabelo = idCorCabelo;
         this.cor = cor;

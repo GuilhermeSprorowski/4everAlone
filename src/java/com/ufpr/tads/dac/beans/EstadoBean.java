@@ -9,6 +9,11 @@ public class EstadoBean {
     public EstadoBean() {
     }
 
+    public EstadoBean(int idEstado, String sigla) {
+        this.sigla = sigla;
+        this.idEstado = idEstado;
+    }
+
     public EstadoBean(String nome, String sigla, int idEstado) {
         this.nome = nome;
         this.sigla = sigla;

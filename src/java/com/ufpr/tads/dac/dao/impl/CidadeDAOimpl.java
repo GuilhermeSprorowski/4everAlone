@@ -21,7 +21,7 @@ public class CidadeDAOimpl implements CidadeDAO {
         try {
             con = new ConnectionFactory().getConnection();
             
-            pst = con.prepareStatement("SELECT id, nome FROM bd4everalone.cidade WHERE codEstado = ?");
+            pst = con.prepareStatement("SELECT id, nome FROM db4everalone.cidade WHERE codEstado = ?");
             pst.setInt(1, idEstado);
             rs = pst.executeQuery();            
             while(rs.next()) {

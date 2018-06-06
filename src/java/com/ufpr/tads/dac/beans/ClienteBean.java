@@ -10,30 +10,22 @@ public class ClienteBean {
     private Date dataNasc;
     private String sexo;
     private String descricao;
-    private String corPele;
-    private String corCabelo;
+    private CorPeleBean corPele;
+    private CorCabeloBean corCabelo;
     private EnderecoBean endereco;
     private PreferenciaBean preferencias;
-    private String escolaridade;
+    private EscolaridadeBean escolaridade;
 
     public ClienteBean() {
     }
 
-    public String getEscolaridade() {
-        return escolaridade;
-    }
-
-    public void setEscolaridade(String escolaridade) {
-        this.escolaridade = escolaridade;
-    }
-
-    
     public ClienteBean(int clienteId, String nome, String descricao) {
         this.clienteId = clienteId;
         this.nome = nome;
         this.descricao = descricao;
     }
-    public ClienteBean(int clienteId, String nome, String cpf, Date dataNasc, String sexo, String descricao, String corPele, String corCabelo, EnderecoBean endereco) {
+
+    public ClienteBean(int clienteId, String nome, String cpf, Date dataNasc, String sexo, String descricao, CorPeleBean corPele, CorCabeloBean corCabelo, EnderecoBean endereco, EscolaridadeBean escolaridade, PreferenciaBean preferencias) {
         this.clienteId = clienteId;
         this.nome = nome;
         this.cpf = cpf;
@@ -43,9 +35,18 @@ public class ClienteBean {
         this.corPele = corPele;
         this.corCabelo = corCabelo;
         this.endereco = endereco;
+        this.escolaridade = escolaridade;
+        this.preferencias = preferencias;
     }
-    
-    
+
+    public EscolaridadeBean getEscolaridade() {
+        return escolaridade;
+    }
+
+    public void setEscolaridade(EscolaridadeBean escolaridade) {
+        this.escolaridade = escolaridade;
+    }
+
     public String getCpf() {
         return cpf;
     }
@@ -94,11 +95,11 @@ public class ClienteBean {
         this.descricao = descricao;
     }
 
-    public void setCorPele(String corPele) {
+    public void setCorPele(CorPeleBean corPele) {
         this.corPele = corPele;
     }
 
-    public void setCorCabelo(String corCabelo) {
+    public void setCorCabelo(CorCabeloBean corCabelo) {
         this.corCabelo = corCabelo;
     }
 
@@ -118,11 +119,11 @@ public class ClienteBean {
         return descricao;
     }
 
-    public String getCorPele() {
+    public CorPeleBean getCorPele() {
         return corPele;
     }
 
-    public String getCorCabelo() {
+    public CorCabeloBean getCorCabelo() {
         return corCabelo;
     }
 

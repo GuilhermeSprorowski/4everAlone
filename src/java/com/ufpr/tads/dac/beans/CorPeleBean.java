@@ -8,6 +8,10 @@ public class CorPeleBean {
     public CorPeleBean() {
     }
 
+    public CorPeleBean(int idCorPele) {
+        this.idCorPele = idCorPele;
+    }
+
     public CorPeleBean(int idCorPele, String cor) {
         this.idCorPele = idCorPele;
         this.cor = cor;

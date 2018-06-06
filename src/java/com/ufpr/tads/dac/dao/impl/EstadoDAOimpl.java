@@ -22,7 +22,7 @@ public class EstadoDAOimpl implements EstadoDAO{
         final ArrayList<EstadoBean> al = new ArrayList<EstadoBean>();
         try {
             con = new ConnectionFactory().getConnection();            
-            pst = con.prepareStatement("SELECT id, nome, sigla FROM bd4everalone.estado");
+            pst = con.prepareStatement("SELECT id, nome, sigla FROM db4everalone.estado");
             rs = pst.executeQuery();            
             while(rs.next()) {
                 al.add(new EstadoBean(rs.getString("nome"),rs.getString("sigla"),rs.getInt("id")));

@@ -9,11 +9,14 @@ public class EscolaridadeBean {
 
     }
 
+    public EscolaridadeBean(int idEscolaridade) {
+        this.idEscolaridade = idEscolaridade;
+    }
+
     public EscolaridadeBean(int idEscolaridade, String descricao) {
         this.idEscolaridade = idEscolaridade;
         this.descricao = descricao;
-    }
-    
+    }    
 
     public int getIdEscolaridade() {
         return idEscolaridade;
