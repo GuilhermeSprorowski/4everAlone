@@ -57,20 +57,44 @@ public class ClienteDAOimpl implements ClienteDAO {
         PreparedStatement pst = null;
         ResultSet rs= null;
         try {
+            int idEndereco;
+            if(c.getEndereco().getEnderecoId() == 0){
+                con = new ConnectionFactory().getConnection();
+                pst = con.prepareStatement("INSERT INTO bd4everalone.endereco(codCidade, rua) VALUE(?,?);", Statement.RETURN_GENERATED_KEYS);
+                pst.setInt(1, c.getEndereco().getCidade().getIdCidade());
+                pst.setString(2, c.getEndereco().getRua());
+                pst.executeUpdate();
+                rs = pst.getGeneratedKeys();
+                if (rs != null && rs.next()) {
+                    idEndereco = rs.getInt(1);
+                }else{
+                    throw new ClienteException("Erro cliente: não foi possivel salvar as informações do endereço do cliente.");
+                }               
+            }
+            else{
+                 con = new ConnectionFactory().getConnection();
+                pst = con.prepareStatement("UPDATE bd4everalone.endereco SET codCidade = ?, rua = ? WHERE id = ?;");
+                pst.setInt(1, c.getEndereco().getCidade().getIdCidade());
+                pst.setString(2, c.getEndereco().getRua());
+                pst.setInt(3, c.getEndereco().getEnderecoId());
+                int resp = pst.executeUpdate(); 
+                idEndereco = c.getEndereco().getEnderecoId();
+                if(resp == 0)
+                    throw new ClienteException("Erro cliente: não foi possivel salvar as informações do endereço do cliente.");                    
+            }            
             con = new ConnectionFactory().getConnection();
-            pst = con.prepareStatement("UPDATE cliente");
+            pst = con.prepareStatement("UPDATE bd4everalone.cliente SET descricao = ?, codEscolaridade= ?, codPele = ?, codCabelo = ?, codEndereco = ? WHERE id = ? ;");
+            pst.setString(1, c.getDescricao());
+            pst.setInt(2, c.getEscolaridade().getIdEscolaridade());
+            pst.setInt(3, c.getCorPele().getIdCorPele());
+            pst.setInt(4, c.getCorCabelo().getIdCorCabelo());
+            pst.setInt(5, idEndereco);
+            pst.setInt(6, c.getClienteId());
             int resp = pst.executeUpdate();
-            pst.setInt(1, c.getClienteId());
             if (resp == 0) {
               throw new ClienteException("Erro cliente: não foi possivel salvar as informações do cliente.");
             }
             resp = 0;
-            pst = con.prepareStatement("UPDATE endereco");
-            resp = pst.executeUpdate();
-            pst.setInt(1, c.getEndereco().getEnderecoId());
-            if (resp == 0) {
-              throw new ClienteException("Erro cliente: não foi possivel salvar as informações do endereço do cliente.");
-            }              
         } catch (SQLException e) {
             throw new ClienteException("Erro cliente: comando sql invalido");
         }finally {if (pst != null) {try { pst.close();} catch (SQLException ex) {throw new ClienteException("Erro cliente: erro ao fechar conecxão");}}
