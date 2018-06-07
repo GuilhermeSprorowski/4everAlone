@@ -35,8 +35,9 @@ public class UserDAOimpl implements UserDAO {
             }
             return u;
         } catch (SQLException e) {
-            throw new UserException("Erro cliente: comando sql invalido");
-        }
+            throw new UserException("Erro Usuario: comando sql invalido");
+        }finally {if (pst != null) {try { pst.close();} catch (SQLException ex) {throw new UserException("Erro user: erro ao fechar conecxão");}}
+        }  
     }
 
     @Override
@@ -65,7 +66,8 @@ public class UserDAOimpl implements UserDAO {
             }
         } catch (SQLException e) {
             throw new UserException("Erro cliente: comando sql invalido");
-        }
+        }finally {if (pst != null) {try { pst.close();} catch (SQLException ex) {throw new UserException("Erro user: erro ao fechar conecxão");}}
+        }  
     }
 
     @Override
@@ -94,7 +96,8 @@ public class UserDAOimpl implements UserDAO {
             }
         } catch (SQLException e) {
             throw new UserException("Erro cliente: comando sql invalido");
-        }
+        }finally {if (pst != null) {try { pst.close();} catch (SQLException ex) {throw new UserException("Erro user: erro ao fechar conecxão");}}
+        }  
     }
     
     @Override

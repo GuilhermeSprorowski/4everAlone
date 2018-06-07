@@ -12,6 +12,6 @@
         <title>JSP Page</title>
     </head>
     <body>
-        <h1>Erro!</h1>
+        <h1>Erro ${msg}</h1>
     </body>
 </html>

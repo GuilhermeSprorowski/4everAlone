@@ -6,7 +6,6 @@ import com.ufpr.tads.dac.beans.CorCabeloBean;
 import com.ufpr.tads.dac.beans.CorPeleBean;
 import com.ufpr.tads.dac.beans.EnderecoBean;
 import com.ufpr.tads.dac.beans.EscolaridadeBean;
-import com.ufpr.tads.dac.beans.EstadoBean;
 import com.ufpr.tads.dac.beans.PreferenciaBean;
 import com.ufpr.tads.dac.beans.UserBean;
 import com.ufpr.tads.dac.exceptions.ClienteException;
@@ -20,27 +19,30 @@ import com.ufpr.tads.dac.facade.CorCabeloFacade;
 import com.ufpr.tads.dac.facade.CorPeleFacade;
 import com.ufpr.tads.dac.facade.EscolaridadeFacade;
 import com.ufpr.tads.dac.facade.EstadoFacade;
-import com.ufpr.tads.dac.facade.PreferenciaFacade;
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import java.util.List;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import org.apache.commons.fileupload.FileItem;
+import org.apache.commons.fileupload.disk.DiskFileItemFactory;
+import org.apache.commons.fileupload.servlet.ServletFileUpload;
 
 @WebServlet(name = "ClienteServlet", urlPatterns = {"/ClienteServlet"})
-public class ClienteServlet extends HttpServlet {    
+public class ClienteServlet extends HttpServlet {
+
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         HttpSession session = request.getSession();
         UserBean login = (UserBean) session.getAttribute("user");
         ArrayList<CorPeleBean> coresPele = new ArrayList<>();
         ArrayList<CorCabeloBean> coresCabelo = new ArrayList<>();
-        
+
         if (login == null) {
             //envia para fazer login
             request.setAttribute("msg", "É necessario esta logado para acessar essa pagina");
@@ -49,10 +51,11 @@ public class ClienteServlet extends HttpServlet {
             //usuario logado
             String action = request.getParameter("action");
             ClienteFacade cf = new ClienteFacade();
-            
+
             switch (action) {
                 case "view":
                     try {
+                        System.out.println("View Cliente");
                         request.setAttribute("form", "alterar");
                         request.setAttribute("cliente", cf.getClienteById(login.getClienteId()));
                         request.setAttribute("escolaridade", EscolaridadeFacade.getAllEscolaridade());
@@ -62,20 +65,36 @@ public class ClienteServlet extends HttpServlet {
                         request.setAttribute("corCabelo", coresCabelo);
                         request.setAttribute("estados", EstadoFacade.getAllEstados());
                         request.getRequestDispatcher("jsp/perfil.jsp").forward(request, response);
-                    } catch (ClienteException | EnderecoException | CorPeleException | 
-                            CorCabeloException | EscolaridadeException | EstadoException ex) {
+                    } catch (ClienteException | EnderecoException | CorPeleException
+                            | CorCabeloException | EscolaridadeException | EstadoException ex) {
                         request.setAttribute("msg", ex);
                         request.getRequestDispatcher("jsp/erro.jsp").forward(request, response);
                     }
                     break;
                 case "salva":
                     // passar corCabelo(id), corPele(id), escolaridade(id), se houver Endereco(id), rua, cidade(id), descricao
+                    System.out.println("Salva Cliente");
+                    ServletFileUpload sf = new ServletFileUpload(new DiskFileItemFactory());
+                    try {
+                        System.out.println("Chegou!!");
+                        List<FileItem> multifiles = sf.parseRequest(request);
+                        if (multifiles != null) {
+                            for (FileItem item : multifiles) {
+                                System.out.println(item.getName());
+                                System.out.println(item.getFieldName());
+                                System.err.println(item.getContentType());
+                                item.write(new File("/Users/T-Gamer/Documents/NetBeansProjects/4everAlone/pictures/a"+item.getName()));
+                            }
+                        }
+                    } catch (Exception ex) {
+                        System.out.println("Erro: aasdasdasdd" + ex);
+                    }
                     ClienteBean cliente;
                     try {
                         cliente = cf.getClienteById(login.getClienteId());
                         coresPele = CorPeleFacade.getAllCoresPele();
                         coresCabelo = CorCabeloFacade.getAllCoresCabelo();
-                        
+
                         cliente.setClienteId(login.getClienteId());
                         cliente.setCorCabelo(new CorCabeloBean(request.getParameter("corCabelo") == null ? 0 : Integer.parseInt(request.getParameter("corCabelo"))));
                         cliente.setCorPele(new CorPeleBean(request.getParameter("corPele") == null ? 0 : Integer.parseInt(request.getParameter("corPele"))));
@@ -104,11 +123,11 @@ public class ClienteServlet extends HttpServlet {
                             }
                         }
                         String idadeStr[] = request.getParameter("pidade").split(" - ");
-                        int[] idade = { Integer.parseInt(idadeStr[0]), Integer.parseInt(idadeStr[1]) };
+                        int[] idade = {Integer.parseInt(idadeStr[0]), Integer.parseInt(idadeStr[1])};
                         pf.setIdade(idade);
 
                         String alturaStr[] = request.getParameter("paltura").split(" - ");
-                        int[] altura = { Integer.parseInt(alturaStr[0]), Integer.parseInt(alturaStr[1]) };
+                        int[] altura = {Integer.parseInt(alturaStr[0]), Integer.parseInt(alturaStr[1])};
                         pf.setAltura(altura);
 
                         cliente.setPreferencias(pf);

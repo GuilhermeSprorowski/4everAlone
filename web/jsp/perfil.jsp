@@ -95,9 +95,13 @@
     <body>
         <c:import url="../components/header.html" ></c:import>
         <div class="container margem">
-            <form method="POST" action="ClienteServlet?action=salva" class="column card">
+            <form method="POST" action="ClienteServlet?action=salva" class="column card" enctype='multipart/form-data'>
                 <h1 class="perfil notification is-info">
-                    <img width="128px" src="https://3s.orisom.com/statics/bootstrap-3.2.0/img/img-perfil.jpg"/>
+                    <div>
+                        <img width="128px" src="https://3s.orisom.com/statics/bootstrap-3.2.0/img/img-perfil.jpg"/><br>
+                        <input type="file" name="file" id="foto"/>
+                    </div>
+                    
                     ${cliente.nome} - ${cliente.cpf}
                 </h1>
                 <div class="columns">
