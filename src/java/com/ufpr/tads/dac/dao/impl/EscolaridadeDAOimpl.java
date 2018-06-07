@@ -21,7 +21,7 @@ public class EscolaridadeDAOimpl implements EscolaridadeDAO {
         final ArrayList<EscolaridadeBean> al = new ArrayList<EscolaridadeBean>();
         try {
             con = new ConnectionFactory().getConnection();            
-            pst = con.prepareStatement("SELECT id, descricao FROM db4everalone.escolaridade");
+            pst = con.prepareStatement("SELECT id, descricao FROM bd4everalone.escolaridade");
             rs = pst.executeQuery();            
             while(rs.next()) {
                 al.add(new EscolaridadeBean(rs.getInt("id"),rs.getString("descricao")));
@@ -31,6 +31,7 @@ public class EscolaridadeDAOimpl implements EscolaridadeDAO {
             }
             return al;
         } catch (SQLException e) {
+            System.out.println(e);
            throw new EscolaridadeException("Erro Escolaridade: Comando SQL invalido");
         } finally {
             if (pst!= null) {try {pst.close(); } catch (SQLException ex) {throw new EscolaridadeException("Erro Escolaridade: Falha ao tentar fechar conexão!");}}

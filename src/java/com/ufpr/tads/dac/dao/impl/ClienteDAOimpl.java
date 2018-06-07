@@ -72,7 +72,7 @@ public class ClienteDAOimpl implements ClienteDAO {
                 }               
             }
             else{
-                 con = new ConnectionFactory().getConnection();
+                con = new ConnectionFactory().getConnection();
                 pst = con.prepareStatement("UPDATE bd4everalone.endereco SET codCidade = ?, rua = ? WHERE id = ?;");
                 pst.setInt(1, c.getEndereco().getCidade().getIdCidade());
                 pst.setString(2, c.getEndereco().getRua());
@@ -83,7 +83,7 @@ public class ClienteDAOimpl implements ClienteDAO {
                     throw new ClienteException("Erro cliente: não foi possivel salvar as informações do endereço do cliente.");                    
             }            
             con = new ConnectionFactory().getConnection();
-            pst = con.prepareStatement("UPDATE bd4everalone.cliente SET descricao = ?, codEscolaridade= ?, codPele = ?, codCabelo = ?, codEndereco = ? WHERE id = ? ;");
+            pst = con.prepareStatement("UPDATE bd4everalone.cliente SET descricao = ?, codEscolaridade= ?, codPele = ?, codCabelo = ?, codEndereco = ? WHERE id = ?;");
             pst.setString(1, c.getDescricao());
             pst.setInt(2, c.getEscolaridade().getIdEscolaridade());
             pst.setInt(3, c.getCorPele().getIdCorPele());
@@ -93,6 +93,24 @@ public class ClienteDAOimpl implements ClienteDAO {
             int resp = pst.executeUpdate();
             if (resp == 0) {
               throw new ClienteException("Erro cliente: não foi possivel salvar as informações do cliente.");
+            }
+            
+            con = new ConnectionFactory().getConnection();
+            pst = con.prepareStatement("UPDATE bd4everalone.preferencia SET sexo = ?, idadeMin = ?, idadeMax = ?, "
+                    + "alturaMin = ?, alturaMax = ?, codPele = ?, codCabelo = ?, codCliente = ? WHERE id = ?;");
+            PreferenciaBean pr = c.getPreferencias();
+            pst.setString(1, pr.getSexo());
+            pst.setInt(2, pr.getIdade()[0]);
+            pst.setInt(3, pr.getIdade()[1]);
+            pst.setInt(4, pr.getAltura()[0]);
+            pst.setInt(5, pr.getAltura()[1]);
+            pst.setInt(6, pr.getCorPele().getIdCorPele());
+            pst.setInt(7, pr.getCorCabelo().getIdCorCabelo());
+            pst.setInt(8, c.getClienteId());
+            pst.setInt(9, pr.getIdPreferencia());
+            resp = pst.executeUpdate();
+            if (resp == 0) {
+              throw new ClienteException("Erro preferencia: não foi possivel salvar as informações das preferencias do cliente.");
             }
             resp = 0;
         } catch (SQLException e) {
@@ -108,7 +126,7 @@ public class ClienteDAOimpl implements ClienteDAO {
         try {
             con = new ConnectionFactory().getConnection();
             pst = con.prepareStatement("SELECT Cli.id as id, Cli.nome, cpf, dataNasc, Cli.sexo as sexoc, Cli.descricao as descricao, codEscolaridade,  E.descricao as escolaridade,  \n" +
-                    "c.descricao as corCabelo, c.id as idCabelo, p.descricao as corPele,p.id as idPele,pref.id as codPreferencia, pref.*,codEndereco,ende.*,cidade.nome as cidade, estado.sigla as uf,\n" +
+                    "c.descricao as corCabelo, c.id as idCabelo, estado.id as codEstado, p.descricao as corPele,p.id as idPele,pref.id as codPreferencia, pref.*,codEndereco,ende.*,cidade.nome as cidade, estado.sigla as uf,\n" +
                     "pc.descricao as prefCorCabelo, pp.descricao as prefCorPele\n" +
                     "FROM bd4everalone.cliente Cli\n" +
                     "LEFT JOIN bd4everalone.escolaridade E ON codEscolaridade = E.id\n" +
@@ -136,6 +154,7 @@ public class ClienteDAOimpl implements ClienteDAO {
                 rs.getString("descricao"),cp, cc,eb,esco, pb);
             }
         } catch (SQLException ex) {
+            System.out.println(ex);
             throw new ClienteException("Erro cliente: comando sql invalido");
         }  finally {if (pst != null) {try { pst.close();} catch (SQLException ex) {throw new ClienteException("Erro cliente: erro ao fechar conecxão");}}
         }

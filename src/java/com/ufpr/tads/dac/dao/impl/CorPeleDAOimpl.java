@@ -24,7 +24,7 @@ public class CorPeleDAOimpl implements CorPeleDAO{
         final ArrayList<CorPeleBean> al = new ArrayList<CorPeleBean>();
         try {
             con = new ConnectionFactory().getConnection();
-            pst = con.prepareStatement("SELECT id, descricao FROM db4everalone.corpele");
+            pst = con.prepareStatement("SELECT id, descricao FROM bd4everalone.corpele");
             rs = pst.executeQuery();
             while (rs.next()) {
                 al.add(new CorPeleBean(rs.getInt("id"), rs.getString("descricao")));
@@ -34,6 +34,7 @@ public class CorPeleDAOimpl implements CorPeleDAO{
             }
            return al;
         } catch (SQLException e) {
+            System.out.println(e);
             throw new CorPeleException("Erro Cor Pele: Comando SQL invalido");
         }finally {
             if (pst!= null) {try {pst.close(); } catch (SQLException ex) {throw new CorPeleException("Erro Cor Pele: Falha ao tentar fechar conexão!");}}

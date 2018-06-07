@@ -54,7 +54,7 @@
                 max: 230,
                 values: valuesAltura,
                 slide: function( event, ui ) {
-                  $( "#altura-amount" ).val( "" + ui.values[ 0 ] + " - " + ui.values[ 1 ] + " cm" );
+                  $( "#altura-amount" ).val( "" + ui.values[ 0 ] + " - " + ui.values[ 1 ] );
                 }
             });
               
@@ -77,7 +77,7 @@
                     $("#cidade").empty();
                     $.each(data, function(i, obj) {
                         var cidadeId = 
-                            <c:if test = "${form == 'alterar'}">${cliente.endereco.cidadeId}</c:if>
+                            <c:if test = "${form == 'alterar'}">${cliente.endereco.cidade.idCidade}</c:if>
                             <c:if test = "${form != 'alterar'}">null</c:if>;
                         var appendHtml = '<option ' +
                                     (cidadeId === obj.idCidade ? 'selected' : '')
@@ -121,7 +121,7 @@
                                   <select name="corPele">
                                       <c:forEach items="${corPele}" var="cp">
                                           <option value="${cp.idCorPele}"
-                                            <c:if test="${cliente.corPele == cp.cor}">selected</c:if>
+                                            <c:if test="${cliente.corPele.idCorPele == cp.idCorPele}">selected</c:if>
                                           >${cp.cor}</option>
                                       </c:forEach>
                                   </select>
@@ -133,7 +133,7 @@
                                   <select name="corCabelo">
                                       <c:forEach items="${corCabelo}" var="cc">
                                           <option value="${cc.idCorCabelo}"  
-                                            <c:if test="${cliente.corCabelo == cc.cor}">selected</c:if>
+                                            <c:if test="${cliente.corCabelo.idCorCabelo == cc.idCorCabelo}">selected</c:if>
                                           >${cc.cor}</option>
                                       </c:forEach>
                                   </select>
@@ -143,12 +143,12 @@
                         <div class="columns">
                             <div class="column">
                                 <div class="field">
-                                    <label class="label" for="endereco.estadoId">Estado</label>
+                                    <label class="label" for="idEstado">Estado</label>
                                     <div class="select">
-                                      <select id="estado" name="endereco.estadoId">
+                                      <select id="estado" name="idEstado">
                                           <c:forEach items="${estados}" var="es">
                                               <option value="${es.idEstado}"
-                                                <c:if test="${form == 'alterar' && cliente.endereco.estadoId == es.idEstado}">selected</c:if>
+                                                <c:if test="${form == 'alterar' && cliente.endereco.estado.idEstado == es.idEstado}">selected</c:if>
                                               >(${es.sigla}) ${es.nome}</option>
                                           </c:forEach>
                                       </select>
@@ -157,28 +157,28 @@
                             </div>
                             <div class="column">
                                 <div class="field">
-                                    <label class="label" for="endereco.cidadeId">Cidade</label>
+                                    <label class="label" for="cidadeId">Cidade</label>
                                     <div class="select">
-                                      <select id="cidade" name="endereco.cidadeId">
+                                      <select id="cidade" name="idCidade">
                                       </select>
                                     </div>
                                 </div>
                             </div>
                         </div>
                         <div class="field">
-                            <label class="label" for="endereco.rua">Endereço:</label>
-                            <input class="input" type="text" name="endereco.rua" value="${cliente.endereco.rua}"/>
+                            <label class="label" for="rua">Endereço:</label>
+                            <input class="input" type="text" name="rua" value="${cliente.endereco.rua}"/>
                         </div>
                         <div class="field">
                             <label class="label" for="descricao">Descrição:</label>
-                            <textarea rows="3" class="textarea" type="text" name="descricao" value="${cliente.descricao}"></textarea>
+                            <textarea rows="3" class="textarea" type="text" name="descricao">${cliente.descricao}</textarea>
                         </div>
                     </div>
                     <div class="column card">
                         <p class="title is-4">Preferências</p>
-                        <label class="label" for="preferencias.sexo">Preferência sexual:</label>
+                        <label class="label" for="psexo">Preferência sexual:</label>
                         <div class="select">
-                          <select name="preferencias.sexo">
+                          <select name="psexo">
                             <option value="m" 
                                 <c:if test="${cliente.preferencias.sexo == 'm'}">selected</c:if>
                             >Masculino</option>
@@ -189,24 +189,24 @@
                         </div>
                         <div class="columns">
                             <div class="column field">
-                                <label class="label" for="preferencias.corPele">Cor da Pele</label>
+                                <label class="label" for="pcorPele">Cor da Pele</label>
                                 <div class="select">
-                                  <select name="preferencias.corPele">
+                                  <select name="pcorPele">
                                       <c:forEach items="${corPele}" var="cp">
                                           <option value="${cp.idCorPele}"
-                                            <c:if test="${cliente.preferencias.corPele == cp.cor}">selected</c:if>
+                                            <c:if test="${cliente.preferencias.corPele.idCorPele == cp.idCorPele}">selected</c:if>
                                           >${cp.cor}</option>
                                       </c:forEach>
                                   </select>
                                 </div>
                             </div>
                             <div class="column field">
-                                <label class="label" for="preferencias.corCabelo">Cor do Cabelo</label>
+                                <label class="label" for="pcorCabelo">Cor do Cabelo</label>
                                 <div class="select">
-                                  <select name="preferencias.corCabelo">
+                                  <select name="pcorCabelo">
                                       <c:forEach items="${corCabelo}" var="cc">
                                           <option value="${cc.idCorCabelo}"  
-                                            <c:if test="${cliente.preferencias.corCabelo == cc.cor}">selected</c:if>
+                                            <c:if test="${cliente.preferencias.corCabelo.idCorCabelo == cc.idCorCabelo}">selected</c:if>
                                           >${cc.cor}</option>
                                       </c:forEach>
                                   </select>
@@ -215,8 +215,8 @@
                         </div>
                         <div class="column field">
                             <p>
-                                <label for="preferencias.idade">Idade:</label>
-                                <input type="text" id="idade-amount" name="preferencias.idade" readonly style="border:0; color:#209cee; font-weight:bold;">
+                                <label for="pidade">Idade:</label>
+                                <input type="text" id="idade-amount" name="pidade" readonly style="border:0; color:#209cee; font-weight:bold;">
                             </p>
 
                             <div id="idade-range"></div>
@@ -224,8 +224,8 @@
                             
                         <div class="column field">
                             <p>
-                                <label for="preferencias.altura">Altura (cm):</label>
-                                <input type="text" id="altura-amount" name="preferencias.altura" readonly style="border:0; color:#209cee; font-weight:bold;">
+                                <label for="paltura">Altura (cm):</label>
+                                <input type="text" id="altura-amount" name="paltura" readonly style="border:0; color:#209cee; font-weight:bold;">
                             </p>
 
                             <div id="altura-range"></div>

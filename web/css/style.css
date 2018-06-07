@@ -14,3 +14,13 @@
 .column.card {
     margin: 5px;
 }
+.perfil.is-info {
+    background-color: #209cee;
+    color: #fff;
+    display: flex;
+    align-items: center;
+    font-size: 2rem;
+}
+.perfil.is-info img {
+    margin-right: 10px;
+} 

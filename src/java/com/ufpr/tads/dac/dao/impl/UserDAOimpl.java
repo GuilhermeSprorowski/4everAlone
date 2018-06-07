@@ -20,9 +20,10 @@ public class UserDAOimpl implements UserDAO {
         try {
             con = new ConnectionFactory().getConnection();
             pst = con.prepareStatement("SELECT cliente.id as id, email, nome,\n"
-                    + "(SELECT true FROM bd4everalone.cliente a WHERE a.codUser = usuario.id) as isCliente,\n"
-                    + "ifnull((SELECT true FROM bd4everalone.funcionario F WHERE F.codUser = usuario.id AND adm), false) as isAdm FROM bd4everalone.usuario\n"
-                    + "INNER JOIN bd4everalone.cliente ON cliente.codUser = usuario.id (email = ?) AND (senha = ?) ");
+                    + "(SELECT true FROM bd4everalone.cliente a WHERE a.codUser = bd4everalone.usuario.id) as isCliente,\n"
+                    + "ifnull((SELECT true FROM bd4everalone.funcionario F WHERE F.codUser = bd4everalone.usuario.id AND adm), false) as isAdm FROM bd4everalone.usuario\n"
+                    + "INNER JOIN bd4everalone.cliente ON cliente.codUser = bd4everalone.usuario.id\n"
+                    + "WHERE (email = ?) AND (senha = ?)");      
             pst.setString(1, email);
             pst.setString(2, senha);
             rs = pst.executeQuery();
