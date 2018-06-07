@@ -23,4 +23,35 @@
 }
 .perfil.is-info img {
     margin-right: 10px;
-} 
+}
+.flex-column {
+    display: flex;
+    flex-direction: column;
+}
+.image-encontro {
+    width: 512px;
+    height: 512px;
+}
+.flex-33 {
+    display: flex;
+    flex-flow: row wrap;
+    width: 100%;
+}
+.encontro  {
+    margin: 7.5px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+.encontro .img {
+    width: 100%;
+    height: auto;
+}
+.encontro .descricao {
+    max-height: 76px;
+    overflow-y: auto;
+    padding: 0 5px;
+    text-align: justify;
+}
+.flex-33 .encontro {
+    flex: 0 1 calc(33% - 15px);
+}   
