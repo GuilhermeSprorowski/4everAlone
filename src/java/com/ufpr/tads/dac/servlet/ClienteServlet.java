@@ -53,7 +53,6 @@ public class ClienteServlet extends HttpServlet {
             //usuario logado
             String action = request.getParameter("action");
             ClienteFacade cf = new ClienteFacade();
-
             switch (action) {
                 case "view":
                     try {
@@ -75,25 +74,6 @@ public class ClienteServlet extends HttpServlet {
                     break;
                 case "salva":
                     // passar corCabelo(id), corPele(id), escolaridade(id), se houver Endereco(id), rua, cidade(id), descricao
-                    System.out.println("Salva Cliente");
-                    ServletFileUpload sf = new ServletFileUpload(new DiskFileItemFactory());
-                    String filename = System.getProperty("user.dir") + "/pictures/" + login.getClienteId() + ".png";
-                    File fs = new File(System.getProperty("user.dir") + "/pictures");
-                    fs.mkdir();
-                    try {
-                        System.out.println("Chegou!!");
-                        List<FileItem> multifiles = sf.parseRequest(request);
-                        if (multifiles != null) {
-                            for (FileItem item : multifiles) {
-                                File imgFile = new File(filename);
-                                
-                                BufferedImage imagem = ImageIO.read(item.getInputStream());
-                                ImageIO.write(imagem, "png", imgFile);
-                            }
-                        }
-                    } catch (Exception ex) {
-                        System.out.println("Erro: aasdasdasdd" + ex);
-                    }
                     ClienteBean cliente;
                     try {
                         cliente = cf.getClienteById(login.getClienteId());
@@ -107,10 +87,9 @@ public class ClienteServlet extends HttpServlet {
                         cliente.setEndereco(new EnderecoBean(request.getParameter("idEndereco") == null ? 0 : Integer.parseInt(request.getParameter("idEndereco")),
                                 request.getParameter("rua"), new CidadeBean(request.getParameter("idCidade") == null ? 0 : Integer.parseInt(request.getParameter("idCidade")))));
                         cliente.setDescricao(request.getParameter("descricao"));
-
                         PreferenciaBean pf = cliente.getPreferencias();
                         pf.setSexo(request.getParameter("psexo"));
-                        int corCabeloId = Integer.parseInt(request.getParameter("pcorCabelo"));
+                        int corCabeloId = request.getParameter("pcorCabelo") == null? 0 : Integer.parseInt(request.getParameter("pcorCabelo"));
 
                         for (int i = 0; i < coresCabelo.size(); i++) {
                             if (coresCabelo.get(i).getIdCorCabelo() == corCabeloId) {
@@ -118,8 +97,7 @@ public class ClienteServlet extends HttpServlet {
                                 break;
                             }
                         }
-
-                        int corPeleId = Integer.parseInt(request.getParameter("pcorPele"));
+                        int corPeleId = request.getParameter("pcorPele") == null? 0 : Integer.parseInt(request.getParameter("pcorPele"));
                         for (int i = 0; i < coresPele.size(); i++) {
                             if (coresPele.get(i).getIdCorPele() == corPeleId) {
                                 System.out.println(coresPele.get(i).getCor());

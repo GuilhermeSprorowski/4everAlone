@@ -95,15 +95,18 @@
     <body>
         <c:import url="../components/header.html" ></c:import>
         <div class="container margem">
-            <form method="POST" action="ClienteServlet?action=salva" class="column card" enctype='multipart/form-data'>
+            
+            <form method="POST" action="ImageServlet?action=salva&img=${cliente.clienteId}" class="column card" enctype='multipart/form-data'>
                 <h1 class="perfil notification is-info">
                     <div>
-                        <img width="128px" src="ImageServlet?img=${cliente.clienteId}"/><br>
-                        <input type="file" name="file" id="foto"/>
+                        <img width="128px" src="ImageServlet?action=view&img=${cliente.clienteId}"/><br>
+                        <input type="file" class="button is-link" name="file" id="foto"/> 
+                        <input type="submit" class="button is-link" value="Enviar Foto" />
                     </div>
-                    
-                    ${cliente.nome} - ${cliente.cpf}
+                ${cliente.nome} - ${cliente.cpf}
                 </h1>
+            </form>
+            <form method="POST" action="ClienteServlet?action=salva" class="column card">               
                 <div class="columns">
                     <div class="column">
                         <div class="columns">

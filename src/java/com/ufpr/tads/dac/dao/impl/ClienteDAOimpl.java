@@ -26,39 +26,46 @@ public class ClienteDAOimpl implements ClienteDAO {
     @Override
     public void setCliente(ClienteBean c) throws ClienteException {
         PreparedStatement pst = null;
-        ResultSet rs= null;
-        int idGerado =0;
+        ResultSet rs = null;
+        int idGerado = 0;
         try {
             con = new ConnectionFactory().getConnection();
             pst = con.prepareStatement("", Statement.RETURN_GENERATED_KEYS);
             int resp = pst.executeUpdate();
             rs = pst.getGeneratedKeys();
-            while(rs.next()){
-               idGerado = rs.getInt(1);
+            while (rs.next()) {
+                idGerado = rs.getInt(1);
             }
             resp = 0;
-            if(idGerado == 0){
+            if (idGerado == 0) {
                 throw new ClienteException("Erro cliente: não foi possivel salvar as informações do cliente.");
-            }else{
+            } else {
                 pst = con.prepareStatement("");
                 resp = pst.executeUpdate();
                 if (resp == 0) {
                     throw new ClienteException("Erro cliente: não foi possivel salvar as informações do endereço do cliente.");
                 }
-            }   
+            }
         } catch (SQLException e) {
             throw new ClienteException("Erro cliente: comando sql invalido");
-        }finally {if (pst != null) {try { pst.close();} catch (SQLException ex) {throw new ClienteException("Erro cliente: erro ao fechar conecxão");}}
+        } finally {
+            if (pst != null) {
+                try {
+                    pst.close();
+                } catch (SQLException ex) {
+                    throw new ClienteException("Erro cliente: erro ao fechar conecxão");
+                }
+            }
         }
     }
 
     @Override
     public void updateCliente(ClienteBean c) throws ClienteException {
         PreparedStatement pst = null;
-        ResultSet rs= null;
+        ResultSet rs = null;
         try {
             int idEndereco;
-            if(c.getEndereco().getEnderecoId() == 0){
+            if (c.getEndereco().getEnderecoId() == 0) {
                 con = new ConnectionFactory().getConnection();
                 pst = con.prepareStatement("INSERT INTO bd4everalone.endereco(codCidade, rua) VALUE(?,?);", Statement.RETURN_GENERATED_KEYS);
                 pst.setInt(1, c.getEndereco().getCidade().getIdCidade());
@@ -67,21 +74,21 @@ public class ClienteDAOimpl implements ClienteDAO {
                 rs = pst.getGeneratedKeys();
                 if (rs != null && rs.next()) {
                     idEndereco = rs.getInt(1);
-                }else{
+                } else {
                     throw new ClienteException("Erro cliente: não foi possivel salvar as informações do endereço do cliente.");
-                }               
-            }
-            else{
+                }
+            } else {
                 con = new ConnectionFactory().getConnection();
                 pst = con.prepareStatement("UPDATE bd4everalone.endereco SET codCidade = ?, rua = ? WHERE id = ?;");
                 pst.setInt(1, c.getEndereco().getCidade().getIdCidade());
                 pst.setString(2, c.getEndereco().getRua());
                 pst.setInt(3, c.getEndereco().getEnderecoId());
-                int resp = pst.executeUpdate(); 
+                int resp = pst.executeUpdate();
                 idEndereco = c.getEndereco().getEnderecoId();
-                if(resp == 0)
-                    throw new ClienteException("Erro cliente: não foi possivel salvar as informações do endereço do cliente.");                    
-            }            
+                if (resp == 0) {
+                    throw new ClienteException("Erro cliente: não foi possivel salvar as informações do endereço do cliente.");
+                }
+            }
             con = new ConnectionFactory().getConnection();
             pst = con.prepareStatement("UPDATE bd4everalone.cliente SET descricao = ?, codEscolaridade= ?, codPele = ?, codCabelo = ?, codEndereco = ? WHERE id = ?;");
             pst.setString(1, c.getDescricao());
@@ -92,30 +99,55 @@ public class ClienteDAOimpl implements ClienteDAO {
             pst.setInt(6, c.getClienteId());
             int resp = pst.executeUpdate();
             if (resp == 0) {
-              throw new ClienteException("Erro cliente: não foi possivel salvar as informações do cliente.");
+                throw new ClienteException("Erro cliente: não foi possivel salvar as informações do cliente.");
             }
-            
-            con = new ConnectionFactory().getConnection();
-            pst = con.prepareStatement("UPDATE bd4everalone.preferencia SET sexo = ?, idadeMin = ?, idadeMax = ?, "
-                    + "alturaMin = ?, alturaMax = ?, codPele = ?, codCabelo = ?, codCliente = ? WHERE id = ?;");
-            PreferenciaBean pr = c.getPreferencias();
-            pst.setString(1, pr.getSexo());
-            pst.setInt(2, pr.getIdade()[0]);
-            pst.setInt(3, pr.getIdade()[1]);
-            pst.setInt(4, pr.getAltura()[0]);
-            pst.setInt(5, pr.getAltura()[1]);
-            pst.setInt(6, pr.getCorPele().getIdCorPele());
-            pst.setInt(7, pr.getCorCabelo().getIdCorCabelo());
-            pst.setInt(8, c.getClienteId());
-            pst.setInt(9, pr.getIdPreferencia());
-            resp = pst.executeUpdate();
-            if (resp == 0) {
-              throw new ClienteException("Erro preferencia: não foi possivel salvar as informações das preferencias do cliente.");
+            if (c.getPreferencias().getIdPreferencia() == 0) {
+                con = new ConnectionFactory().getConnection();
+                pst = con.prepareStatement("INSERT INTO bd4everalone.preferencia(sexo, idadeMin, idadeMax,alturaMin,alturaMax,codPele, codCabelo, codCliente)VALUE(?,?,?,?,?,?,?,?);");
+                PreferenciaBean pr = c.getPreferencias();
+                pst.setString(1, pr.getSexo());
+                pst.setInt(2, pr.getIdade()[0]);
+                pst.setInt(3, pr.getIdade()[1]);
+                pst.setInt(4, pr.getAltura()[0]);
+                pst.setInt(5, pr.getAltura()[1]);
+                pst.setInt(6, pr.getCorPele().getIdCorPele());
+                pst.setInt(7, pr.getCorCabelo().getIdCorCabelo());
+                pst.setInt(8, c.getClienteId());
+                resp = pst.executeUpdate();
+                System.out.println(pst);
+                if (resp == 0) {
+                    throw new ClienteException("Erro preferencia: não foi possivel salvar as informações das preferencias do cliente.");
+                }
+            } else {
+                con = new ConnectionFactory().getConnection();
+                pst = con.prepareStatement("UPDATE bd4everalone.preferencia SET sexo = ?, idadeMin = ?, idadeMax = ?, "
+                        + "alturaMin = ?, alturaMax = ?, codPele = ?, codCabelo = ?, codCliente = ? WHERE id = ?;");
+                PreferenciaBean pr = c.getPreferencias();
+                pst.setString(1, pr.getSexo());
+                pst.setInt(2, pr.getIdade()[0]);
+                pst.setInt(3, pr.getIdade()[1]);
+                pst.setInt(4, pr.getAltura()[0]);
+                pst.setInt(5, pr.getAltura()[1]);
+                pst.setInt(6, pr.getCorPele().getIdCorPele());
+                pst.setInt(7, pr.getCorCabelo().getIdCorCabelo());
+                pst.setInt(8, c.getClienteId());
+                pst.setInt(9, pr.getIdPreferencia());
+                resp = pst.executeUpdate();
+                System.out.println(pst);
+                if (resp == 0) {
+                    throw new ClienteException("Erro preferencia: não foi possivel salvar as informações das preferencias do cliente.");
+                }
             }
-            resp = 0;
         } catch (SQLException e) {
             throw new ClienteException("Erro cliente: comando sql invalido");
-        }finally {if (pst != null) {try { pst.close();} catch (SQLException ex) {throw new ClienteException("Erro cliente: erro ao fechar conecxão");}}
+        } finally {
+            if (pst != null) {
+                try {
+                    pst.close();
+                } catch (SQLException ex) {
+                    throw new ClienteException("Erro cliente: erro ao fechar conecxão");
+                }
+            }
         }
     }
 
@@ -125,38 +157,45 @@ public class ClienteDAOimpl implements ClienteDAO {
         ResultSet rs = null;
         try {
             con = new ConnectionFactory().getConnection();
-            pst = con.prepareStatement("SELECT Cli.id as id, Cli.nome, cpf, dataNasc, Cli.sexo as sexoc, Cli.descricao as descricao, codEscolaridade,  E.descricao as escolaridade,  \n" +
-                    "c.descricao as corCabelo, c.id as idCabelo, estado.id as codEstado, p.descricao as corPele,p.id as idPele,pref.id as codPreferencia, pref.*,codEndereco,ende.*,cidade.nome as cidade, estado.sigla as uf,\n" +
-                    "pc.descricao as prefCorCabelo, pp.descricao as prefCorPele\n" +
-                    "FROM bd4everalone.cliente Cli\n" +
-                    "LEFT JOIN bd4everalone.escolaridade E ON codEscolaridade = E.id\n" +
-                    "LEFT JOIN bd4everalone.corcabelo c ON Cli.codCabelo = c.id\n" +
-                    "LEFT JOIN bd4everalone.corpele p ON Cli.codPele = p.id\n" +
-                    "LEFT JOIN bd4everalone.preferencia pref ON Cli.id = codCliente\n" +
-                    "LEFT JOIN bd4everalone.endereco ende ON ende.id = codEndereco\n" +
-                    "LEFT JOIN bd4everalone.corcabelo pc ON pref.codCabelo = c.id\n" +
-                    "LEFT JOIN bd4everalone.corpele pp ON pref.codPele = p.id\n" +
-                    "LEFT JOIN bd4everalone.cidade on codCidade = cidade.id\n" +
-                    "LEFT JOIN bd4everalone.estado on codEstado = estado.id\n" +
-                    "WHERE Cli.id = ?;");
+            pst = con.prepareStatement("SELECT Cli.id as id, Cli.nome, cpf, dataNasc, Cli.sexo as sexoc, Cli.descricao as descricao, codEscolaridade,  E.descricao as escolaridade,  \n"
+                    + "c.descricao as corCabelo, c.id as idCabelo, estado.id as codEstado, p.descricao as corPele,p.id as idPele,pref.id as codPreferencia, pref.*,codEndereco,ende.*,cidade.nome as cidade, estado.sigla as uf,\n"
+                    + "pc.descricao as prefCorCabelo, pp.descricao as prefCorPele\n"
+                    + "FROM bd4everalone.cliente Cli\n"
+                    + "LEFT JOIN bd4everalone.escolaridade E ON codEscolaridade = E.id\n"
+                    + "LEFT JOIN bd4everalone.corcabelo c ON Cli.codCabelo = c.id\n"
+                    + "LEFT JOIN bd4everalone.corpele p ON Cli.codPele = p.id\n"
+                    + "LEFT JOIN bd4everalone.preferencia pref ON Cli.id = codCliente\n"
+                    + "LEFT JOIN bd4everalone.endereco ende ON ende.id = codEndereco\n"
+                    + "LEFT JOIN bd4everalone.corcabelo pc ON pref.codCabelo = c.id\n"
+                    + "LEFT JOIN bd4everalone.corpele pp ON pref.codPele = p.id\n"
+                    + "LEFT JOIN bd4everalone.cidade on codCidade = cidade.id\n"
+                    + "LEFT JOIN bd4everalone.estado on codEstado = estado.id\n"
+                    + "WHERE Cli.id = ?;");
             pst.setInt(1, clienteId);
             rs = pst.executeQuery();
             while (rs.next()) {
                 CorPeleBean cp = new CorPeleBean(rs.getInt("idPele"), rs.getString("corPele"));
                 CorCabeloBean cc = new CorCabeloBean(rs.getInt("idCabelo"), rs.getString("corCabelo"));
-                EnderecoBean eb = new EnderecoBean(rs.getInt("codEndereco"), rs.getString("rua"), new CidadeBean(rs.getInt("codCidade"), rs.getString("cidade")), new EstadoBean(rs.getInt("codEstado"),rs.getString("uf")));
+                EnderecoBean eb = new EnderecoBean(rs.getInt("codEndereco"), rs.getString("rua"), new CidadeBean(rs.getInt("codCidade"), rs.getString("cidade")), new EstadoBean(rs.getInt("codEstado"), rs.getString("uf")));
                 EscolaridadeBean esco = new EscolaridadeBean(rs.getInt("codEscolaridade"), rs.getString("escolaridade"));
-                
+
                 int[] pa = {rs.getInt("alturaMin"), rs.getInt("alturaMax")};
                 int[] pi = {rs.getInt("idadeMin"), rs.getInt("idadeMax")};
-                PreferenciaBean pb = new PreferenciaBean(rs.getInt("codPreferencia"),rs.getString("sexo"),pi, pa, new CorCabeloBean(rs.getInt("codCabelo"),rs.getString("prefCorCabelo")), new CorPeleBean(rs.getInt("codPele"), rs.getString("prefCorPele")));
+                PreferenciaBean pb = new PreferenciaBean(rs.getInt("codPreferencia"), rs.getString("sexo"), pi, pa, new CorCabeloBean(rs.getInt("codCabelo"), rs.getString("prefCorCabelo")), new CorPeleBean(rs.getInt("codPele"), rs.getString("prefCorPele")));
                 return new ClienteBean(rs.getInt("id"), rs.getString("nome"), rs.getString("cpf"), rs.getDate("dataNasc"), rs.getString("sexoc"),
-                rs.getString("descricao"),cp, cc,eb,esco, pb);
+                        rs.getString("descricao"), cp, cc, eb, esco, pb);
             }
         } catch (SQLException ex) {
             System.out.println(ex);
             throw new ClienteException("Erro cliente: comando sql invalido");
-        }  finally {if (pst != null) {try { pst.close();} catch (SQLException ex) {throw new ClienteException("Erro cliente: erro ao fechar conecxão");}}
+        } finally {
+            if (pst != null) {
+                try {
+                    pst.close();
+                } catch (SQLException ex) {
+                    throw new ClienteException("Erro cliente: erro ao fechar conecxão");
+                }
+            }
         }
         return null;
     }
@@ -170,14 +209,21 @@ public class ClienteDAOimpl implements ClienteDAO {
             pst = con.prepareStatement("");
             rs = pst.executeQuery();
             final ArrayList<ClienteBean> al = new ArrayList<ClienteBean>();
-            while(rs.next()){
+            while (rs.next()) {
                 al.add(new ClienteBean());
             }
             return al;
         } catch (SQLException e) {
             throw new ClienteException("Erro cliente: comando sql invalido");
-        } finally {if (pst != null) {try { pst.close();} catch (SQLException ex) {throw new ClienteException("Erro cliente: erro ao fechar conecxão");}}
-        }      
+        } finally {
+            if (pst != null) {
+                try {
+                    pst.close();
+                } catch (SQLException ex) {
+                    throw new ClienteException("Erro cliente: erro ao fechar conecxão");
+                }
+            }
+        }
     }
 
     @Override
@@ -190,13 +236,20 @@ public class ClienteDAOimpl implements ClienteDAO {
             pst.setString(1, cpf);
             rs = pst.executeQuery();
             while (rs.next()) {
-               return rs.getBoolean("cpfValido");
+                return rs.getBoolean("cpfValido");
             }
             return true;
         } catch (SQLException e) {
             throw new ClienteException("Erro cliente: comando sql invalido");
-        }finally {if (pst != null) {try { pst.close();} catch (SQLException ex) {throw new ClienteException("Erro cliente: erro ao fechar conecxão");}}
-        }   
+        } finally {
+            if (pst != null) {
+                try {
+                    pst.close();
+                } catch (SQLException ex) {
+                    throw new ClienteException("Erro cliente: erro ao fechar conecxão");
+                }
+            }
+        }
     }
 
 }
