@@ -19,10 +19,12 @@ import com.ufpr.tads.dac.facade.CorCabeloFacade;
 import com.ufpr.tads.dac.facade.CorPeleFacade;
 import com.ufpr.tads.dac.facade.EscolaridadeFacade;
 import com.ufpr.tads.dac.facade.EstadoFacade;
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import javax.imageio.ImageIO;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -75,15 +77,18 @@ public class ClienteServlet extends HttpServlet {
                     // passar corCabelo(id), corPele(id), escolaridade(id), se houver Endereco(id), rua, cidade(id), descricao
                     System.out.println("Salva Cliente");
                     ServletFileUpload sf = new ServletFileUpload(new DiskFileItemFactory());
+                    String filename = System.getProperty("user.dir") + "/pictures/" + login.getClienteId() + ".png";
+                    File fs = new File(System.getProperty("user.dir") + "/pictures");
+                    fs.mkdir();
                     try {
                         System.out.println("Chegou!!");
                         List<FileItem> multifiles = sf.parseRequest(request);
                         if (multifiles != null) {
                             for (FileItem item : multifiles) {
-                                System.out.println(item.getName());
-                                System.out.println(item.getFieldName());
-                                System.err.println(item.getContentType());
-                                item.write(new File("/Users/T-Gamer/Documents/NetBeansProjects/4everAlone/pictures/a"+item.getName()));
+                                File imgFile = new File(filename);
+                                
+                                BufferedImage imagem = ImageIO.read(item.getInputStream());
+                                ImageIO.write(imagem, "png", imgFile);
                             }
                         }
                     } catch (Exception ex) {

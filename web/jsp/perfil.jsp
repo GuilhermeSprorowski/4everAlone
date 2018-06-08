@@ -98,7 +98,7 @@
             <form method="POST" action="ClienteServlet?action=salva" class="column card" enctype='multipart/form-data'>
                 <h1 class="perfil notification is-info">
                     <div>
-                        <img width="128px" src="https://3s.orisom.com/statics/bootstrap-3.2.0/img/img-perfil.jpg"/><br>
+                        <img width="128px" src="ImageServlet?img=${cliente.clienteId}"/><br>
                         <input type="file" name="file" id="foto"/>
                     </div>
                     
