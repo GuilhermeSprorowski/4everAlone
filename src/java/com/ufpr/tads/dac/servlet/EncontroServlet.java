@@ -1,30 +1,38 @@
 package com.ufpr.tads.dac.servlet;
 
+import com.ufpr.tads.dac.beans.UserBean;
 import java.io.IOException;
-import java.io.PrintWriter;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
+import javax.servlet.http.HttpSession;
 
 @WebServlet(name = "EncontroServlet", urlPatterns = {"/EncontroServlet"})
 public class EncontroServlet extends HttpServlet {
 
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        
-        String action = request.getParameter("action");
-        
-        switch (action) {
-            case "meus-encontros":
-                request.getRequestDispatcher("jsp/meus-encontros.jsp").forward(request, response);
-                break;
-                
-            case "solicitar-encontro":
-                request.getRequestDispatcher("jsp/solicitar-encontro.jsp").forward(request, response);
-                break;
+        HttpSession session = request.getSession();
+        UserBean login = (UserBean) session.getAttribute("user");
+        if (login == null) {
+
+            //envia para fazer login
+            request.setAttribute("msg", "É necessario esta logado para acessar essa pagina");
+            request.getRequestDispatcher("index.jsp").forward(request, response);
+        } else {
+            String action = request.getParameter("action");
+
+            switch (action) {
+                case "meus-encontros":
+                    request.getRequestDispatcher("jsp/meus-encontros.jsp").forward(request, response);
+                    break;
+
+                case "solicitar-encontro":
+                    request.getRequestDispatcher("jsp/solicitar-encontro.jsp").forward(request, response);
+                    break;
+            }
         }
     }
 

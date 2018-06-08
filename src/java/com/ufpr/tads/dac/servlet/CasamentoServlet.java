@@ -1,10 +1,6 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.ufpr.tads.dac.servlet;
 
+import com.ufpr.tads.dac.beans.UserBean;
 import java.io.IOException;
 import java.io.PrintWriter;
 import javax.servlet.ServletException;
@@ -12,38 +8,32 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
-/**
- *
- * @author T-Gamer
- */
 @WebServlet(name = "CasamentoServlet", urlPatterns = {"/CasamentoServlet"})
 public class CasamentoServlet extends HttpServlet {
 
-    /**
-     * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
-     * methods.
-     *
-     * @param request servlet request
-     * @param response servlet response
-     * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
-     */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        
-        String action = request.getParameter("action");
-        
-        switch (action) {
-            case "visualizar":
-                request.getRequestDispatcher("jsp/casamento.jsp").forward(request, response);
-                break;
-                
-            case "solicitar":
-                request.getRequestDispatcher("jsp/solicitar-casamento.jsp").forward(request, response);
-                break;
+        HttpSession session = request.getSession();
+        UserBean login = (UserBean) session.getAttribute("user");
+        if (login == null) {
+
+            //envia para fazer login
+            request.setAttribute("msg", "É necessario esta logado para acessar essa pagina");
+            request.getRequestDispatcher("index.jsp").forward(request, response);
+        } else {
+            String action = request.getParameter("action");
+            switch (action) {
+                case "visualizar":
+                    request.getRequestDispatcher("jsp/casamento.jsp").forward(request, response);
+                    break;
+
+                case "solicitar":
+                    request.getRequestDispatcher("jsp/solicitar-casamento.jsp").forward(request, response);
+                    break;
+            }
         }
-        
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
