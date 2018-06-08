@@ -94,18 +94,30 @@
     </head>
     <body>
         <c:import url="../components/header.jsp" ></c:import>
-        <div class="container margem">
-            
-            <form method="POST" action="ImageServlet?action=salva&img=${cliente.clienteId}" class="column card" enctype='multipart/form-data'>
-                <h1 class="perfil notification is-info">
-                    <div>
-                        <img width="128px" src="ImageServlet?action=view&img=${cliente.clienteId}"/><br>
-                        <input type="file" class="button is-link" name="file" id="foto"/> 
-                        <input type="submit" class="button is-link" value="Enviar Foto" />
-                    </div>
-                ${cliente.nome} - ${cliente.cpf}
-                </h1>
-            </form>
+        <section class="hero is-info">
+            <div class="hero-body">
+                <div class="container">
+                    <form method="POST" class="flex-row" action="ImageServlet?action=salva&img=${cliente.clienteId}" enctype='multipart/form-data'>
+                        <div class="titulo-perfil">
+                            <h1 class="title">
+                                ${cliente.nome}
+                            </h1>
+                            <h2 class="subtitle">
+                                ${cliente.cpf}
+                            </h2>
+                        </div>
+                        
+                        <div>
+                            <img style="width: 256px    " src="ImageServlet?action=view&img=${cliente.clienteId}"/><br>
+                            <input type="file" class="button is-link" name="file" id="foto"/>
+                            <input type="submit" class="button is-link" value="Enviar Foto" />
+                        </div>
+                    </form>
+                    
+                </div>
+            </div>
+        </section>
+        <div class="container margem">            
             <form method="POST" action="ClienteServlet?action=salva" class="column card">               
                 <div class="columns">
                     <div class="column">

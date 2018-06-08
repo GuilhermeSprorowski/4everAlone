@@ -43,12 +43,12 @@
             <a class="navbar-item" href="EventoServlet">
                 Eventos
             </a>
-            <a class="navbar-item" href="CasamentoServlet">
+            <a class="navbar-item" href="CasamentoServlet?action=visualizar">
                 Casamento
             </a>
             <div id="active-toggle" class="navbar-item has-dropdown">
                 <a class="navbar-link">
-                  <img class="round-image" src="ImageServlet?action=view&img=${user.clienteId}"/>
+                    <img class="round-image" src="ImageServlet?action=view&img=${user.clienteId}"/>
                 </a>
                 <div class="navbar-dropdown">
                     <a class="navbar-item" href="ClienteServlet?action=view">
@@ -66,32 +66,32 @@
 </nav>
 
 <script>
-$(function() {
-    $("#active-toggle").click(function() {
-        $(this).toggleClass("is-active");
-     });
-});
-document.addEventListener('DOMContentLoaded', function () {
-    // Get all "navbar-burger" elements
-    var $navbarBurgers = Array.prototype.slice.call(document.querySelectorAll('.navbar-burger'), 0);
-    
-    // Check if there are any navbar burgers
-    if ($navbarBurgers.length > 0) {
-
-        // Add a click event on each of them
-        $navbarBurgers.forEach(function ($el) {
-            $el.addEventListener('click', function () {
-
-                // Get the target from the "data-target" attribute
-                var target = $el.dataset.target;
-                var $target = document.getElementById(target);
-
-                // Toggle the class on both the "navbar-burger" and the "navbar-menu"
-                $el.classList.toggle('is-active');
-                $target.classList.toggle('is-active');
-
-            });
+    $(function () {
+        $("#active-toggle").click(function () {
+            $(this).toggleClass("is-active");
         });
-    }
-});
+    });
+    document.addEventListener('DOMContentLoaded', function () {
+        // Get all "navbar-burger" elements
+        var $navbarBurgers = Array.prototype.slice.call(document.querySelectorAll('.navbar-burger'), 0);
+
+        // Check if there are any navbar burgers
+        if ($navbarBurgers.length > 0) {
+
+            // Add a click event on each of them
+            $navbarBurgers.forEach(function ($el) {
+                $el.addEventListener('click', function () {
+
+                    // Get the target from the "data-target" attribute
+                    var target = $el.dataset.target;
+                    var $target = document.getElementById(target);
+
+                    // Toggle the class on both the "navbar-burger" and the "navbar-menu"
+                    $el.classList.toggle('is-active');
+                    $target.classList.toggle('is-active');
+
+                });
+            });
+        }
+    });
 </script>

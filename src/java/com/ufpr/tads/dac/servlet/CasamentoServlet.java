@@ -32,7 +32,18 @@ public class CasamentoServlet extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         
-        request.getRequestDispatcher("jsp/casamento.jsp").forward(request, response);
+        String action = request.getParameter("action");
+        
+        switch (action) {
+            case "visualizar":
+                request.getRequestDispatcher("jsp/casamento.jsp").forward(request, response);
+                break;
+                
+            case "solicitar":
+                request.getRequestDispatcher("jsp/solicitar-casamento.jsp").forward(request, response);
+                break;
+        }
+        
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
