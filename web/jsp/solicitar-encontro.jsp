@@ -8,17 +8,21 @@
         <title>Solicitar Encontro</title>
         
         <link rel="stylesheet" href="lib/bulma-0.7.1/css/bulma.min.css"/>
+        <link rel="stylesheet" href="lib/jquery-ui/jquery-ui.min.css"/>
         <link rel="stylesheet" href="css/style.css"/>
+        
+        <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+        <script src="lib/jquery-ui/jquery-ui.min.js"></script>
     </head>
     <body>
-        <c:import url="../components/header.html" ></c:import>
+        <c:import url="../components/header.jsp" ></c:import>
 
         <div class="container margem">
             <h1 class="notification is-info">Pessoas que possam te interessar</h1>
             <div class="flex-33">
                 <c:forEach items="encontros" var="pessoa">
                     <div class="encontro flex-column">
-                        <img src="${pessoa.url}">
+                        <img src="ImageServlet?action=view&img=${pessoa.id}">
                         <p class="title">
                           ${pessoa.nome}
                         </p>
@@ -27,7 +31,7 @@
                       </div>    
                       <footer class="card-footer">
                         <a href="#" class="card-footer-item">Solicitar Encontro</a>
-                        <a href="#" class="card-footer-item">Excluir da lista</a>
+                        <a href="#" class="card-footer-item">Mais informações</a>
                       </footer>
                     </div>
                 </c:forEach>

@@ -55,3 +55,42 @@
 .flex-33 .encontro {
     flex: 0 1 calc(33% - 15px);
 }   
+.flex-row {
+    display: flex;
+    flex-direction: row;  
+    justify-content: space-between;
+}
+.list-item {
+    border-bottom: 1px solid #ccc;
+    border-left: 1px solid #ccc;
+    border-right: 1px solid #ccc;
+    padding: 10px 10px 0 10px;
+}
+.flex-row .descricao {
+    margin: 0 20px;
+}
+.flex-row .descricao p {
+    max-height: 120px;
+    overflow: auto;
+}
+.padding-bottom {
+    padding-bottom: 10px;
+}
+a .round-image {
+    max-height: 2.75rem;
+    height: 2.75rem;
+    width: 2.75rem;
+    border-radius: 50%;
+}
+.modal-content.encontro-details {
+    display: flex;
+    flex-direction: row;
+    width: 90vw;
+}
+.modal-content.encontro-details .encontro {
+    background: white;
+    padding: 10px;
+    display: flex;
+    justify-content: space-between;
+    flex-direction: column;
+}

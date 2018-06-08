@@ -93,7 +93,7 @@
         </script>
     </head>
     <body>
-        <c:import url="../components/header.html" ></c:import>
+        <c:import url="../components/header.jsp" ></c:import>
         <div class="container margem">
             
             <form method="POST" action="ImageServlet?action=salva&img=${cliente.clienteId}" class="column card" enctype='multipart/form-data'>

@@ -8,10 +8,14 @@
         <title>Home</title>
         
         <link rel="stylesheet" href="lib/bulma-0.7.1/css/bulma.min.css"/>
+        <link rel="stylesheet" href="lib/jquery-ui/jquery-ui.min.css"/>
         <link rel="stylesheet" href="css/style.css"/>
+        
+        <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+        <script src="lib/jquery-ui/jquery-ui.min.js"></script>
     </head>
     <body>
-        <c:import url="../components/header.html" ></c:import>
+        <c:import url="../components/header.jsp" ></c:import>
 
         <div class="container margem">
             <div class="columns is-2">

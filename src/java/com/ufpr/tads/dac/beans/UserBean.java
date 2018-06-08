@@ -28,6 +28,10 @@ public class UserBean {
     public Boolean isAdm() {
         return adm;
     }
+    
+    public Boolean getAdm() {
+        return adm;
+    }
 
     public void setAdm(Boolean adm) {
         this.adm = adm;

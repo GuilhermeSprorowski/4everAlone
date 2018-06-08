@@ -15,8 +15,17 @@ public class EncontroServlet extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         
-        //code
-       
+        String action = request.getParameter("action");
+        
+        switch (action) {
+            case "meus-encontros":
+                request.getRequestDispatcher("jsp/meus-encontros.jsp").forward(request, response);
+                break;
+                
+            case "solicitar-encontro":
+                request.getRequestDispatcher("jsp/solicitar-encontro.jsp").forward(request, response);
+                break;
+        }
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
