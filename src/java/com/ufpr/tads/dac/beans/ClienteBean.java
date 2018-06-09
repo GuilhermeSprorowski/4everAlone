@@ -22,6 +22,10 @@ public class ClienteBean {
     public ClienteBean() {
     }
 
+    public ClienteBean(int clienteId) {
+        this.clienteId = clienteId;
+    }
+
     public ClienteBean(int clienteId, String nome, String descricao) {
         this.clienteId = clienteId;
         this.nome = nome;

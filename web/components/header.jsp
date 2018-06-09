@@ -34,7 +34,7 @@
             <a class="navbar-item is-active" href="HomeServlet">
                 Home
             </a>
-            <a class="navbar-item" href="EncontroServlet?action=solicitar-encontro">
+            <a class="navbar-item" href="EncontroServlet?action=solicitar-encontro-view">
                 Solicitar Encontro
             </a>
             <a class="navbar-item" href="EncontroServlet?action=meus-encontros">

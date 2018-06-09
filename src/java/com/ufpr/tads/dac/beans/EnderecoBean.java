@@ -6,6 +6,7 @@ public class EnderecoBean {
     private String rua;
     private CidadeBean cidade;
     private EstadoBean estado;
+    private String enderecoString;
 
     public EnderecoBean(int enderecoId, String rua, CidadeBean cidade, EstadoBean estado) {
         this.enderecoId = enderecoId;
@@ -20,7 +21,23 @@ public class EnderecoBean {
         this.cidade = cidade;
     }
 
+    public EnderecoBean(String enderecoString) {
+        this.enderecoString = enderecoString;
+    }
+
+    public EnderecoBean(int enderecoId) {
+        this.enderecoId = enderecoId;
+    }
+
     public EnderecoBean() {
+    }
+
+    public String getEnderecoString() {
+        return enderecoString;
+    }
+
+    public void setEnderecoString(String enderecoString) {
+        this.enderecoString = enderecoString;
     }
 
     public CidadeBean getCidade() {

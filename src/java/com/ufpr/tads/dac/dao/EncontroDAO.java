@@ -1,16 +1,14 @@
 
 package com.ufpr.tads.dac.dao;
 
-import com.ufpr.tads.dac.beans.ClienteBean;
 import com.ufpr.tads.dac.exceptions.EncontroException;
 import com.ufpr.tads.dac.beans.EncontroBean;
-import com.ufpr.tads.dac.beans.PreferenciaBean;
 import java.util.ArrayList;
 
 
 public interface EncontroDAO {
     
-    public void setNovoEncontro(EncontroBean encontro) throws EncontroException;   
+    public void setNovoEncontro(EncontroBean encontro, int clienteId) throws EncontroException;   
     public void updateEncontro(EncontroBean encontro) throws EncontroException;    
     public EncontroBean getEncontro(int encontroId) throws EncontroException; 
     public ArrayList<EncontroBean> getAllEncontrosByIdCliente(int clienteId) throws EncontroException;

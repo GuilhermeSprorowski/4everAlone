@@ -14,4 +14,10 @@ public class EncontroFacade {
         
         return EncontroDAO.getEncontrosPendentesByIdCliente(clienteId);
     }   
+    public static void setSolicitacao(EncontroBean encontro, int clienteId) throws EncontroException{
+        EncontroDAO.setNovoEncontro(encontro, clienteId);
+    }   
+    public static void setResposta(EncontroBean encontro) throws EncontroException{
+        EncontroDAO.updateEncontro(encontro);
+    }
 }

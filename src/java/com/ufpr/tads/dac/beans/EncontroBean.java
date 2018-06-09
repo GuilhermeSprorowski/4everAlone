@@ -1,6 +1,8 @@
 
 package com.ufpr.tads.dac.beans;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class EncontroBean {
@@ -10,13 +12,24 @@ public class EncontroBean {
     private Date dataEncontro;
     private Date dataResposta;
     private ClienteBean solicitado;
-    private String endereco;
-    private Boolean aceito;
+    private EnderecoBean endereco;
+    private boolean aceito;
 
     public EncontroBean() {        
     }
 
-    public EncontroBean(int encontroId, Date dataSolicitacao, Date dataEncontro, Date dataResposta, ClienteBean solicitado, String endereco, Boolean aceito) {
+    public EncontroBean(int encontroId, boolean aceito) {
+        this.encontroId = encontroId;
+        this.aceito = aceito;
+    }
+
+    public EncontroBean(String dataEncontro, ClienteBean solicitado, EnderecoBean endereco) {
+        this.setDataEncontro(dataEncontro);
+        this.solicitado = solicitado;
+        this.endereco = endereco;
+    }
+
+    public EncontroBean(int encontroId, Date dataSolicitacao, Date dataEncontro, Date dataResposta, ClienteBean solicitado, EnderecoBean endereco, boolean aceito) {
         this.encontroId = encontroId;
         this.dataSolicitacao = dataSolicitacao;
         this.dataEncontro = dataEncontro;
@@ -44,7 +57,7 @@ public class EncontroBean {
         this.dataResposta = dataResposta;
     }
 
-    public void setAceito(Boolean aceito) {
+    public void setAceito(boolean aceito) {
         this.aceito = aceito;
     }
 
@@ -52,19 +65,29 @@ public class EncontroBean {
         return dataResposta;
     }
 
-    public Boolean isAceito() {
+    public boolean isAceito() {
         return aceito;
     }
 
     public void setDataEncontro(Date dataEncontro) {
         this.dataEncontro = dataEncontro;
     }
-    
+    public void setDataEncontro(String dataEncontro){
+         SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
+        Date data = null;
+        try {
+            data = format.parse(dataEncontro);
+        } catch (ParseException e) {
+            System.out.println("Data no formato errado");
+            e.printStackTrace();
+        }
+         this.dataEncontro = data;
+    }
     public void setSolicitado(ClienteBean solicitado) {
         this.solicitado = solicitado;
     }
 
-    public void setEndereco(String endereco) {
+    public void setEndereco(EnderecoBean endereco) {
         this.endereco = endereco;
     }
 
@@ -79,7 +102,7 @@ public class EncontroBean {
         return solicitado;
     }
 
-    public String getEndereco() {
+    public EnderecoBean getEndereco() {
         return endereco;
     }
     
