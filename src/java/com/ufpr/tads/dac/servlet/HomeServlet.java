@@ -41,6 +41,7 @@ public class HomeServlet extends HttpServlet {
             } catch (EncontroException ex) {
                 request.setAttribute("msg", ex);
                 request.getRequestDispatcher("erro.jsp").forward(request, response);
+                return;
             }
             ConviteFacade cf = new ConviteFacade();
             try {
@@ -49,6 +50,7 @@ public class HomeServlet extends HttpServlet {
             } catch (ConviteException ex) {
                 request.setAttribute("msg", ex);
                 request.getRequestDispatcher("erro.jsp").forward(request, response);
+                return;
             }
             request.getRequestDispatcher("/jsp/home.jsp").forward(request, response);
             } else {

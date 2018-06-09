@@ -9,9 +9,12 @@
         <link rel="stylesheet" href="lib/bulma-0.7.1/css/bulma.min.css"/>
         <link rel="stylesheet" href="lib/jquery-ui/jquery-ui.min.css"/>
         <link rel="stylesheet" href="css/style.css"/>
+        <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.13/css/all.css" integrity="sha384-DNOHZ68U8hZfKXOrtjWvjxusGo9WQnrNx2sqG0tfsghAvtVlRW3tvkXWZh58N9jp" crossorigin="anonymous">
+
         
         <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
         <script src="lib/jquery-ui/jquery-ui.min.js"></script>
+        <script src="js/forms.js"></script>
         
         <script>
         $(document).ready(function() {
@@ -122,6 +125,25 @@
                 <div class="columns">
                     <div class="column">
                         <div class="columns">
+                            <div class="field column">
+                                <label class="label">Data de nascimento:</label>
+                                <div class="control has-icons-left">
+                                    <input name="dataNasc" class="input" type="text" id="datepicker"
+                                           placeholder="Data nascimento" value="${cliente.dataNascS}">
+                                    <span class="icon is-left">
+                                        <i class="fas fa-calendar-alt"></i>
+                                    </span> 
+                                </div>
+                            </div>
+                            <div class="field column">
+                                <label class="label">Altura (em cm):</label>
+                                <div class="control">
+                                    <input name="altura" class="input" type="text"
+                                           placeholder="Altura (em cm)" value="${cliente.altura}">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="columns">
                             <div class="column field">
                                 <label class="label" for="escolaridade">Escolaridade</label>
                                 <div class="select">
@@ -184,11 +206,14 @@
                                     </div>
                                 </div>
                             </div>
+                            
                         </div>
+
                         <div class="field">
                             <label class="label" for="rua">Endereço:</label>
                             <input class="input" type="text" name="rua" value="${cliente.endereco.rua}"/>
                         </div>
+                        
                         <div class="field">
                             <label class="label" for="descricao">Descrição:</label>
                             <textarea rows="3" class="textarea" type="text" name="descricao">${cliente.descricao}</textarea>

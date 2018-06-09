@@ -9,6 +9,9 @@ public class FestaBean {
     private EnderecoBean endereco;
     private int vagas;
     private String descricao;
+    private String tema;
+
+
     private Date datahora;
     private FuncionarioBean funcionarioResponsavel;    
     private String enderecoString;
@@ -19,10 +22,19 @@ public class FestaBean {
     public FestaBean(int idFesta, int vagas, String descricao, String tema, Date datahora, FuncionarioBean funcionarioResponsavel, String enderecoString) {
         this.idFesta = idFesta;
         this.vagas = vagas;
+        this.tema = tema;
         this.descricao = descricao;
         this.datahora = datahora;
         this.funcionarioResponsavel = funcionarioResponsavel;
         this.enderecoString = enderecoString;
+    }
+    
+    public String getTema() {
+        return tema;
+    }
+
+    public void setTema(String tema) {
+        this.tema = tema;
     }
 
     public int getIdFesta() {

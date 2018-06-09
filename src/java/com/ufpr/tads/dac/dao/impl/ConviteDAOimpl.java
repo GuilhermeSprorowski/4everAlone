@@ -42,7 +42,7 @@ public class ConviteDAOimpl implements ConviteDAO {
         ResultSet rs = null;
         try {
             con = new ConnectionFactory().getConnection();
-            pst = con.prepareStatement("SELECT convite.id, dataResposta, confirmado, dataEnviado, codFesta, Endereco, vagas, tema, descricao, dataHora, nome FROM bd4everalone.convite "
+            pst = con.prepareStatement("SELECT convite.id, dataResposta, confirmado, dataEnviado, codFuncionario, codFesta, Endereco, vagas, tema, descricao, dataHora, nome FROM bd4everalone.convite "
                     + "INNER JOIN bd4everalone.festa ON codFesta = festa.id "
                     + "INNER JOIN bd4everalone.getendereco ON getendereco.id = codEndereco "
                     + "INNER JOIN bd4everalone.funcionario ON codFuncionario = funcionario.id "
@@ -51,13 +51,14 @@ public class ConviteDAOimpl implements ConviteDAO {
             rs = pst.executeQuery();
             final ArrayList<ConviteBean> al = new ArrayList<ConviteBean>();
             while (rs.next()) {
-                al.add(new ConviteBean(rs.getInt("id"),rs.getDate("dataResposta"), rs.getBoolean("confirmado"),rs.getDate("dataEnvio"),
+                al.add(new ConviteBean(rs.getInt("id"),rs.getDate("dataResposta"), rs.getBoolean("confirmado"),rs.getDate("dataEnviado"),
                        new FestaBean(rs.getInt("codFesta"), rs.getInt("vagas"), rs.getString("tema"), rs.getString("descricao"),
                                      rs.getDate("dataHora"), new FuncionarioBean(rs.getInt("codFuncionario"),rs.getString("nome")),
                                      rs.getString("Endereco")))); 
             }
             return al;
         } catch (SQLException ex) {
+            System.out.println(ex);
             throw new ConviteException("Erro convite: comando sql invalido");
         } finally {if (pst != null) { try {pst.close();} catch (SQLException ex) {throw new ConviteException("Erro convite: erro ao fechar conexão"); } }
         }

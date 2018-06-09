@@ -58,7 +58,7 @@
                             <input name="horario" class="input" type="text" id="horario"
                                    placeholder="00:00">
                             <span class="icon is-left">
-                                <i class="fas clock"></i>
+                                <i class="fas fa-clock"></i>
                             </span> 
                         </div>
                     </div>
