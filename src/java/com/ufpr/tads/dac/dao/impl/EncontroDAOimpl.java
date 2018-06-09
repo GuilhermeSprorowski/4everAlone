@@ -8,6 +8,7 @@ package com.ufpr.tads.dac.dao.impl;
 import com.ufpr.tads.dac.beans.ClienteBean;
 import com.ufpr.tads.dac.exceptions.EncontroException;
 import com.ufpr.tads.dac.beans.EncontroBean;
+import com.ufpr.tads.dac.beans.PreferenciaBean;
 import com.ufpr.tads.dac.dao.ConnectionFactory;
 import com.ufpr.tads.dac.dao.EncontroDAO;
 import com.ufpr.tads.dac.exceptions.ClienteException;
@@ -70,5 +71,4 @@ public class EncontroDAOimpl implements EncontroDAO {
             }}
         }
     }
-
 }

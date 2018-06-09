@@ -28,6 +28,16 @@ public class ClienteBean {
         this.descricao = descricao;
     }
 
+    public ClienteBean(int clienteId, String nome, String sexo,Date dataNasc, int altura, CorPeleBean corPele, CorCabeloBean corCabelo) {
+        this.clienteId = clienteId;
+        this.nome = nome;
+        this.sexo = sexo;
+        this.altura = altura;
+        this.corPele = corPele;
+        this.corCabelo = corCabelo;
+        this.dataNasc = dataNasc;
+    }
+
     public ClienteBean(int clienteId, String nome, String cpf, Date dataNasc, String sexo, String descricao, CorPeleBean corPele, CorCabeloBean corCabelo, EnderecoBean endereco, EscolaridadeBean escolaridade, PreferenciaBean preferencias, int alutra) {
         this.clienteId = clienteId;
         this.nome = nome;

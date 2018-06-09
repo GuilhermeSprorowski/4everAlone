@@ -253,4 +253,45 @@ public class ClienteDAOimpl implements ClienteDAO {
         }
     }
 
+    @Override
+    public ArrayList<ClienteBean> getClientesCompativeis(PreferenciaBean p, int cidade) throws ClienteException {
+        PreparedStatement pst = null;
+        ResultSet rs = null;
+        try {
+            con = new ConnectionFactory().getConnection();
+            pst = con.prepareStatement("SELECT cliente.id, nome, cliente.descricao, sexo,  dataNasc, altura, codPele, corpele.descricao AS corpele, codCabelo, corcabelo.descricao as corcabelo\n"
+                    + "FROM bd4everalone.cliente \n"
+                    + "INNER JOIN bd4everalone.corpele ON codPele = corpele.id\n"
+                    + "INNER JOIN bd4everalone.corcabelo ON codCabelo = corcabelo.id\n"
+                    + "INNER JOIN bd4everalone.endereco ON codEndereco = endereco.id\n"
+                    + "WHERE ((altura BETWEEN ? AND ?) AND (YEAR(FROM_DAYS(TO_DAYS(NOW())-TO_DAYS(dataNasc))) BETWEEN ? AND ?)) AND sexo = ? AND codCidade = ?\n"
+                    + "ORDER BY  codPele = ? desc, codCabelo = ? desc;");
+            pst.setInt(1, p.getAltura()[0]);
+            pst.setInt(2, p.getAltura()[1]);
+            pst.setInt(3, p.getIdade()[0]);
+            pst.setInt(4, p.getIdade()[1]);
+            pst.setString(5, p.getSexo());
+            pst.setInt(6, cidade);
+            pst.setInt(7, p.getCorCabelo().getIdCorCabelo());
+            pst.setInt(8, p.getCorPele().getIdCorPele());
+            rs = pst.executeQuery();
+            final ArrayList<ClienteBean> al = new ArrayList<ClienteBean>();
+            while (rs.next()) {
+                
+                al.add(new ClienteBean(rs.getInt("id"),rs.getString("nome"),rs.getString("sexo"), rs.getDate("dataNasc"), rs.getInt("altura"), new CorPeleBean(rs.getInt("codPele"), rs.getString("corpele")), new CorCabeloBean(rs.getInt("codCabelo"), rs.getString("corcabelo"))));
+            }
+            return al;
+        } catch (SQLException e) {
+            throw new ClienteException("Erro cliente: comando sql invalido");
+        } finally {
+            if (pst != null) {
+                try {
+                    pst.close();
+                } catch (SQLException ex) {
+                    throw new ClienteException("Erro cliente: erro ao fechar conecxão");
+                }
+            }
+        }
+    }
+
 }

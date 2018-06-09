@@ -20,9 +20,9 @@
         <div class="container margem">
             <h1 class="notification is-info">Pessoas que possam te interessar</h1>
             <div class="flex-33">
-                <c:forEach items="encontros" var="pessoa">
+                <c:forEach items="${listClientes}" var="pessoa">
                     <div class="encontro flex-column">
-                        <img src="ImageServlet?action=view&img=${pessoa.id}">
+                        <img src="ImageServlet?action=view&img=${pessoa.clienteId}">
                         <p class="title">
                           ${pessoa.nome}
                         </p>

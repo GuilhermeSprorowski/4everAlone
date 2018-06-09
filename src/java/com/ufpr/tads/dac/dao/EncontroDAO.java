@@ -1,8 +1,10 @@
 
 package com.ufpr.tads.dac.dao;
 
+import com.ufpr.tads.dac.beans.ClienteBean;
 import com.ufpr.tads.dac.exceptions.EncontroException;
 import com.ufpr.tads.dac.beans.EncontroBean;
+import com.ufpr.tads.dac.beans.PreferenciaBean;
 import java.util.ArrayList;
 
 

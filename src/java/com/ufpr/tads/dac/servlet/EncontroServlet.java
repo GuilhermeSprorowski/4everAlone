@@ -1,7 +1,16 @@
 package com.ufpr.tads.dac.servlet;
 
+import com.ufpr.tads.dac.beans.ClienteBean;
 import com.ufpr.tads.dac.beans.UserBean;
+import com.ufpr.tads.dac.exceptions.ClienteException;
+import com.ufpr.tads.dac.exceptions.EncontroException;
+import com.ufpr.tads.dac.exceptions.EnderecoException;
+import com.ufpr.tads.dac.facade.ClienteFacade;
+import com.ufpr.tads.dac.facade.EncontroFacade;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -26,10 +35,25 @@ public class EncontroServlet extends HttpServlet {
 
             switch (action) {
                 case "meus-encontros":
+                    System.out.println("meus-encontro");
                     request.getRequestDispatcher("jsp/meus-encontros.jsp").forward(request, response);
                     break;
 
                 case "solicitar-encontro":
+                    System.out.println("solicitar-encontro");
+
+                    try {
+                        ClienteBean cb = ClienteFacade.getClienteById(login.getClienteId());     
+                        ArrayList<ClienteBean> listClientes = ClienteFacade.getClientesCompativeis(cb.getPreferencias(), cb.getEndereco().getCidade().getIdCidade());
+                        request.setAttribute("listClientes",listClientes );
+                    } catch (ClienteException ex) {
+                        request.setAttribute("msg", ex);
+                        request.getRequestDispatcher("jsp/erro.jsp").forward(request, response);
+                    } catch (EnderecoException ex) {
+                        request.setAttribute("msg", ex);
+                        request.getRequestDispatcher("jsp/erro.jsp").forward(request, response);
+                    } 
+
                     request.getRequestDispatcher("jsp/solicitar-encontro.jsp").forward(request, response);
                     break;
             }

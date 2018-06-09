@@ -13,5 +13,5 @@ public class EncontroFacade {
     public static ArrayList<EncontroBean> getEncontrosPendentes(int clienteId) throws EncontroException{
         
         return EncontroDAO.getEncontrosPendentesByIdCliente(clienteId);
-    }    
+    }   
 }
