@@ -174,6 +174,7 @@
                                     </div>
                                 </div>
                             </div>
+                            <input type="hidden" name="idEndereco" value="${cliente.endereco.enderecoId}"/>
                             <div class="column">
                                 <div class="field">
                                     <label class="label" for="cidadeId">Cidade</label>
