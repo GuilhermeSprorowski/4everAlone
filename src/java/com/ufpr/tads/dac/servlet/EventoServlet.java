@@ -1,10 +1,7 @@
 package com.ufpr.tads.dac.servlet;
 
-import com.ufpr.tads.dac.beans.CorCabeloBean;
-import com.ufpr.tads.dac.beans.CorPeleBean;
 import com.ufpr.tads.dac.beans.UserBean;
 import java.io.IOException;
-import java.util.ArrayList;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -26,7 +23,7 @@ public class EventoServlet extends HttpServlet {
             request.getRequestDispatcher("index.jsp").forward(request, response);
         } else {
             //usuario logado
-            request.getRequestDispatcher("jsp/eventos.jsp").forward(request, response);
+            request.getRequestDispatcher("/jsp/eventos.jsp").forward(request, response);
         }
     }
 

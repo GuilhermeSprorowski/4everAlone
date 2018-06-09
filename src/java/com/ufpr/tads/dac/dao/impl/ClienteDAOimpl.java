@@ -90,13 +90,14 @@ public class ClienteDAOimpl implements ClienteDAO {
                 }
             }
             con = new ConnectionFactory().getConnection();
-            pst = con.prepareStatement("UPDATE bd4everalone.cliente SET descricao = ?, codEscolaridade= ?, codPele = ?, codCabelo = ?, codEndereco = ? WHERE id = ?;");
+            pst = con.prepareStatement("UPDATE bd4everalone.cliente SET descricao = ?, codEscolaridade= ?, codPele = ?, codCabelo = ?, codEndereco = ?, altura=? WHERE id = ?;");
             pst.setString(1, c.getDescricao());
             pst.setInt(2, c.getEscolaridade().getIdEscolaridade());
             pst.setInt(3, c.getCorPele().getIdCorPele());
             pst.setInt(4, c.getCorCabelo().getIdCorCabelo());
             pst.setInt(5, idEndereco);
-            pst.setInt(6, c.getClienteId());
+            pst.setInt(6, c.getAltura());
+            pst.setInt(7, c.getClienteId());
             int resp = pst.executeUpdate();
             if (resp == 0) {
                 throw new ClienteException("Erro cliente: não foi possivel salvar as informações do cliente.");

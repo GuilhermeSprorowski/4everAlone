@@ -1,5 +1,7 @@
 package com.ufpr.tads.dac.beans;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class ClienteBean {
@@ -9,6 +11,7 @@ public class ClienteBean {
     private String cpf;
     private Date dataNasc;
     private String sexo;
+    private int altura;
     private String descricao;
     private CorPeleBean corPele;
     private CorCabeloBean corCabelo;
@@ -59,6 +62,14 @@ public class ClienteBean {
         return preferencias;
     }
 
+    public int getAltura() {
+        return altura;
+    }
+
+    public void setAltura(int altura) {
+        this.altura = altura;
+    }
+
     public int getClienteId() {
         return clienteId;
     }
@@ -87,6 +98,18 @@ public class ClienteBean {
         this.dataNasc = dataNasc;
     }
 
+    public void setDataNasc(String dataNasc) {
+        SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
+        Date data = null;
+        try {
+            data = format.parse(dataNasc);
+        } catch (ParseException e) {
+            System.out.println("Data no formato errado");
+            e.printStackTrace();
+        }
+        this.dataNasc = data;
+    }
+
     public void setSexo(String sexo) {
         this.sexo = sexo;
     }
@@ -109,6 +132,10 @@ public class ClienteBean {
 
     public Date getDataNasc() {
         return dataNasc;
+    }
+    public String getDataNascS() {
+        SimpleDateFormat fmt = new SimpleDateFormat("dd/MM/yyyy"); 
+        return  fmt.format(dataNasc);
     }
 
     public String getSexo() {

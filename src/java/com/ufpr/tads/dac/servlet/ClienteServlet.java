@@ -66,7 +66,7 @@ public class ClienteServlet extends HttpServlet {
                     }
                     break;
                 case "salva":
-                    // passar corCabelo(id), corPele(id), escolaridade(id), se houver Endereco(id), rua, cidade(id), descricao
+                    // passar corCabelo(id), corPele(id), escolaridade(id), se houver Endereco(id), rua, cidade(id), descricao e dataNasc em string 
                     ClienteBean cliente;
                     try {
                         cliente = cf.getClienteById(login.getClienteId());
@@ -79,6 +79,8 @@ public class ClienteServlet extends HttpServlet {
                         cliente.setEscolaridade(new EscolaridadeBean(request.getParameter("escolaridade") == null ? 0 : Integer.parseInt(request.getParameter("escolaridade"))));
                         cliente.setEndereco(new EnderecoBean(request.getParameter("idEndereco") == null ? 0 : Integer.parseInt(request.getParameter("idEndereco")),
                                 request.getParameter("rua"), new CidadeBean(request.getParameter("idCidade") == null ? 0 : Integer.parseInt(request.getParameter("idCidade")))));
+                        cliente.setDataNasc(request.getParameter("dataNasc"));
+                        cliente.setAltura(request.getParameter("altura") == null? 0: Integer.parseInt(request.getParameter("altura")));
                         cliente.setDescricao(request.getParameter("descricao"));
                         PreferenciaBean pf = cliente.getPreferencias();
                         pf.setSexo(request.getParameter("psexo"));
