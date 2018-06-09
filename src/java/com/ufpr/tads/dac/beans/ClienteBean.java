@@ -28,7 +28,7 @@ public class ClienteBean {
         this.descricao = descricao;
     }
 
-    public ClienteBean(int clienteId, String nome, String cpf, Date dataNasc, String sexo, String descricao, CorPeleBean corPele, CorCabeloBean corCabelo, EnderecoBean endereco, EscolaridadeBean escolaridade, PreferenciaBean preferencias) {
+    public ClienteBean(int clienteId, String nome, String cpf, Date dataNasc, String sexo, String descricao, CorPeleBean corPele, CorCabeloBean corCabelo, EnderecoBean endereco, EscolaridadeBean escolaridade, PreferenciaBean preferencias, int alutra) {
         this.clienteId = clienteId;
         this.nome = nome;
         this.cpf = cpf;
@@ -40,6 +40,7 @@ public class ClienteBean {
         this.endereco = endereco;
         this.escolaridade = escolaridade;
         this.preferencias = preferencias;
+        this.altura = alutra;
     }
 
     public EscolaridadeBean getEscolaridade() {

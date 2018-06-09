@@ -158,7 +158,7 @@ public class ClienteDAOimpl implements ClienteDAO {
         ResultSet rs = null;
         try {
             con = new ConnectionFactory().getConnection();
-            pst = con.prepareStatement("SELECT Cli.id as id, Cli.nome, cpf, dataNasc, Cli.sexo as sexoc, Cli.descricao as descricao, codEscolaridade,  E.descricao as escolaridade,  \n"
+            pst = con.prepareStatement("SELECT Cli.id as id, Cli.nome, cpf, dataNasc, Cli.sexo as sexoc, Cli.descricao as descricao,altura, codEscolaridade,  E.descricao as escolaridade,  \n"
                     + "c.descricao as corCabelo, c.id as idCabelo, estado.id as codEstado, p.descricao as corPele,p.id as idPele,pref.id as codPreferencia, pref.*,codEndereco,ende.*,cidade.nome as cidade, estado.sigla as uf,\n"
                     + "pc.descricao as prefCorCabelo, pp.descricao as prefCorPele\n"
                     + "FROM bd4everalone.cliente Cli\n"
@@ -184,7 +184,7 @@ public class ClienteDAOimpl implements ClienteDAO {
                 int[] pi = {rs.getInt("idadeMin"), rs.getInt("idadeMax")};
                 PreferenciaBean pb = new PreferenciaBean(rs.getInt("codPreferencia"), rs.getString("sexo"), pi, pa, new CorCabeloBean(rs.getInt("codCabelo"), rs.getString("prefCorCabelo")), new CorPeleBean(rs.getInt("codPele"), rs.getString("prefCorPele")));
                 return new ClienteBean(rs.getInt("id"), rs.getString("nome"), rs.getString("cpf"), rs.getDate("dataNasc"), rs.getString("sexoc"),
-                        rs.getString("descricao"), cp, cc, eb, esco, pb);
+                        rs.getString("descricao"), cp, cc, eb, esco, pb, rs.getInt("altura"));
             }
         } catch (SQLException ex) {
             System.out.println(ex);
