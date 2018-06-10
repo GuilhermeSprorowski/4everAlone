@@ -9,10 +9,9 @@ import com.ufpr.tads.dac.exceptions.EncontroException;
 import com.ufpr.tads.dac.exceptions.EnderecoException;
 import com.ufpr.tads.dac.facade.ClienteFacade;
 import com.ufpr.tads.dac.facade.EncontroFacade;
+import com.ufpr.tads.dac.facade.EnderecoFacade;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -47,7 +46,9 @@ public class EncontroServlet extends HttpServlet {
                     try {
                         ClienteBean cb = ClienteFacade.getClienteById(login.getClienteId());
                         ArrayList<ClienteBean> listClientes = ClienteFacade.getClientesCompativeis(cb.getPreferencias(), cb.getEndereco().getCidade().getIdCidade());
-                        request.setAttribute("listClientes", listClientes);
+                        request.setAttribute("clienteList", listClientes);
+                        request.setAttribute("locaisList", EnderecoFacade.getAllEndereco());
+                        request.getRequestDispatcher("jsp/solicitar-encontro.jsp").forward(request, response);
                     } catch (ClienteException ex) {
                         request.setAttribute("msg", ex);
                         request.getRequestDispatcher("jsp/erro.jsp").forward(request, response);
@@ -55,7 +56,6 @@ public class EncontroServlet extends HttpServlet {
                         request.setAttribute("msg", ex);
                         request.getRequestDispatcher("jsp/erro.jsp").forward(request, response);
                     }
-                    request.getRequestDispatcher("jsp/solicitar-encontro.jsp").forward(request, response);
                     break;
                 case "solicitar-encontro-new":
                     System.out.println("solicitar-encontro-new");

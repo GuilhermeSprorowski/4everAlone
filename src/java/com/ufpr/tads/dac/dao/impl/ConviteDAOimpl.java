@@ -18,7 +18,20 @@ public class ConviteDAOimpl implements ConviteDAO {
 
     @Override
     public void setNovoConvite(ConviteBean convite) throws ConviteException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        PreparedStatement pst = null;
+        try {
+            con = new ConnectionFactory().getConnection();
+            pst = con.prepareStatement("");
+        } catch (SQLException e) {
+        } finally {
+            if (pst != null) {
+                try {
+                    pst.close();
+                } catch (SQLException ex) {
+                    throw new ConviteException("Erro convite: erro ao fechar conexão");
+                }
+            }
+        }
     }
 
     @Override
@@ -51,16 +64,23 @@ public class ConviteDAOimpl implements ConviteDAO {
             rs = pst.executeQuery();
             final ArrayList<ConviteBean> al = new ArrayList<ConviteBean>();
             while (rs.next()) {
-                al.add(new ConviteBean(rs.getInt("id"),rs.getDate("dataResposta"), rs.getBoolean("confirmado"),rs.getDate("dataEnviado"),
-                       new FestaBean(rs.getInt("codFesta"), rs.getInt("vagas"), rs.getString("tema"), rs.getString("descricao"),
-                                     rs.getDate("dataHora"), new FuncionarioBean(rs.getInt("codFuncionario"),rs.getString("nome")),
-                                     rs.getString("Endereco")))); 
+                al.add(new ConviteBean(rs.getInt("id"), rs.getDate("dataResposta"), rs.getBoolean("confirmado"), rs.getDate("dataEnviado"),
+                        new FestaBean(rs.getInt("codFesta"), rs.getInt("vagas"), rs.getString("tema"), rs.getString("descricao"),
+                                rs.getDate("dataHora"), new FuncionarioBean(rs.getInt("codFuncionario"), rs.getString("nome")),
+                                rs.getString("Endereco"))));
             }
             return al;
         } catch (SQLException ex) {
             System.out.println(ex);
             throw new ConviteException("Erro convite: comando sql invalido");
-        } finally {if (pst != null) { try {pst.close();} catch (SQLException ex) {throw new ConviteException("Erro convite: erro ao fechar conexão"); } }
+        } finally {
+            if (pst != null) {
+                try {
+                    pst.close();
+                } catch (SQLException ex) {
+                    throw new ConviteException("Erro convite: erro ao fechar conexão");
+                }
+            }
         }
     }
 

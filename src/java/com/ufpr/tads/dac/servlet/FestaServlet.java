@@ -5,12 +5,8 @@
  */
 package com.ufpr.tads.dac.servlet;
 
-import com.ufpr.tads.dac.beans.CorCabeloBean;
-import com.ufpr.tads.dac.beans.CorPeleBean;
 import com.ufpr.tads.dac.beans.UserBean;
 import java.io.IOException;
-import java.io.PrintWriter;
-import java.util.ArrayList;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -32,6 +28,14 @@ public class FestaServlet extends HttpServlet {
             request.getRequestDispatcher("index.jsp").forward(request, response);
         } else {
             //usuario logado
+            if (login.isCliente()) {
+                //usuario cliente
+                
+                
+            } else {
+                //usuario Funcionario
+                
+            }
         }
     }
 
