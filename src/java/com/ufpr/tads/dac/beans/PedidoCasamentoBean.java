@@ -1,16 +1,19 @@
 package com.ufpr.tads.dac.beans;
 
+import java.io.Serializable;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-public class PedidoCasamentoBean {
+public class PedidoCasamentoBean implements Serializable{
 
     private int idPedido;
-    private Date dataConfirmação;
-    private Date dataSolicitação;
+    private Date dataConfirmacao;
+    private boolean aceito;
+    private Date dataSolicitacao;
     private Date dataCasamento;
-    private ClienteBean conjuge;
+    private int conjuge;
+    private int solicitante;
     private int nConvidados;
     private String padre;
     private String igreja;
@@ -19,6 +22,40 @@ public class PedidoCasamentoBean {
     private String padrinho2;
     private String madrinha1;
     private String madrinha2;
+    private String itensOrcamento;
+
+    public PedidoCasamentoBean() {
+    }
+
+    public PedidoCasamentoBean(int conjuge, int solicitante, int nConvidados, String padre, String igreja, String localLua, String padrinho1, String padrinho2, String madrinha1, String madrinha2) {
+        this.dataCasamento = dataCasamento;
+        this.conjuge = conjuge;
+        this.solicitante = solicitante;
+        this.nConvidados = nConvidados;
+        this.padre = padre;
+        this.igreja = igreja;
+        this.localLua = localLua;
+        this.padrinho1 = padrinho1;
+        this.padrinho2 = padrinho2;
+        this.madrinha1 = madrinha1;
+        this.madrinha2 = madrinha2;
+    }
+
+    public String getItensOrcamento() {
+        return itensOrcamento;
+    }
+
+    public boolean isAceito() {
+        return aceito;
+    }
+
+    public void setAceito(boolean aceito) {
+        this.aceito = aceito;
+    }
+
+    public void setItensOrcamento(String itensOrcamento) {
+        this.itensOrcamento = itensOrcamento;
+    }
 
     public int getIdPedido() {
         return idPedido;
@@ -28,40 +65,48 @@ public class PedidoCasamentoBean {
         this.idPedido = idPedido;
     }
 
-    public void setDataConfirmação(Date dataConfirmação) {
-        this.dataConfirmação = dataConfirmação;
+    public void setDataConfirmacao(Date dataConfirmacao) {
+        this.dataConfirmacao = dataConfirmacao;
     }
 
-    public void setDataSolicitação(Date dataSolicitação) {
-        this.dataSolicitação = dataSolicitação;
+    public void setDataSolicitacao(Date dataSolicitacao) {
+        this.dataSolicitacao = dataSolicitacao;
     }
 
     public void setDataCasamento(Date dataCasamento) {
         this.dataCasamento = dataCasamento;
     }
 
-    public void setDataConfirmação(String dataConfirmação) {
-        SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
-        Date data = null;
-        try {
-            data = format.parse(dataConfirmação);
-        } catch (ParseException e) {
-            System.out.println("Data no formato errado");
-            e.printStackTrace();
-        }
-        this.dataConfirmação = data;
+    public int getSolicitante() {
+        return solicitante;
     }
 
-    public void setDataSolicitação(String dataSolicitação) {
+    public void setSolicitante(int solicitante) {
+        this.solicitante = solicitante;
+    }
+
+    public void setDataConfirmacao(String dataConfirmacao) {
         SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
         Date data = null;
         try {
-            data = format.parse(dataSolicitação);
+            data = format.parse(dataConfirmacao);
         } catch (ParseException e) {
             System.out.println("Data no formato errado");
             e.printStackTrace();
         }
-        this.dataSolicitação = data;
+        this.dataConfirmacao = data;
+    }
+
+    public void setDataSolicitacao(String dataSolicitacao) {
+        SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
+        Date data = null;
+        try {
+            data = format.parse(dataSolicitacao);
+        } catch (ParseException e) {
+            System.out.println("Data no formato errado");
+            e.printStackTrace();
+        }
+        this.dataSolicitacao = data;
     }
 
     public void setDataCasamento(String dataCasamento) {
@@ -76,7 +121,7 @@ public class PedidoCasamentoBean {
         this.dataCasamento = data;
     }
 
-    public void setConjuge(ClienteBean conjuge) {
+    public void setConjuge(int conjuge) {
         this.conjuge = conjuge;
     }
 
@@ -112,26 +157,26 @@ public class PedidoCasamentoBean {
         this.madrinha2 = madrinha2;
     }
 
-    public Date getDataConfirmação() {
-        return dataConfirmação;
+    public Date getDataConfirmacao() {
+        return dataConfirmacao;
     }
 
-    public Date getDataSolicitação() {
-        return dataSolicitação;
+    public Date getDataSolicitacao() {
+        return dataSolicitacao;
     }
 
     public Date getDataCasamento() {
         return dataCasamento;
     }
     
-     public String getDataConfirmaçãoS() {
+     public String getDataConfirmacaoS() {
         SimpleDateFormat fmt = new SimpleDateFormat("dd/MM/yyyy");
-        return fmt.format(dataConfirmação);
+        return fmt.format(dataConfirmacao);
     }
 
-    public String getDataSolicitaçãoS() {
+    public String getDataSolicitacaoS() {
         SimpleDateFormat fmt = new SimpleDateFormat("dd/MM/yyyy");
-        return fmt.format(dataSolicitação);
+        return fmt.format(dataSolicitacao);
     }
 
     public String getDataCasamentoS() {
@@ -139,7 +184,7 @@ public class PedidoCasamentoBean {
         return fmt.format(dataCasamento);
     }
 
-    public ClienteBean getConjuge() {
+    public int getConjuge() {
         return conjuge;
     }
 
