@@ -10,13 +10,21 @@ public class FestaBean {
     private int vagas;
     private String descricao;
     private String tema;
-
-
     private Date datahora;
     private FuncionarioBean funcionarioResponsavel;    
     private String enderecoString;
 
     public FestaBean() {
+    }
+
+    public FestaBean(int idFesta, int vagas, String descricao, String tema, Date datahora, FuncionarioBean funcionarioResponsavel, EnderecoBean endereco) {
+        this.idFesta = idFesta;
+        this.endereco = endereco;
+        this.vagas = vagas;
+        this.descricao = descricao;
+        this.tema = tema;
+        this.datahora = datahora;
+        this.funcionarioResponsavel = funcionarioResponsavel;
     }
 
     public FestaBean(int idFesta, int vagas, String descricao, String tema, Date datahora, FuncionarioBean funcionarioResponsavel, String enderecoString) {

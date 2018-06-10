@@ -24,26 +24,29 @@ public class ClienteDAOimpl implements ClienteDAO {
     private Connection con;
 
     @Override
-    public void setCliente(ClienteBean c) throws ClienteException {
+    public void setCliente(ClienteBean c, String email) throws ClienteException {
         PreparedStatement pst = null;
         ResultSet rs = null;
         int idGerado = 0;
         try {
             con = new ConnectionFactory().getConnection();
-            pst = con.prepareStatement("", Statement.RETURN_GENERATED_KEYS);
+            pst = con.prepareStatement("INSERT INTO bd4everalone.usuario(email)VALUES(?);", Statement.RETURN_GENERATED_KEYS);
+            pst.setString(1, email);
             int resp = pst.executeUpdate();
             rs = pst.getGeneratedKeys();
             while (rs.next()) {
-                idGerado = rs.getInt(1);
-            }
+                idGerado = rs.getInt(1);            }
             resp = 0;
             if (idGerado == 0) {
-                throw new ClienteException("Erro cliente: não foi possivel salvar as informações do cliente.");
+                throw new ClienteException("Erro cliente: não foi possivel gerar esse login");
             } else {
-                pst = con.prepareStatement("");
+                pst = con.prepareStatement("INSERT INTO bd4everalone.cliente(nome, cpf, sexo) VALUES(?,?,?);");
+                pst.setString(1, c.getNome());
+                pst.setString(2, c.getCpf());
+                pst.setString(3, c.getSexo());                
                 resp = pst.executeUpdate();
                 if (resp == 0) {
-                    throw new ClienteException("Erro cliente: não foi possivel salvar as informações do endereço do cliente.");
+                    throw new ClienteException("Erro cliente: não foi possivel criar esse cliente");
                 }
             }
         } catch (SQLException e) {

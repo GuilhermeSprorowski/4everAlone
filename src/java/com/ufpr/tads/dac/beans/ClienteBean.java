@@ -26,6 +26,12 @@ public class ClienteBean {
         this.clienteId = clienteId;
     }
 
+    public ClienteBean(String nome, String cpf, String sexo) {
+        this.nome = nome;
+        this.cpf = cpf;
+        this.sexo = sexo;
+    }
+
     public ClienteBean(int clienteId, String nome, String descricao) {
         this.clienteId = clienteId;
         this.nome = nome;

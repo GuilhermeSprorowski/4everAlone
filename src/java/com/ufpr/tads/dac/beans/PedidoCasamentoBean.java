@@ -1,10 +1,11 @@
-
 package com.ufpr.tads.dac.beans;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
-
 public class PedidoCasamentoBean {
+
     private int idPedido;
     private Date dataConfirmação;
     private Date dataSolicitação;
@@ -15,8 +16,8 @@ public class PedidoCasamentoBean {
     private String igreja;
     private String localLua;
     private String padrinho1;
-    private String padrinho2;    
-    private String madrinha1;    
+    private String padrinho2;
+    private String madrinha1;
     private String madrinha2;
 
     public int getIdPedido() {
@@ -37,6 +38,42 @@ public class PedidoCasamentoBean {
 
     public void setDataCasamento(Date dataCasamento) {
         this.dataCasamento = dataCasamento;
+    }
+
+    public void setDataConfirmação(String dataConfirmação) {
+        SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
+        Date data = null;
+        try {
+            data = format.parse(dataConfirmação);
+        } catch (ParseException e) {
+            System.out.println("Data no formato errado");
+            e.printStackTrace();
+        }
+        this.dataConfirmação = data;
+    }
+
+    public void setDataSolicitação(String dataSolicitação) {
+        SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
+        Date data = null;
+        try {
+            data = format.parse(dataSolicitação);
+        } catch (ParseException e) {
+            System.out.println("Data no formato errado");
+            e.printStackTrace();
+        }
+        this.dataSolicitação = data;
+    }
+
+    public void setDataCasamento(String dataCasamento) {
+        SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
+        Date data = null;
+        try {
+            data = format.parse(dataCasamento);
+        } catch (ParseException e) {
+            System.out.println("Data no formato errado");
+            e.printStackTrace();
+        }
+        this.dataCasamento = data;
     }
 
     public void setConjuge(ClienteBean conjuge) {
@@ -86,6 +123,21 @@ public class PedidoCasamentoBean {
     public Date getDataCasamento() {
         return dataCasamento;
     }
+    
+     public String getDataConfirmaçãoS() {
+        SimpleDateFormat fmt = new SimpleDateFormat("dd/MM/yyyy");
+        return fmt.format(dataConfirmação);
+    }
+
+    public String getDataSolicitaçãoS() {
+        SimpleDateFormat fmt = new SimpleDateFormat("dd/MM/yyyy");
+        return fmt.format(dataSolicitação);
+    }
+
+    public String getDataCasamentoS() {
+        SimpleDateFormat fmt = new SimpleDateFormat("dd/MM/yyyy yyyy-MM-dd HH:mm:ss");
+        return fmt.format(dataCasamento);
+    }
 
     public ClienteBean getConjuge() {
         return conjuge;
@@ -122,5 +174,5 @@ public class PedidoCasamentoBean {
     public String getMadrinha2() {
         return madrinha2;
     }
-    
+
 }

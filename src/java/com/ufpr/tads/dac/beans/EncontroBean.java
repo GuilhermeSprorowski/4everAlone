@@ -1,4 +1,3 @@
-
 package com.ufpr.tads.dac.beans;
 
 import java.text.ParseException;
@@ -6,7 +5,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class EncontroBean {
-    
+
     private int encontroId;
     private Date dataSolicitacao;
     private Date dataEncontro;
@@ -15,7 +14,7 @@ public class EncontroBean {
     private EnderecoBean endereco;
     private boolean aceito;
 
-    public EncontroBean() {        
+    public EncontroBean() {
     }
 
     public EncontroBean(int encontroId, boolean aceito) {
@@ -38,9 +37,7 @@ public class EncontroBean {
         this.endereco = endereco;
         this.aceito = aceito;
     }
-    
-        
-    
+
     public int getEncontroId() {
         return encontroId;
     }
@@ -53,8 +50,32 @@ public class EncontroBean {
         this.dataSolicitacao = dataSolicitacao;
     }
 
+    public void setDataSolicitacao(String dataSolicitacao) {
+        SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
+        Date data = null;
+        try {
+            data = format.parse(dataSolicitacao);
+        } catch (ParseException e) {
+            System.out.println("Data no formato errado");
+            e.printStackTrace();
+        }
+        this.dataSolicitacao = data;
+    }
+
     public void setDataResposta(Date dataResposta) {
         this.dataResposta = dataResposta;
+    }
+
+    public void setDataResposta(String dataResposta) {
+        SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
+        Date data = null;
+        try {
+            data = format.parse(dataResposta);
+        } catch (ParseException e) {
+            System.out.println("Data no formato errado");
+            e.printStackTrace();
+        }
+        this.dataResposta = data;
     }
 
     public void setAceito(boolean aceito) {
@@ -65,6 +86,11 @@ public class EncontroBean {
         return dataResposta;
     }
 
+    public String getDataRespostaS() {
+        SimpleDateFormat fmt = new SimpleDateFormat("dd/MM/yyyy");
+        return fmt.format(dataResposta);
+    }
+
     public boolean isAceito() {
         return aceito;
     }
@@ -72,8 +98,9 @@ public class EncontroBean {
     public void setDataEncontro(Date dataEncontro) {
         this.dataEncontro = dataEncontro;
     }
-    public void setDataEncontro(String dataEncontro){
-         SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
+
+    public void setDataEncontro(String dataEncontro) {
+        SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
         Date data = null;
         try {
             data = format.parse(dataEncontro);
@@ -81,8 +108,9 @@ public class EncontroBean {
             System.out.println("Data no formato errado");
             e.printStackTrace();
         }
-         this.dataEncontro = data;
+        this.dataEncontro = data;
     }
+
     public void setSolicitado(ClienteBean solicitado) {
         this.solicitado = solicitado;
     }
@@ -94,8 +122,19 @@ public class EncontroBean {
     public Date getDataSolicitacao() {
         return dataSolicitacao;
     }
+
+    public String getDataSolicitacaoS() {
+        SimpleDateFormat fmt = new SimpleDateFormat("dd/MM/yyyy");
+        return fmt.format(dataSolicitacao);
+    }
+
     public Date getDataEncontro() {
         return dataEncontro;
+    }
+
+    public String getDataEncontroS() {
+        SimpleDateFormat fmt = new SimpleDateFormat("dd/MM/yyyy");
+        return fmt.format(dataEncontro);
     }
 
     public ClienteBean getSolicitado() {
@@ -105,9 +144,5 @@ public class EncontroBean {
     public EnderecoBean getEndereco() {
         return endereco;
     }
-    
-    
-    
-    
-    
+
 }

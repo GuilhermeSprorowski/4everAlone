@@ -18,6 +18,11 @@ public class ClienteFacade {
     public static ArrayList<ClienteBean> getClientesCompativeis(PreferenciaBean p, int cidade)throws ClienteException {
         return ClienteDAO.getClientesCompativeis(p, cidade);
     }
+
+    public static void setNovoCliente(ClienteBean cb, String email) throws ClienteException{
+        ClienteDAO.setCliente(cb, email);
+        
+    }
     public void updateCliente(ClienteBean cliente) throws ClienteException{
         ClienteDAO.updateCliente(cliente);
     }
