@@ -12,5 +12,9 @@ public class ConviteFacade {
     public static ArrayList<ConviteBean> getAllConvites(int clienteId) throws ConviteException{
         return ConviteDAO.getAllConvites(clienteId);
     }
+
+    public static void updateConvite(ConviteBean conv) throws ConviteException {
+        ConviteDAO.updateConvite(conv);
+    }
     
 }

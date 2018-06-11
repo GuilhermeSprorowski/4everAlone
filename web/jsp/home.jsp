@@ -38,10 +38,18 @@
                               ${convite.festa.descricao}
                             </div>
                           </div>
-                          <footer class="card-footer">
-                            <a href="#" class="card-footer-item">Aceitar</a>
-                            <a href="#" class="card-footer-item">Recusar</a>
-                          </footer>
+                            <c:if test="${!convite.confirmado and convite.dataResposta == null}">
+                                <footer class="card-footer">
+                                    <a href="FestaServlet?action=update&resp=true&conviteId=${convite.idConvite}" class="card-footer-item">Confirmar presença</a>
+                                    <a href="FestaServlet?action=update&resp=false&conviteId=${convite.idConvite}" class="card-footer-item">Não comparecerei</a>
+                                </footer>
+                            </c:if>
+                            <c:if test="${convite.confirmado}">
+                                <center><strong>Presença confirmada</strong></center>
+                            </c:if>
+                            <c:if test="${!convite.confirmado and convite.dataResposta != null}">
+                                <center><strong>Presença rejeitada</strong></center>
+                            </c:if>
                         </div>
                     </c:forEach>
                 </div>

@@ -112,7 +112,6 @@ public class EncontroServlet extends HttpServlet {
                     System.out.println("resposta-encontro");
                     if (request.getParameter("resp") != null) {
                         try {
-                            System.out.println("EGFEG EGGE " + Boolean.parseBoolean(request.getParameter("resp")));
                             EncontroFacade.setResposta(new EncontroBean(
                                     request.getParameter("encontroId") == null ? 0 : Integer.parseInt(request.getParameter("encontroId")),
                                     Boolean.parseBoolean(request.getParameter("resp"))));

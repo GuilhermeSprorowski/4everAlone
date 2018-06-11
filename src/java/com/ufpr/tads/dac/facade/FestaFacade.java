@@ -9,6 +9,11 @@ import java.util.ArrayList;
 public class FestaFacade {
     static FestaDAOimpl FestaDAO = new FestaDAOimpl();
     
+    public static ArrayList<FestaBean> getAllFestasPorRegiao(int cidadeId) throws FestaException{
+        
+        return FestaDAO.getAllFestasPorRegiao(cidadeId);
+    }
+    
     public static ArrayList<FestaBean> getAllFesta() throws FestaException{
         
         return FestaDAO.getAllFestas();
