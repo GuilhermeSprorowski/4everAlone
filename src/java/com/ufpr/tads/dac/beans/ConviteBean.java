@@ -39,6 +39,10 @@ public class ConviteBean {
     public boolean isConfirmado() {
         return confirmado;
     }
+    
+    public boolean getConfirmado() {
+        return confirmado;
+    }
 
     public Date getDataEnvio() {
         return dataEnvio;

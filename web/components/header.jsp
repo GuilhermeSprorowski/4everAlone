@@ -40,8 +40,8 @@
             <a class="navbar-item" href="EncontroServlet?action=meus-encontros">
                 Meus Encontros
             </a>
-            <a class="navbar-item" href="EventoServlet">
-                Eventos
+            <a class="navbar-item" href="FestaServlet?action=view">
+                Festas
             </a>
             <a class="navbar-item" href="CasamentoServlet?action=visualizar">
                 Casamento

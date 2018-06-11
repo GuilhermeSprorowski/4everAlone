@@ -14,5 +14,7 @@ public interface FestaDAO {
 
     public FestaBean getFestaById(int idFesta) throws FestaException;
 
+    public ArrayList<FestaBean> getAllFestasPorRegiao(int cidadeId) throws FestaException;
+    
     public ArrayList<FestaBean> getAllFestas() throws FestaException;
 }

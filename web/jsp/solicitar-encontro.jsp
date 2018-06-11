@@ -31,8 +31,8 @@
                 <c:forEach items="${clienteList}" var="pessoa">
                     <div class="encontro flex-column">
                         <img src="ImageServlet?action=view&img=${pessoa.clienteId}">
-                        <p class="title">
-                          ${pessoa.nome}
+                        <p class="title flex-row">
+                            ${pessoa.nome} <span>${pessoa.idade} anos</span>
                         </p>
                       <div class="descricao">
                           ${pessoa.descricao}

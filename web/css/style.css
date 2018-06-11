@@ -52,6 +52,15 @@
     padding: 0 5px;
     text-align: justify;
 }
+.encontro .title {
+    margin-top: 10px;
+    margin-left: 10px;
+    margin-right: 10px;
+}
+.encontro .title span {
+    font-size: 1.6rem;
+    margin-top: 7px;
+}
 .flex-33 .encontro {
     flex: 0 1 calc(33% - 15px);
 }   
