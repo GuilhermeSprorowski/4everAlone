@@ -104,3 +104,7 @@ a .round-image {
     justify-content: space-between;
     flex-direction: column;
 }
+
+.searchfuncio{
+    text-align: center;
+}
