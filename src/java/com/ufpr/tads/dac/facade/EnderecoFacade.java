@@ -12,4 +12,8 @@ public class EnderecoFacade {
     public static ArrayList<EnderecoBean> getAllEndereco() throws EnderecoException {
         return EnderecoDAO.getAllEndereco();
     }
+    
+    public static EnderecoBean getRandomLocal(int cidadeId) throws EnderecoException {
+        return EnderecoDAO.getRandomLocalPorCidadeId(cidadeId);
+    }
 }

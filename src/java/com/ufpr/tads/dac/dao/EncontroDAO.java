@@ -12,5 +12,6 @@ public interface EncontroDAO {
     public void updateEncontro(EncontroBean encontro) throws EncontroException;    
     public EncontroBean getEncontro(int encontroId) throws EncontroException; 
     public ArrayList<EncontroBean> getAllEncontrosByIdCliente(int clienteId) throws EncontroException;
-    public ArrayList<EncontroBean> getEncontrosPendentesByIdCliente(int clienteId) throws EncontroException;
+    public ArrayList<EncontroBean> getEncontrosRecebidos(int clienteId) throws EncontroException;
+    public ArrayList<EncontroBean> getEncontrosAceitosPendentesByIdCliente(int clienteId) throws EncontroException;
 }

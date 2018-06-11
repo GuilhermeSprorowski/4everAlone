@@ -66,8 +66,7 @@ public class EnderecoDAOimpl implements EnderecoDAO {
 
             pst = con.prepareStatement("SELECT endereco.id, rua, local, codCidade ,cidade.nome as cidade, codEstado, sigla FROM bd4everalone.endereco\n"
                     + "INNER JOIN bd4everalone.cidade ON codCidade = cidade.id\n"
-                    + "INNER JOIN bd4everalone.estado ON codEstado = estado.id\n"
-                    + "WHERE local IS NOT NULL;");
+                    + "INNER JOIN bd4everalone.estado ON codEstado = estado.id");
             rs = pst.executeQuery();
             while (rs.next()) {
                 al.add(new EnderecoBean(rs.getInt("id"), rs.getString("rua"), new CidadeBean(rs.getInt("codCidade"), rs.getString("cidade")),new EstadoBean(rs.getInt("codEstado"), rs.getString("sigla")),rs.getString("local")));
@@ -88,6 +87,35 @@ public class EnderecoDAOimpl implements EnderecoDAO {
                 }
             }
         }
+    }
+
+    @Override
+    public EnderecoBean getRandomLocalPorCidadeId(int cidadeId) throws EnderecoException {
+        PreparedStatement pst = null;
+        ResultSet rs = null;
+        try {
+            con = new ConnectionFactory().getConnection();
+            pst = con.prepareStatement("SELECT endereco.id, rua, local, codCidade ,cidade.nome as cidade, codEstado, sigla FROM bd4everalone.endereco\n"
+                    + "INNER JOIN bd4everalone.cidade ON codCidade = cidade.id\n"
+                    + "INNER JOIN bd4everalone.estado ON codEstado = estado.id\n"
+                    + "WHERE endereco.codCidade = ? AND local IS NOT NULL\n"
+                    + "ORDER BY RAND()");
+            pst.setInt(1, cidadeId);
+            rs = pst.executeQuery();
+            while (rs.next()) {
+                return new EnderecoBean(rs.getInt("id"), rs.getString("rua"), new CidadeBean(rs.getInt("codCidade"), rs.getString("cidade")),new EstadoBean(rs.getInt("codEstado"), rs.getString("sigla")),rs.getString("local"));
+            }
+        } catch (SQLException e) {
+            throw new EnderecoException("Erro: comando sql invalido");
+        } finally {
+            if (pst != null) {
+                try {
+                    pst.close();
+                } catch (SQLException ex) {
+                }
+            }
+        }
+        return null;
     }
 
 }

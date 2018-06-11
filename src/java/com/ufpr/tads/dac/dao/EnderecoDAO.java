@@ -8,6 +8,8 @@ public interface EnderecoDAO {
 
     public EnderecoBean getEnderecoById(int enderecoId) throws EnderecoException;
 
+    public EnderecoBean getRandomLocalPorCidadeId(int cidadeId) throws EnderecoException;
+    
     public void setEndereco(EnderecoBean eb) throws EnderecoException;
 
     public void updateEndereco(EnderecoBean eb) throws EnderecoException;

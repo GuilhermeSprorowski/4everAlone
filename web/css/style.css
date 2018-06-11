@@ -86,6 +86,7 @@ a .round-image {
     display: flex;
     flex-direction: row;
     width: 90vw;
+    justify-content: center;
 }
 .modal-content.encontro-details .encontro {
     background: white;

@@ -262,11 +262,13 @@ public class ClienteDAOimpl implements ClienteDAO {
         ResultSet rs = null;
         try {
             con = new ConnectionFactory().getConnection();
-            pst = con.prepareStatement("SELECT cliente.id, nome, cliente.descricao, sexo,  dataNasc, altura, codPele, corpele.descricao AS corpele, codCabelo, corcabelo.descricao as corcabelo\n"
+            pst = con.prepareStatement("SELECT cliente.id, nome, cliente.descricao, sexo,  dataNasc, altura, codPele, corpele.descricao AS corpele,"
+                    + " codCabelo, corcabelo.descricao as corcabelo, cliente.codEscolaridade, esco.descricao as escolaridade\n"
                     + "FROM bd4everalone.cliente \n"
                     + "INNER JOIN bd4everalone.corpele ON codPele = corpele.id\n"
                     + "INNER JOIN bd4everalone.corcabelo ON codCabelo = corcabelo.id\n"
                     + "INNER JOIN bd4everalone.endereco ON codEndereco = endereco.id\n"
+                    + "INNER JOIN bd4everalone.escolaridade esco ON cliente.codEscolaridade = esco.id\n"
                     + "WHERE ((altura BETWEEN ? AND ?) AND (YEAR(FROM_DAYS(TO_DAYS(NOW())-TO_DAYS(dataNasc))) BETWEEN ? AND ?)) AND sexo = ? AND codCidade = ?\n"
                     + "ORDER BY  codPele = ? desc, codCabelo = ? desc;");
             pst.setInt(1, p.getAltura()[0]);
@@ -280,8 +282,11 @@ public class ClienteDAOimpl implements ClienteDAO {
             rs = pst.executeQuery();
             final ArrayList<ClienteBean> al = new ArrayList<ClienteBean>();
             while (rs.next()) {
-                
-                al.add(new ClienteBean(rs.getInt("id"),rs.getString("nome"),rs.getString("sexo"), rs.getDate("dataNasc"), rs.getInt("altura"), new CorPeleBean(rs.getInt("codPele"), rs.getString("corpele")), new CorCabeloBean(rs.getInt("codCabelo"), rs.getString("corcabelo"))));
+                al.add(new ClienteBean(rs.getInt("id"),rs.getString("nome"),rs.getString("sexo"), rs.getDate("dataNasc"), rs.getInt("altura"), 
+                        new CorPeleBean(rs.getInt("codPele"), rs.getString("corpele")), 
+                        new CorCabeloBean(rs.getInt("codCabelo"), rs.getString("corcabelo")),
+                        new EscolaridadeBean(rs.getInt("codEscolaridade"), rs.getString("escolaridade")))
+                );
             }
             return al;
         } catch (SQLException e) {

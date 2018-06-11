@@ -12,12 +12,20 @@ public class EncontroFacade {
     
     public static ArrayList<EncontroBean> getEncontrosPendentes(int clienteId) throws EncontroException{
         
-        return EncontroDAO.getEncontrosPendentesByIdCliente(clienteId);
+        return EncontroDAO.getEncontrosAceitosPendentesByIdCliente(clienteId);
     }   
     public static void setSolicitacao(EncontroBean encontro, int clienteId) throws EncontroException{
         EncontroDAO.setNovoEncontro(encontro, clienteId);
     }   
     public static void setResposta(EncontroBean encontro) throws EncontroException{
         EncontroDAO.updateEncontro(encontro);
+    }
+
+    public static ArrayList<EncontroBean> getAllEncontrosByIdCliente(int clienteId) throws EncontroException {
+        return EncontroDAO.getAllEncontrosByIdCliente(clienteId);
+    }
+    
+    public static ArrayList<EncontroBean> getEncontrosRecebidos(int clienteId) throws EncontroException {
+        return EncontroDAO.getEncontrosRecebidos(clienteId);
     }
 }

@@ -42,16 +42,20 @@ public class HomeServlet extends HttpServlet {
                     ArrayList<EncontroBean> encontroList = ef.getEncontrosPendentes(login.getClienteId());
                     request.setAttribute("encontroList", encontroList);
                 } catch (EncontroException ex) {
+                    System.out.println(ex);
                     request.setAttribute("msg", ex);
                     request.getRequestDispatcher("erro.jsp").forward(request, response);
+                    return;
                 }
                 ConviteFacade cf = new ConviteFacade();
                 try {
                     ArrayList<ConviteBean> conviteList = cf.getAllConvites(login.getClienteId());
                     request.setAttribute("conviteList", conviteList);
                 } catch (ConviteException ex) {
+                    System.out.println(ex);
                     request.setAttribute("msg", ex);
                     request.getRequestDispatcher("erro.jsp").forward(request, response);
+                    return;
                 }
                 request.getRequestDispatcher("/jsp/home.jsp").forward(request, response);
             } else {

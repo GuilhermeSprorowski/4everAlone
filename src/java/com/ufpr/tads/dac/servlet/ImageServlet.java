@@ -4,8 +4,11 @@ package com.ufpr.tads.dac.servlet;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStream;
+import java.net.URL;
 import java.util.List;
 import javax.imageio.ImageIO;
 import javax.servlet.ServletContext;
@@ -43,20 +46,42 @@ public class ImageServlet extends HttpServlet {
                     return;
                 }
                 response.setContentType(mime);
-                File file = new File(filename);
-                response.setContentLength((int) file.length());
+                FileInputStream in;
+                OutputStream out;
+                try {
+                    File file = new File(filename);
+                    response.setContentLength((int) file.length());
 
-                FileInputStream in = new FileInputStream(file);
-                OutputStream out = response.getOutputStream();
+                    in = new FileInputStream(file);
+                    out = response.getOutputStream();
 
-                // Copy the contents of the file to the output stream
-                byte[] buf = new byte[1024];
-                int count = 0;
-                while ((count = in.read(buf)) >= 0) {
-                    out.write(buf, 0, count);
+                    // Copy the contents of the file to the output stream
+                    byte[] buf = new byte[1024];
+                    int count = 0;
+                    while ((count = in.read(buf)) >= 0) {
+                        out.write(buf, 0, count);
+                    }
+                    out.close();
+                    in.close();
+                } catch(FileNotFoundException ex) {
+                    response.setContentType("image/jpeg");
+                    filename = System.getProperty("user.dir") + "/pictures/default.jpg";
+                    
+                    File file = new File(filename);
+                    response.setContentLength((int) file.length());
+
+                    in = new FileInputStream(file);
+                    out = response.getOutputStream();
+
+                    byte[] buf = new byte[1024];
+                    int count = 0;
+                    while ((count = in.read(buf)) >= 0) {
+                        out.write(buf, 0, count);
+                    }
+                    out.close();
+                    in.close();
                 }
-                out.close();
-                in.close();
+
                 break;
             case "salva":
                 System.out.println("Salva imagem");

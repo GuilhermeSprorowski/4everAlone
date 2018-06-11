@@ -11,7 +11,14 @@ import com.ufpr.tads.dac.facade.ClienteFacade;
 import com.ufpr.tads.dac.facade.EncontroFacade;
 import com.ufpr.tads.dac.facade.EnderecoFacade;
 import java.io.IOException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.Random;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -21,6 +28,19 @@ import javax.servlet.http.HttpSession;
 
 @WebServlet(name = "EncontroServlet", urlPatterns = {"/EncontroServlet"})
 public class EncontroServlet extends HttpServlet {
+    
+    private Date getDateBetween(int diamin, int diamax, int horamin, int horamax) {
+        Random rand = new Random();
+        int randomDia = rand.nextInt((diamax - diamin) + 1) + diamin;
+        int randomHora = rand.nextInt((horamax - horamin) + 1) + horamin;
+        
+        Calendar c = Calendar.getInstance();
+        c.setTime(new Date());
+        c.add(Calendar.DATE, randomDia);
+        c.add(Calendar.HOUR_OF_DAY, randomHora);
+        
+        return c.getTime();
+    }
 
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
@@ -37,6 +57,16 @@ public class EncontroServlet extends HttpServlet {
             switch (action) {
                 case "meus-encontros":
                     System.out.println("meus-encontro");
+            
+                    try {
+                        request.setAttribute("encontrosEnviados", EncontroFacade.getAllEncontrosByIdCliente(login.getClienteId()));
+                        request.setAttribute("encontrosParaResponder", EncontroFacade.getEncontrosRecebidos(login.getClienteId()));
+                    } catch (EncontroException ex) {
+                        request.setAttribute("msg", ex);
+                        request.getRequestDispatcher("jsp/erro.jsp").forward(request, response);
+                        return;
+                    }
+            
                     request.getRequestDispatcher("jsp/meus-encontros.jsp").forward(request, response);
                     break;
 
@@ -49,43 +79,55 @@ public class EncontroServlet extends HttpServlet {
                         request.setAttribute("clienteList", listClientes);
                         request.setAttribute("locaisList", EnderecoFacade.getAllEndereco());
                         request.getRequestDispatcher("jsp/solicitar-encontro.jsp").forward(request, response);
-                    } catch (ClienteException ex) {
-                        request.setAttribute("msg", ex);
-                        request.getRequestDispatcher("jsp/erro.jsp").forward(request, response);
-                    } catch (EnderecoException ex) {
+                    } catch (ClienteException | EnderecoException ex) {
                         request.setAttribute("msg", ex);
                         request.getRequestDispatcher("jsp/erro.jsp").forward(request, response);
                     }
                     break;
                 case "solicitar-encontro-new":
                     System.out.println("solicitar-encontro-new");
-                    int clienteId = request.getParameter("solicitadoId") == null ? 0 : Integer.parseInt(request.getParameter("solicitadoId"));
-                    int enderecoId = request.getParameter("enderecoId") == null ? 0 : Integer.parseInt(request.getParameter("enderecoId"));
-                    EncontroBean eb = new EncontroBean(request.getParameter("dataEncontro"), new ClienteBean(clienteId), new EnderecoBean(enderecoId));
                     try {
-                        EncontroFacade.setSolicitacao(eb, login.getClienteId());
-                    } catch (EncontroException ex) {
+                        ClienteBean cli = ClienteFacade.getClienteById(login.getClienteId());
+                        int clienteId = request.getParameter("clienteId") == null ? 0 : Integer.parseInt(request.getParameter("clienteId"));
+                        Date dataEncontro = getDateBetween(5, 15, 10, 23); // De 5 até 15 dias, das 10 as 23h
+                        EnderecoBean enderecoEncontro = EnderecoFacade.getRandomLocal(cli.getEndereco().getCidade().getIdCidade());
+                        EncontroBean eb = new EncontroBean(dataEncontro, new ClienteBean(clienteId), enderecoEncontro);
+                        try {
+                            EncontroFacade.setSolicitacao(eb, login.getClienteId());
+                        } catch (EncontroException ex) {
+                            System.out.println(ex);
+                            request.setAttribute("msg", ex);
+                            request.getRequestDispatcher("jsp/erro.jsp").forward(request, response);
+                            return;
+                        }
+                        request.getRequestDispatcher("EncontroServlet?action=meus-encontros").forward(request, response);
+                    } catch (ClienteException | EnderecoException ex) {
                         request.setAttribute("msg", ex);
                         request.getRequestDispatcher("jsp/erro.jsp").forward(request, response);
                     }
-                    request.getRequestDispatcher("EncontroServlet?action=meus-encontros").forward(request, response);
+            
+
                     break;
                 case "resposta-encontro":
                     System.out.println("resposta-encontro");
                     if (request.getParameter("resp") != null) {
                         try {
+                            System.out.println("EGFEG EGGE " + Boolean.parseBoolean(request.getParameter("resp")));
                             EncontroFacade.setResposta(new EncontroBean(
                                     request.getParameter("encontroId") == null ? 0 : Integer.parseInt(request.getParameter("encontroId")),
                                     Boolean.parseBoolean(request.getParameter("resp"))));
                         } catch (EncontroException ex) {
                             request.setAttribute("msg", ex);
                             request.getRequestDispatcher("jsp/erro.jsp").forward(request, response);
+                            return;
                         }
                     } else {
                         request.setAttribute("msg", "erro ao passar resposta");
                         request.getRequestDispatcher("jsp/erro.jsp").forward(request, response);
+                        return;
                     }
-
+                    
+                    request.getRequestDispatcher("HomeServlet").forward(request, response);
                     break;
             }
         }

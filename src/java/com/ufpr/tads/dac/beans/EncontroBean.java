@@ -22,7 +22,7 @@ public class EncontroBean {
         this.aceito = aceito;
     }
 
-    public EncontroBean(String dataEncontro, ClienteBean solicitado, EnderecoBean endereco) {
+    public EncontroBean(Date dataEncontro, ClienteBean solicitado, EnderecoBean endereco) {
         this.setDataEncontro(dataEncontro);
         this.solicitado = solicitado;
         this.endereco = endereco;
@@ -90,8 +90,12 @@ public class EncontroBean {
         SimpleDateFormat fmt = new SimpleDateFormat("dd/MM/yyyy");
         return fmt.format(dataResposta);
     }
-
+    
     public boolean isAceito() {
+        return aceito;
+    }
+
+    public boolean getAceito() {
         return aceito;
     }
 

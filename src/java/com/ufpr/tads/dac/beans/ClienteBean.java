@@ -2,6 +2,7 @@ package com.ufpr.tads.dac.beans;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 
 public class ClienteBean {
@@ -12,6 +13,7 @@ public class ClienteBean {
     private Date dataNasc;
     private String sexo;
     private int altura;
+    private int idade;
     private String descricao;
     private CorPeleBean corPele;
     private CorCabeloBean corCabelo;
@@ -46,6 +48,17 @@ public class ClienteBean {
         this.corPele = corPele;
         this.corCabelo = corCabelo;
         this.dataNasc = dataNasc;
+    }
+    
+    public ClienteBean(int clienteId, String nome, String sexo,Date dataNasc, int altura, CorPeleBean corPele, CorCabeloBean corCabelo, EscolaridadeBean es) {
+        this.clienteId = clienteId;
+        this.nome = nome;
+        this.sexo = sexo;
+        this.altura = altura;
+        this.corPele = corPele;
+        this.corCabelo = corCabelo;
+        this.dataNasc = dataNasc;
+        this.escolaridade = es;
     }
 
     public ClienteBean(int clienteId, String nome, String cpf, Date dataNasc, String sexo, String descricao, CorPeleBean corPele, CorCabeloBean corCabelo, EnderecoBean endereco, EscolaridadeBean escolaridade, PreferenciaBean preferencias, int alutra) {
@@ -90,7 +103,36 @@ public class ClienteBean {
     public void setAltura(int altura) {
         this.altura = altura;
     }
+    
+    public int getIdade() {
+        Calendar today = Calendar.getInstance();
+        Calendar birthDate = Calendar.getInstance();
+        birthDate.setTime(this.dataNasc);
+        if (birthDate.after(today)) {
+            throw new IllegalArgumentException("You don't exist yet");
+        }
+        int todayYear = today.get(Calendar.YEAR);
+        int birthDateYear = birthDate.get(Calendar.YEAR);
+        int todayDayOfYear = today.get(Calendar.DAY_OF_YEAR);
+        int birthDateDayOfYear = birthDate.get(Calendar.DAY_OF_YEAR);
+        int todayMonth = today.get(Calendar.MONTH);
+        int birthDateMonth = birthDate.get(Calendar.MONTH);
+        int todayDayOfMonth = today.get(Calendar.DAY_OF_MONTH);
+        int birthDateDayOfMonth = birthDate.get(Calendar.DAY_OF_MONTH);
+        int age = todayYear - birthDateYear;
 
+        // If birth date is greater than todays date (after 2 days adjustment of leap year) then decrement age one year
+        if ((birthDateDayOfYear - todayDayOfYear > 3) || (birthDateMonth > todayMonth)){
+            age--;
+
+        // If birth date and todays date are of same month and birth day of month is greater than todays day of month then decrement age
+        } else if ((birthDateMonth == todayMonth) && (birthDateDayOfMonth > todayDayOfMonth)){
+            age--;
+        }
+        return age;
+
+    }
+    
     public int getClienteId() {
         return clienteId;
     }

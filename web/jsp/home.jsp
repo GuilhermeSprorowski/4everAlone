@@ -65,7 +65,7 @@
                         <footer class="card-footer flex-row">
                             <p><strong><i class="fas fa-calendar-alt"></i></strong> <fmt:formatDate type="date" value="${encontro.dataEncontro}"/></p>
                             <p><strong><i class="fas fa-clock"></i></strong> <fmt:formatDate type="time" value="${encontro.dataEncontro}"/></p>
-                            <p><strong><i class="fas fa-map-marker"></i></strong> ${encontro.endereco}</p>
+                            <p><strong><i class="fas fa-map-marker"></i></strong> ${encontro.endereco.nomeLocal}</p>
                         </footer>
                     </c:forEach>
                     
