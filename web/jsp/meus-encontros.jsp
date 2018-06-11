@@ -11,6 +11,8 @@
         <link rel="stylesheet" href="lib/bulma-0.7.1/css/bulma.min.css"/>
         <link rel="stylesheet" href="lib/jquery-ui/jquery-ui.min.css"/>
         <link rel="stylesheet" href="css/style.css"/>
+        <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.13/css/all.css" integrity="sha384-DNOHZ68U8hZfKXOrtjWvjxusGo9WQnrNx2sqG0tfsghAvtVlRW3tvkXWZh58N9jp" crossorigin="anonymous">
+
         
         <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
         <script src="lib/jquery-ui/jquery-ui.min.js"></script>
@@ -27,7 +29,10 @@
         <div class="container margem">
             <div class="columns is-2">
                 <div class="column">
-                    <h1 class="notification is-info">Solicitações enviadas</h1>
+                    <h1 class="notification is-info">Solicitações enviadas 
+                    <c:if test="${empty encontrosEnviados}">
+                        - Nenhuma solicitação enviada
+                    </c:if></h1></h1>
                     <c:forEach items="${encontrosEnviados}" var="encontro">
                         <div class="media">
                             <figure class="media-left">
@@ -52,12 +57,20 @@
                                     </strong>
                                 </div>
                               </nav>
+                                <footer class="card-footer flex-row">
+                                    <p><strong><i class="fas fa-calendar-alt"></i></strong> <fmt:formatDate type="date" value="${encontro.dataEncontro}"/></p>
+                                    <p><strong><i class="fas fa-clock"></i></strong> <fmt:formatDate type="time" value="${encontro.dataEncontro}"/></p>
+                                    <p><strong><i class="fas fa-map-marker"></i></strong> ${encontro.endereco.nomeLocal}</p>
+                                </footer>
                             </div>
                         </div>
                     </c:forEach>
                 </div>
                 <div class="column">
-                    <h1 class="notification is-success" >Solicitações recebidas</h1>
+                    <h1 class="notification is-success" >Solicitações recebidas 
+                    <c:if test="${empty encontrosParaResponder}">
+                        - Nenhuma solicitação disponível
+                    </c:if></h1>
                     <c:forEach items="${encontrosParaResponder}" var="enc">
                         <div class="encontro flex-column">
                             <p class="title">
@@ -103,9 +116,7 @@
                           </footer>
                         </div>
                     </c:forEach>
-                    <c:if test="${empty encontrosParaResponder}">
-                        Nenhuma solicitação disponível
-                    </c:if>
+                    
 
                 </div>
 
