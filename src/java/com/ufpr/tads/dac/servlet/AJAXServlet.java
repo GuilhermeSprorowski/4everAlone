@@ -2,11 +2,14 @@ package com.ufpr.tads.dac.servlet;
 
 import com.google.gson.Gson;
 import com.ufpr.tads.dac.beans.CidadeBean;
+import com.ufpr.tads.dac.beans.EnderecoBean;
 import com.ufpr.tads.dac.exceptions.CidadeException;
 import com.ufpr.tads.dac.exceptions.ClienteException;
+import com.ufpr.tads.dac.exceptions.EnderecoException;
 import com.ufpr.tads.dac.exceptions.UserException;
 import com.ufpr.tads.dac.facade.CidadeFacade;
 import com.ufpr.tads.dac.facade.ClienteFacade;
+import com.ufpr.tads.dac.facade.EnderecoFacade;
 import com.ufpr.tads.dac.facade.UserFacade;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -36,6 +39,20 @@ public class AJAXServlet extends HttpServlet {
                     response.setCharacterEncoding("UTF-8");
                     response.getWriter().write(json);
                 } catch (CidadeException ex) {
+                    request.setAttribute("msg", ex);
+                    request.getRequestDispatcher("/jsp/erro.jsp").forward(request, response);
+                }
+                break;
+            case "viewLocais":
+                int cidade = request.getParameter("cidadeId") == null ? 0 : Integer.parseInt(request.getParameter("cidadeId"));
+                
+                try {
+                    ArrayList<EnderecoBean> ff = EnderecoFacade.getAllLocais(cidade);
+                    String json = new Gson().toJson(ff);
+                    response.setContentType("application/json");
+                    response.setCharacterEncoding("UTF-8");
+                    response.getWriter().write(json);
+                } catch (EnderecoException ex) {
                     request.setAttribute("msg", ex);
                     request.getRequestDispatcher("/jsp/erro.jsp").forward(request, response);
                 }

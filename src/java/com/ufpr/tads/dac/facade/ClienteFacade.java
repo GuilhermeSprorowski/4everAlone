@@ -23,6 +23,14 @@ public class ClienteFacade {
         ClienteDAO.setCliente(cb, email);
         
     }
+
+    public static ArrayList<ClienteBean> getAllClientes() throws ClienteException {
+        return ClienteDAO.getAllClientes();
+    }
+
+    public static String getEmailCliente(int cliId) throws ClienteException {
+        return ClienteDAO.getEmailCliente(cliId);
+    }
     public void updateCliente(ClienteBean cliente) throws ClienteException{
         ClienteDAO.updateCliente(cliente);
     }

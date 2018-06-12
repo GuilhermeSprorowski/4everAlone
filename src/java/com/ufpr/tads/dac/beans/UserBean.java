@@ -5,8 +5,11 @@ public class UserBean {
     private String email;
     private String nome;
     private int clienteId;
+    private int funcionarioId;
     private Boolean cliente;
     private Boolean adm;
+    private Boolean funcionario;
+    
 
     public UserBean() {
     }
@@ -18,6 +21,10 @@ public class UserBean {
     }
 
     public Boolean isCliente() {
+        return cliente;
+    }
+    
+    public Boolean getCliente() {
         return cliente;
     }
 
@@ -37,11 +44,25 @@ public class UserBean {
         this.adm = adm;
     }
     
+    public Boolean getFuncionario() {
+        return funcionario;
+    }
+
+    public void setFuncionario(Boolean funcionario) {
+        this.funcionario = funcionario;
+    }
+    
     
     public void setEmail(String email) {
         this.email = email;
     }
+    public void setFuncionarioId(int id) {
+        this.funcionarioId = id;
+    }
 
+    public int getFuncionarioId() {
+        return funcionarioId;
+    }
     public void setNome(String nome) {
         this.nome = nome;
     }

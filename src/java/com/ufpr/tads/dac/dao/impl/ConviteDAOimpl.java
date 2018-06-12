@@ -109,4 +109,32 @@ public class ConviteDAOimpl implements ConviteDAO {
         }
     }
 
+    @Override
+    public void enviaConvite(int clienteId, FestaBean fe) throws ConviteException {
+                PreparedStatement pst = null;
+        try {
+            con = new ConnectionFactory().getConnection();
+            pst = con.prepareStatement("INSERT INTO bd4everalone.convite (dataEnviado, codFesta, codCliente)\n"
+                    + "VALUES (?, ?, ?)");
+            pst.setTimestamp(1, new Timestamp(System.currentTimeMillis()));
+            pst.setInt(2, fe.getIdFesta());
+            pst.setInt(3, clienteId);
+            int resp = pst.executeUpdate();
+            if (resp == 0) {
+                throw new ConviteException("Erro convite: não foi possivel enviar convite");
+            }
+        } catch (SQLException e) {
+            System.out.println(e);
+            throw new ConviteException("Erro convite: comando sql invalido");
+        } finally {
+            if (pst != null) {
+                try {
+                    pst.close();
+                } catch (SQLException ex) {
+                    throw new ConviteException("Erro convite: erro ao fechar conexão");
+                }
+            }
+        }
+    }
+
 }

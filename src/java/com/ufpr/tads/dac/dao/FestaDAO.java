@@ -6,7 +6,7 @@ import java.util.ArrayList;
 
 public interface FestaDAO {
 
-    public void setFesta(FestaBean f) throws FestaException;
+    public int setFesta(FestaBean f) throws FestaException;
 
     public void updateFesta(FestaBean f) throws FestaException;
 

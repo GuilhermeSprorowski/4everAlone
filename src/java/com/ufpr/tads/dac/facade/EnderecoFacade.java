@@ -1,5 +1,6 @@
 package com.ufpr.tads.dac.facade;
 
+import com.ufpr.tads.dac.beans.CidadeBean;
 import com.ufpr.tads.dac.beans.EnderecoBean;
 import com.ufpr.tads.dac.dao.impl.EnderecoDAOimpl;
 import com.ufpr.tads.dac.exceptions.EnderecoException;
@@ -15,5 +16,9 @@ public class EnderecoFacade {
     
     public static EnderecoBean getRandomLocal(int cidadeId) throws EnderecoException {
         return EnderecoDAO.getRandomLocalPorCidadeId(cidadeId);
+    }
+
+    public static ArrayList<EnderecoBean> getAllLocais(int cidade) throws EnderecoException {
+        return EnderecoDAO.getAllLocaisPorCidade(cidade);
     }
 }

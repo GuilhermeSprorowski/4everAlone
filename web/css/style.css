@@ -5,6 +5,15 @@
     max-height: 100px;
     overflow-y: auto;
 }
+
+.cliente-modal {
+    width: 90vw;
+    background: white;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+}
+
 .margem {
     margin: 20px auto;
 }

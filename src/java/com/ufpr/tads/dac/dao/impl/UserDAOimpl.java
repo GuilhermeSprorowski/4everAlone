@@ -21,7 +21,10 @@ public class UserDAOimpl implements UserDAO {
             con = new ConnectionFactory().getConnection();
             pst = con.prepareStatement("SELECT cliente.id as id, email, nome,\n"
                     + "(SELECT true FROM bd4everalone.cliente a WHERE a.codUser = bd4everalone.usuario.id) as isCliente,\n"
-                    + "ifnull((SELECT true FROM bd4everalone.funcionario F WHERE F.codUser = bd4everalone.usuario.id AND adm), false) as isAdm FROM bd4everalone.usuario\n"
+                    + "ifnull((SELECT true FROM bd4everalone.funcionario F WHERE F.codUser = bd4everalone.usuario.id), false) as isFuncionario,"
+                    + "(SELECT id FROM bd4everalone.funcionario F WHERE F.codUser = bd4everalone.usuario.id) as idFuncionario,\n"
+                    + "ifnull((SELECT true FROM bd4everalone.funcionario F WHERE F.codUser = bd4everalone.usuario.id AND adm), false) as isAdm\n"
+                    + "FROM bd4everalone.usuario\n"
                     + "INNER JOIN bd4everalone.cliente ON cliente.codUser = bd4everalone.usuario.id\n"
                     + "WHERE (email = ?) AND (senha = ?)");      
             pst.setString(1, email);
@@ -31,10 +34,13 @@ public class UserDAOimpl implements UserDAO {
             while (rs.next()) {
                 u = new UserBean(rs.getString("email"), rs.getString("nome"), rs.getInt("id"));
                 u.setAdm(rs.getBoolean("isAdm"));
+                u.setFuncionario(rs.getBoolean("isFuncionario"));
                 u.setCliente(rs.getBoolean("isCliente"));
+                u.setFuncionarioId(rs.getInt("idFuncionario"));
             }
             return u;
         } catch (SQLException e) {
+            System.out.println(e);
             throw new UserException("Erro Usuario: comando sql invalido");
         }finally {if (pst != null) {try { pst.close();} catch (SQLException ex) {throw new UserException("Erro user: erro ao fechar conecxão");}}
         }  

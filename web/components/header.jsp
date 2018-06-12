@@ -10,26 +10,31 @@
             <span aria-hidden="true"></span>
         </a>
     </div>
-    <c:if test="${user.adm == true}">
+    <c:if test="${user.funcionario}">
         <div id="navMenu" class="navbar-menu navbar-end">
             <a class="navbar-item is-active" href="HomeServlet">
                 Home
             </a>
             <a class="navbar-item" href="ClienteServlet?action=view">
-                Cadastrar cliente
+                Administrar clientes
             </a>
-            <a class="navbar-item" href="ClienteServlet?action=view">
+            <a class="navbar-item" href="FestaServlet?action=cadastrar">
                 Promover festa
             </a>
             <a class="navbar-item" href="ClienteServlet?action=view">
                 Relatório
             </a>
+            <c:if test="${user.adm}">
+                <a class="navbar-item" href="ClienteServlet?action=view">
+                    Funcionários
+                </a>
+            </c:if>
             <a class="navbar-item" href="LogoutServlet">
                 Logout
             </a>
         </div>
     </c:if>
-    <c:if test="${user.adm == false}">
+    <c:if test="${user.cliente and !user.funcionario}">
         <div id="navMenu" class="navbar-menu navbar-end">
             <a class="navbar-item is-active" href="HomeServlet">
                 Home

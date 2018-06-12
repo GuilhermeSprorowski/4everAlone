@@ -18,4 +18,8 @@ public class FestaFacade {
         
         return FestaDAO.getAllFestas();
     }
+
+    public static int novaFesta(FestaBean festa) throws FestaException {
+        return FestaDAO.setFesta(festa);
+    }
 }

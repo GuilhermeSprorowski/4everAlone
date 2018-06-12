@@ -35,7 +35,17 @@ public class HomeServlet extends HttpServlet {
             request.getRequestDispatcher("index.jsp").forward(request, response);
         } else {
             //usuario logado
-            if (login.isCliente()) {
+            if (login.getFuncionario()) {
+                System.out.println("Funcioanrio");
+                try {
+                    request.setAttribute("festaList", FestaFacade.getAllFesta());
+                    request.setAttribute("login", login);
+                    request.getRequestDispatcher("/jsp/home-funcionario.jsp").forward(request, response);
+                } catch (FestaException ex) {
+                    request.setAttribute("msg", ex);
+                    request.getRequestDispatcher("erro.jsp").forward(request, response);
+                }
+            } else {
                 // usuarioCliente
                 EncontroFacade ef = new EncontroFacade();
                 try {
@@ -58,29 +68,6 @@ public class HomeServlet extends HttpServlet {
                     return;
                 }
                 request.getRequestDispatcher("/jsp/home.jsp").forward(request, response);
-            } else {
-                //usuarioFuncionario
-                if (login.isAdm()) {
-                    //usuarioAdm
-                    System.out.println("admin");
-                    try {
-                        request.setAttribute("funcionarioList", FuncionarioFacade.getAllFuncionario());
-                        request.getRequestDispatcher("/jsp/admin-home.jsp").forward(request, response);
-                    } catch (FuncionarioException ex) {
-                        request.setAttribute("msg", ex);
-                        request.getRequestDispatcher("erro.jsp").forward(request, response);
-                    }
-                } else {
-                    //usuario Funcionario
-                    System.out.println("Funcioanrio");
-                    try {
-                        request.setAttribute("festaList", FestaFacade.getAllFesta());
-                        request.getRequestDispatcher("/jsp/funcionario-home.jsp").forward(request, response);
-                    } catch (FestaException ex) {
-                        request.setAttribute("msg", ex);
-                        request.getRequestDispatcher("erro.jsp").forward(request, response);
-                    }
-                }
             }
 
         }

@@ -10,10 +10,11 @@ public class ClienteBean {
     private int clienteId;
     private String nome;
     private String cpf;
+    private String email;
     private Date dataNasc;
     private String sexo;
     private int altura;
-    private int idade;
+    private int idade; 
     private String descricao;
     private CorPeleBean corPele;
     private CorCabeloBean corCabelo;
@@ -76,6 +77,22 @@ public class ClienteBean {
         this.altura = alutra;
     }
 
+    public ClienteBean(int clienteId, String nome, String cpf, Date dataNasc, String sexo, String descricao, CorPeleBean corPele, CorCabeloBean corCabelo, EnderecoBean endereco, EscolaridadeBean escolaridade, PreferenciaBean preferencias, int alutra, String email) {
+        this.clienteId = clienteId;
+        this.nome = nome;
+        this.cpf = cpf;
+        this.dataNasc = dataNasc;
+        this.sexo = sexo;
+        this.descricao = descricao;
+        this.corPele = corPele;
+        this.corCabelo = corCabelo;
+        this.endereco = endereco;
+        this.escolaridade = escolaridade;
+        this.preferencias = preferencias;
+        this.altura = alutra;
+        this.email = email;
+    }
+    
     public EscolaridadeBean getEscolaridade() {
         return escolaridade;
     }
@@ -102,6 +119,14 @@ public class ClienteBean {
 
     public void setAltura(int altura) {
         this.altura = altura;
+    }
+    
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String em) {
+        this.email = em;
     }
     
     public int getIdade() {
