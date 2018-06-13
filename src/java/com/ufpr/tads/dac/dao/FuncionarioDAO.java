@@ -6,7 +6,7 @@ import java.util.ArrayList;
 
 public interface FuncionarioDAO {
 
-    public void setFuncionario(FuncionarioBean f) throws FuncionarioException;
+    public void setFuncionario(FuncionarioBean f, String email) throws FuncionarioException;
 
     public void updateFuncionario(FuncionarioBean f) throws FuncionarioException;
 

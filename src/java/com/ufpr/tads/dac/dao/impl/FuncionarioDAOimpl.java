@@ -11,6 +11,8 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 
 public class FuncionarioDAOimpl implements FuncionarioDAO {
@@ -18,13 +20,77 @@ public class FuncionarioDAOimpl implements FuncionarioDAO {
     private Connection con;
 
     @Override
-    public void setFuncionario(FuncionarioBean f) throws FuncionarioException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public void setFuncionario(FuncionarioBean f, String email) throws FuncionarioException {
+        PreparedStatement pst = null;
+        ResultSet rs = null;
+        int idGerado = 0;
+        try {
+            con = new ConnectionFactory().getConnection();
+            pst = con.prepareStatement("INSERT INTO bd4everalone.usuario (email) VALUES(?)");
+            pst.setString(1, email);
+            int resp = pst.executeUpdate();
+            rs = pst.getGeneratedKeys();
+            while (rs.next()) {
+                idGerado = rs.getInt(1);            
+            }
+            resp = 0;
+            if (idGerado == 0) {
+                throw new FuncionarioException("Erro funcionario: não foi possivel gerar esse login");
+            } else {
+                pst = con.prepareStatement("INSERT INTO bd4everalone.funcionario (nome, cpf, salario, codUser, dataNasc, codEndereco) VALUES(?,?,?,?,?,?);");
+                pst.setString(1, f.getNome());
+                pst.setString(2, f.getCpf());
+                pst.setDouble(3, f.getSalario());
+                pst.setInt(4, idGerado);               
+                pst.setTimestamp(5, new Timestamp(f.getDataNasc().getTime()));   
+                pst.setInt(6, f.getEndereco().getEnderecoId());
+                resp = pst.executeUpdate();
+                if (resp == 0) {
+                    throw new FuncionarioException("Erro funcionario: não foi possivel criar esse funcionario");
+                }
+            }
+        } catch (SQLException e) {
+            throw new FuncionarioException("Erro funcionario: comando sql invalido");
+        } finally {
+            if (pst != null) {
+                try {
+                    pst.close();
+                } catch (SQLException ex) {
+                    throw new FuncionarioException("Erro funcionario: erro ao fechar conecxão");
+                }
+            }
+        }
     }
 
     @Override
     public void updateFuncionario(FuncionarioBean f) throws FuncionarioException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        PreparedStatement pst = null;
+        ResultSet rs = null;
+        try {
+            con = new ConnectionFactory().getConnection();
+            pst = con.prepareStatement("UPDATE bd4everalone.funcionario SET nome = ?, cpf = ?, salario = ?, "
+                        + "dataNasc = ?, codEndereco = ? WHERE id = ?");
+            pst.setString(1, f.getNome());
+            pst.setString(2, f.getCpf());
+            pst.setDouble(3, f.getSalario());       
+            pst.setTimestamp(4, new Timestamp(f.getDataNasc().getTime()));   
+            pst.setInt(5, f.getEndereco().getEnderecoId());
+            pst.setInt(6, f.getIdFuncionario());
+            int resp = pst.executeUpdate();
+            if (resp == 0) {
+                throw new FuncionarioException("Erro funcionario: não foi possivel criar esse funcionario");
+            }
+        } catch (SQLException e) {
+            throw new FuncionarioException("Erro funcionario: comando sql invalido");
+        } finally {
+            if (pst != null) {
+                try {
+                    pst.close();
+                } catch (SQLException ex) {
+                    throw new FuncionarioException("Erro funcionario: erro ao fechar conecxão");
+                }
+            }
+        }
     }
 
     @Override
@@ -48,7 +114,7 @@ public class FuncionarioDAOimpl implements FuncionarioDAO {
                     + "INNER JOIN bd4everalone.endereco ON codEndereco = endereco.id\n"
                     + "INNER JOIN bd4everalone.cidade ON codCidade = cidade.id\n"
                     + "INNER JOIN bd4everalone.usuario ON codUser = usuario.id\n"
-                    + "WHERE NOT adm AND dataDemissao IS NULL;");
+                    + "WHERE dataDemissao IS NULL;");
             rs = pst.executeQuery();
             while (rs.next()) {
                 al.add(new FuncionarioBean(rs.getInt("id"), rs.getString("nome"), rs.getDouble("salario"), new EnderecoBean(), rs.getDate("dataNasc"), rs.getDate("dataCadastro")));

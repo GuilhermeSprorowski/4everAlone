@@ -8,10 +8,19 @@ public class FuncionarioBean {
 
     private int idFuncionario;
     private String nome;
+    private String cpf;
     private Double salario;
     private EnderecoBean endereco;
     private Date dataNasc;
     private Date dataCadastro;
+
+    public String getCpf() {
+        return cpf;
+    }
+
+    public void setCpf(String cpf) {
+        this.cpf = cpf;
+    }
 
     public FuncionarioBean() {
     }

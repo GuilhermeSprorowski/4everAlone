@@ -5,9 +5,18 @@
  */
 package com.ufpr.tads.dac.servlet;
 
+import com.ufpr.tads.dac.beans.CidadeBean;
+import com.ufpr.tads.dac.beans.EnderecoBean;
+import com.ufpr.tads.dac.beans.FuncionarioBean;
 import com.ufpr.tads.dac.beans.UserBean;
+import com.ufpr.tads.dac.exceptions.EstadoException;
+import com.ufpr.tads.dac.exceptions.FuncionarioException;
+import com.ufpr.tads.dac.facade.EstadoFacade;
+import com.ufpr.tads.dac.facade.FuncionarioFacade;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -32,7 +41,80 @@ public class FuncionarioServlet extends HttpServlet {
             request.setAttribute("msg", "É necessario esta logado para acessar essa pagina");
             request.getRequestDispatcher("index.jsp").forward(request, response);
         } else {
-            // usuario logado
+            String action = request.getParameter("action");
+            if (action.equals("create")) {
+                try {
+                    request.setAttribute("alterar", false);
+                    request.setAttribute("estados", EstadoFacade.getAllEstados());
+                    request.getRequestDispatcher("jsp/cadastrar-funcionario.jsp").forward(request, response);
+                } catch (EstadoException ex) {
+                    request.setAttribute("msg", ex);
+                    request.getRequestDispatcher("jsp/erro.jsp").forward(request, response);
+                }
+            } else if (action.equals("edit")) {
+                try {
+                    request.setAttribute("alterar", true);
+                    int funcId = Integer.parseInt(request.getParameter("idFuncionario"));
+                    
+                    request.setAttribute("estados", EstadoFacade.getAllEstados());
+                    // request.setAttribute("login", login);
+                    request.getRequestDispatcher("jsp/cadastrar-funcionario.jsp").forward(request, response);
+                } catch (EstadoException ex) {
+                    request.setAttribute("msg", ex);
+                    request.getRequestDispatcher("jsp/erro.jsp").forward(request, response);
+                }
+            } else if (action.equals("salva")) {
+                FuncionarioBean func = new FuncionarioBean();
+                
+                String email = request.getParameter("email");
+                func.setNome(request.getParameter("nome"));
+                func.setDataNasc(request.getParameter("dataNasc"));
+                func.setCpf(request.getParameter("cpf"));
+                func.setSalario(Double.parseDouble(request.getParameter("cpf")));
+                func.setEndereco(new EnderecoBean(request.getParameter("idEndereco") == null ? 0 : Integer.parseInt(request.getParameter("idEndereco")),
+                                    request.getParameter("rua"), new CidadeBean(request.getParameter("idCidade") == null ? 0 : Integer.parseInt(request.getParameter("idCidade")))));
+                try {
+                    FuncionarioFacade.novoFuncionario(func, email);
+                    request.getRequestDispatcher("HomeServlet").forward(request, response);
+                } catch (FuncionarioException ex) {
+                    request.setAttribute("msg", ex);
+                    request.getRequestDispatcher("jsp/erro.jsp").forward(request, response);
+                }
+            } else if (action.equals("alterar")) {
+                FuncionarioBean func = new FuncionarioBean();
+                
+                func.setIdFuncionario(request.getParameter("nome") == null ? 0 : Integer.parseInt(request.getParameter("nome")));
+                func.setNome(request.getParameter("nome"));
+                func.setDataNasc(request.getParameter("dataNasc"));
+                func.setCpf(request.getParameter("cpf"));
+                func.setSalario(Double.parseDouble(request.getParameter("cpf")));
+                func.setEndereco(new EnderecoBean(request.getParameter("idEndereco") == null ? 0 : Integer.parseInt(request.getParameter("idEndereco")),
+                                    request.getParameter("rua"), new CidadeBean(request.getParameter("idCidade") == null ? 0 : Integer.parseInt(request.getParameter("idCidade")))));
+                try {
+                    FuncionarioFacade.updateFuncionario(func);
+                    request.getRequestDispatcher("HomeServlet").forward(request, response);
+                } catch (FuncionarioException ex) {
+                    request.setAttribute("msg", ex);
+                    request.getRequestDispatcher("jsp/erro.jsp").forward(request, response);
+                }
+            } else if (action.equals("list")) {
+                try {
+                    request.setAttribute("funcionarios", FuncionarioFacade.getAllFuncionario());
+                    request.getRequestDispatcher("jsp/lista-funcionarios.jsp").forward(request, response);
+                } catch (Exception ex) {
+                    request.setAttribute("msg", ex);
+                    request.getRequestDispatcher("jsp/erro.jsp").forward(request, response);
+                }
+            } else if (action.equals("delete")) {
+//                try {
+//                    request.setAttribute("funcionarios", FuncionarioFacade.getAllFuncionario());
+//                    request.getRequestDispatcher("jsp/listar-funcionario.jsp").forward(request, response);
+//                } catch (FuncionarioException ex) {
+//                    request.setAttribute("msg", ex);
+//                    request.getRequestDispatcher("erro.jsp").forward(request, response);
+//                }
+            }
+            
         }
     }
 

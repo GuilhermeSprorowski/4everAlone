@@ -25,7 +25,7 @@
                 Relatório
             </a>
             <c:if test="${user.adm}">
-                <a class="navbar-item" href="ClienteServlet?action=view">
+                <a class="navbar-item" href="FuncionarioServlet?action=list">
                     Funcionários
                 </a>
             </c:if>

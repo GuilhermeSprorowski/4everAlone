@@ -14,6 +14,7 @@
         
         <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
         <script src="lib/jquery-ui/jquery-ui.min.js"></script>
+        <script src="lib/jquery-mask/jquery.mask.min.js"></script>
         <script src="js/forms.js"></script>
         
         <script>

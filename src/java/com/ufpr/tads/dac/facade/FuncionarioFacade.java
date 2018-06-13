@@ -12,4 +12,12 @@ public class FuncionarioFacade {
     public static ArrayList<FuncionarioBean> getAllFuncionario() throws FuncionarioException{
         return FuncionarioDAO.getAllFuncionarios();
     }
+    
+    public static void novoFuncionario(FuncionarioBean f, String email) throws FuncionarioException {
+        FuncionarioDAO.setFuncionario(f, email);
+    }
+    
+    public static void updateFuncionario(FuncionarioBean f) throws FuncionarioException {
+        FuncionarioDAO.updateFuncionario(f);
+    }
 }

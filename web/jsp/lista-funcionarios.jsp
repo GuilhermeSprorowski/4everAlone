@@ -41,10 +41,10 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <c:forEach var="funcionario" items="$(request.lista)">
+                        <c:forEach var="funcionario" items="${funcionarios}">
                             <tr>
                                 <td><c:out value="${funcionario.nome}"/></td>
-                                <td><c:out value="${funcionario.salario}"/>/td>
+                                <td><c:out value="${funcionario.salario}"/></td>
                                 <td><a href="FuncionarioServlet?action=edit&idFuncionario=<c:out value="${funcionario.idFuncionario}"/>" class="button is-link">Editar</a></td>
                                 <td><a href="FuncionarioServlet?action=delete&idFuncionario=<c:out value="${funcionario.idFuncionario}"/>" class="button is-danger">Excluir</a></td>
                             </tr>
