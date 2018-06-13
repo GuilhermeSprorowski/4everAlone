@@ -35,6 +35,7 @@ public class FuncionarioServlet extends HttpServlet {
             throws ServletException, IOException {
         HttpSession session = request.getSession();
         UserBean login = (UserBean) session.getAttribute("user");
+        request.setCharacterEncoding("UTF-8");
 
         if (login == null) {
             //envia para fazer login

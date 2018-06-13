@@ -222,6 +222,9 @@ public class ClienteBean {
         return dataNasc;
     }
     public String getDataNascS() {
+        if (dataNasc == null) {
+            return "";
+        }
         SimpleDateFormat fmt = new SimpleDateFormat("dd/MM/yyyy"); 
         return  fmt.format(dataNasc);
     }

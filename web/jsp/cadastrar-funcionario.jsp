@@ -16,44 +16,8 @@
         <script src="lib/jquery-mask/jquery.mask.min.js"></script>
         <script src="js/forms.js"></script>
 
-        <script>
-            $(document).ready(function () {
-                $("#estado").change(function () {
-                    getCidades();
-                });
-
-            <c:if test = "${form == 'alterar'}">getCidades()</c:if>
-            });
-
-                function getCidades() {
-                    var estadoId = $("#estado").val();
-                    var url = "AJAXServlet?action=viewCidade";
-                    $.ajax({
-                        url: url, // URL da sua Servlet
-                        data: {
-                            estadoId: estadoId
-                        }, // ParÃ¢metro passado para a Servlet
-                        dataType: 'json',
-                        success: function (data) {
-                            $("#cidade").empty();
-                            $.each(data, function (i, obj) {
-                                var cidadeId =
-            <c:if test = "${form == 'alterar'}">${funcionario.endereco.cidade.idCidade}</c:if>
-            <c:if test = "${form != 'alterar'}">null</c:if>;
-                                var appendHtml = '<option ' +
-                                        (cidadeId === obj.idCidade ? 'selected' : '')
-                                        + ' value=' + obj.idCidade + '>' + obj.nome + '</option>';
-                                $("#cidade").append(appendHtml);
-                            });
-                        },
-                        error: function (request, textStatus, errorThrown) {
-                            alert(request.status + ', Error: ' + request.statusText);
-                        }
-                    });
-                }
-            </script>
-        </head>
-        <body>
+    </head>
+    <body>
         <c:import url="../components/header.jsp" ></c:import>
         <section class="hero is-info">
             <div class="hero-body">

@@ -26,6 +26,7 @@
                     <h1 class="title">
                         Lista de Clientes
                     </h1>
+                    <button class="button"><a href="ClienteServlet?action=form-new">Cadastrar Cliente</a></button>
                 </div>
             </div>
         </section>

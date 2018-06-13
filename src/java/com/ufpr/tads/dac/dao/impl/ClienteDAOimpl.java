@@ -41,10 +41,11 @@ public class ClienteDAOimpl implements ClienteDAO {
             if (idGerado == 0) {
                 throw new ClienteException("Erro cliente: não foi possivel gerar esse login");
             } else {
-                pst = con.prepareStatement("INSERT INTO bd4everalone.cliente(nome, cpf, sexo) VALUES(?,?,?);");
+                pst = con.prepareStatement("INSERT INTO bd4everalone.cliente(nome, cpf, sexo, codUser) VALUES(?,?,?,?)");
                 pst.setString(1, c.getNome());
                 pst.setString(2, c.getCpf());
                 pst.setString(3, c.getSexo());
+                pst.setInt(4, idGerado);
                 resp = pst.executeUpdate();
                 if (resp == 0) {
                     throw new ClienteException("Erro cliente: não foi possivel criar esse cliente");
@@ -94,19 +95,32 @@ public class ClienteDAOimpl implements ClienteDAO {
                 }
             }
             con = new ConnectionFactory().getConnection();
-            pst = con.prepareStatement("UPDATE bd4everalone.cliente SET descricao = ?, codEscolaridade= ?, codPele = ?, codCabelo = ?, codEndereco = ?, altura=? WHERE id = ?;");
+            pst = con.prepareStatement("UPDATE bd4everalone.cliente SET descricao = ?, codEscolaridade= ?, codPele = ?, codCabelo = ?, codEndereco = ?, altura=?, sexo = ?, cpf = ?, nome = ? WHERE id = ?;");
             pst.setString(1, c.getDescricao());
             pst.setInt(2, c.getEscolaridade().getIdEscolaridade());
             pst.setInt(3, c.getCorPele().getIdCorPele());
             pst.setInt(4, c.getCorCabelo().getIdCorCabelo());
             pst.setInt(5, idEndereco);
             pst.setInt(6, c.getAltura());
-            pst.setInt(7, c.getClienteId());
+            pst.setString(7, c.getSexo());
+            pst.setString(8, c.getCpf());
+            pst.setString(9, c.getNome());
+            pst.setInt(10, c.getClienteId());
+            System.out.println(c.getDescricao());
+            System.out.println(c.getEscolaridade().getIdEscolaridade());
+            System.out.println(c.getCorPele().getIdCorPele());
+            System.out.println(c.getCorCabelo().getIdCorCabelo());
+            System.out.println(idEndereco);
+            System.out.println(c.getAltura());
+            System.out.println(c.getSexo());
+            System.out.println( c.getCpf());
+            System.out.println(c.getNome());
+            System.out.println(c.getClienteId());
             int resp = pst.executeUpdate();
             if (resp == 0) {
                 throw new ClienteException("Erro cliente: não foi possivel salvar as informações do cliente.");
             }
-            if (c.getPreferencias().getIdPreferencia() == 0) {
+            if (c.getPreferencias() != null && c.getPreferencias().getIdPreferencia() == 0) {
                 con = new ConnectionFactory().getConnection();
                 pst = con.prepareStatement("INSERT INTO bd4everalone.preferencia(sexo, idadeMin, idadeMax,alturaMin,alturaMax,codPele, codCabelo, codCliente)VALUE(?,?,?,?,?,?,?,?);");
                 PreferenciaBean pr = c.getPreferencias();
@@ -123,7 +137,7 @@ public class ClienteDAOimpl implements ClienteDAO {
                 if (resp == 0) {
                     throw new ClienteException("Erro preferencia: não foi possivel salvar as informações das preferencias do cliente.");
                 }
-            } else {
+            } else if(c.getPreferencias() != null) {
                 con = new ConnectionFactory().getConnection();
                 pst = con.prepareStatement("UPDATE bd4everalone.preferencia SET sexo = ?, idadeMin = ?, idadeMax = ?, "
                         + "alturaMin = ?, alturaMax = ?, codPele = ?, codCabelo = ?, codCliente = ? WHERE id = ?;");
@@ -174,7 +188,8 @@ public class ClienteDAOimpl implements ClienteDAO {
                     + "LEFT JOIN bd4everalone.endereco ende ON ende.id = codEndereco\n"
                     + "LEFT JOIN bd4everalone.cidade on codCidade = cidade.id\n"
                     + "LEFT JOIN bd4everalone.estado on codEstado = estado.id\n"
-                    + "WHERE Cli.id = ?;");
+                    + "LEFT JOIN bd4everalone.usuario usu on usu.id = Cli.codUser\n"
+                    + "WHERE Cli.id = ? AND usu.dataExcluido IS NULL");
             pst.setInt(1, clienteId);
             System.out.println(pst);
             rs = pst.executeQuery();
@@ -224,7 +239,8 @@ public class ClienteDAOimpl implements ClienteDAO {
                     + "LEFT JOIN bd4everalone.endereco ende ON ende.id = codEndereco\n"
                     + "LEFT JOIN bd4everalone.cidade on codCidade = cidade.id\n"
                     + "LEFT JOIN bd4everalone.usuario usu ON usu.id = Cli.codUser\n"
-                    + "LEFT JOIN bd4everalone.estado on codEstado = estado.id");
+                    + "LEFT JOIN bd4everalone.estado on codEstado = estado.id\n"
+                    + "WHERE usu.dataExcluido IS NULL");
             rs = pst.executeQuery();
             while (rs.next()) {
                 CorPeleBean cp = new CorPeleBean(rs.getInt("idPele"), rs.getString("corPele"));
@@ -294,7 +310,7 @@ public class ClienteDAOimpl implements ClienteDAO {
                     + " INNER JOIN bd4everalone.escolaridade esco ON cliente.codEscolaridade = esco.id \n"
                     + " LEFT JOIN bd4everalone.encontro ON codCSolicitado AND codCSolicitado = cliente.id\n"
                     + " LEFT JOIN bd4everalone.usuario ON codUser = usuario.id\n"
-                    + "  WHERE ((altura BETWEEN ? AND ?) AND (YEAR(FROM_DAYS(TO_DAYS(NOW())-TO_DAYS(dataNasc))) BETWEEN ? AND ?)) AND sexo = ? AND codCidade = ? AND cliente.id != ? AND encontro.id IS NULL AND dataExcluido IS NULL\n"
+                    + "  WHERE ((altura BETWEEN ? AND ?) AND (YEAR(FROM_DAYS(TO_DAYS(NOW())-TO_DAYS(dataNasc))) BETWEEN ? AND ?)) AND sexo = ? AND usuario.dataExcluido IS NULL AND codCidade = ? AND cliente.id != ? AND encontro.id IS NULL AND dataExcluido IS NULL\n"
                     + " ORDER BY  codPele = ? desc, codCabelo = ? desc;");
             pst.setInt(1, p.getAltura()[0]);
             pst.setInt(2, p.getAltura()[1]);
@@ -362,9 +378,10 @@ public class ClienteDAOimpl implements ClienteDAO {
         PreparedStatement pst = null;
         try {
             con = new ConnectionFactory().getConnection();
-            pst = con.prepareStatement("UPDATE bd4everalone.usuario SET dataExcluido = ? WHERE ID = (SELECT usuario.id FROM bd4everalone.cliente\n"
-                    + "INNER JOIN bd4everalone.usuario ON usuario.id = codUser\n"
-                    + "WHERE cliente.id = ?); ");
+            pst = con.prepareStatement("UPDATE bd4everalone.usuario u SET dataExcluido = ? WHERE id = "
+                    + "(select * from (SELECT usu.id FROM bd4everalone.cliente\n"
+                    + "INNER JOIN bd4everalone.usuario usu ON usu.id = codUser\n"
+                    + "WHERE cliente.id = ?) us)");
             pst.setDate(1, new java.sql.Date(new java.util.Date().getTime()));
             pst.setInt(2, clienteId);
             int resp = pst.executeUpdate();
@@ -372,6 +389,7 @@ public class ClienteDAOimpl implements ClienteDAO {
                 throw new ClienteException("Erro cliente: erro na tentativa de exclusão do cliente");
             }
         } catch (SQLException e) {
+            System.out.println(e);
             throw new ClienteException("Erro cliente: comando sql invalido");
         } finally {
             if (pst != null) {

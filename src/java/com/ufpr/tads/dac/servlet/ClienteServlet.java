@@ -39,153 +39,208 @@ public class ClienteServlet extends HttpServlet {
         UserBean login = (UserBean) session.getAttribute("user");
         ArrayList<CorPeleBean> coresPele = new ArrayList<>();
         ArrayList<CorCabeloBean> coresCabelo = new ArrayList<>();
+        request.setCharacterEncoding("UTF-8");
 
         if (login == null) {
             //envia para fazer login
             request.setAttribute("msg", "É necessario esta logado para acessar essa pagina");
             request.getRequestDispatcher("index.jsp").forward(request, response);
         } else {
-            //usuario logado
-            if (login.isCliente()) {
-                //usuario Cliente
-                String action = request.getParameter("action");
-                ClienteFacade cf = new ClienteFacade();
-                switch (action) {
-                    case "view":
+            String action = request.getParameter("action");
+            ClienteFacade cf = new ClienteFacade();
+            switch (action) {
+                case "list":
+                    if (!login.getFuncionario()) {
+                        request.setAttribute("msg", "Você não tem acesso a este conteúdo.");
+                        request.getRequestDispatcher("jsp/erro.jsp").forward(request, response);
+                        return;
+                    }
+                    try {
+                        request.setAttribute("clientes", ClienteFacade.getAllClientes());
+                        request.getRequestDispatcher("jsp/lista-clientes.jsp").forward(request, response);
+                    } catch (ClienteException ex) {
+                        request.setAttribute("msg", ex);
+                        request.getRequestDispatcher("jsp/erro.jsp").forward(request, response);
+                    }
+                    break;
+                case "view":
+                    try {
+                        System.out.println("View Cliente");
+                        request.setAttribute("form", "alterar");
+                        request.setAttribute("cliente", cf.getClienteById(login.getClienteId()));
+                        request.setAttribute("escolaridade", EscolaridadeFacade.getAllEscolaridade());
+                        coresPele = CorPeleFacade.getAllCoresPele();
+                        request.setAttribute("corPele", coresPele);
+                        coresCabelo = CorCabeloFacade.getAllCoresCabelo();
+                        request.setAttribute("corCabelo", coresCabelo);
+                        request.setAttribute("estados", EstadoFacade.getAllEstados());
+                        request.getRequestDispatcher("jsp/perfil.jsp").forward(request, response);
+                    } catch (ClienteException | EnderecoException | CorPeleException
+                            | CorCabeloException | EscolaridadeException | EstadoException ex) {
+                        request.setAttribute("msg", ex);
+                        request.getRequestDispatcher("jsp/erro.jsp").forward(request, response);
+                    }
+                    break;
+                case "salva":
+                    // passar corCabelo(id), corPele(id), escolaridade(id), se houver Endereco(id), rua, cidade(id), descricao e dataNasc em string 
+                    ClienteBean cliente;
+                    try {
+                        cliente = cf.getClienteById(login.getClienteId());
+                        coresPele = CorPeleFacade.getAllCoresPele();
+                        coresCabelo = CorCabeloFacade.getAllCoresCabelo();
+
+                        cliente.setClienteId(login.getClienteId());
+                        cliente.setCorCabelo(new CorCabeloBean(request.getParameter("corCabelo") == null ? 0 : Integer.parseInt(request.getParameter("corCabelo"))));
+                        cliente.setCorPele(new CorPeleBean(request.getParameter("corPele") == null ? 0 : Integer.parseInt(request.getParameter("corPele"))));
+                        cliente.setEscolaridade(new EscolaridadeBean(request.getParameter("escolaridade") == null ? 0 : Integer.parseInt(request.getParameter("escolaridade"))));
+                        cliente.setEndereco(new EnderecoBean(request.getParameter("idEndereco") == null ? 0 : Integer.parseInt(request.getParameter("idEndereco")),
+                                request.getParameter("rua"), new CidadeBean(request.getParameter("idCidade") == null ? 0 : Integer.parseInt(request.getParameter("idCidade")))));
+                        cliente.setDataNasc(request.getParameter("dataNasc"));
+                        cliente.setAltura(request.getParameter("altura") == null ? 0 : Integer.parseInt(request.getParameter("altura")));
+                        cliente.setDescricao(request.getParameter("descricao"));
+                        PreferenciaBean pf = cliente.getPreferencias();
+                        pf.setSexo(request.getParameter("psexo"));
+                        int corCabeloId = request.getParameter("pcorCabelo") == null ? 0 : Integer.parseInt(request.getParameter("pcorCabelo"));
+
+                        for (int i = 0; i < coresCabelo.size(); i++) {
+                            if (coresCabelo.get(i).getIdCorCabelo() == corCabeloId) {
+                                pf.setCorCabelo(coresCabelo.get(i));
+                                break;
+                            }
+                        }
+                        int corPeleId = request.getParameter("pcorPele") == null ? 0 : Integer.parseInt(request.getParameter("pcorPele"));
+                        for (int i = 0; i < coresPele.size(); i++) {
+                            if (coresPele.get(i).getIdCorPele() == corPeleId) {
+                                System.out.println(coresPele.get(i).getCor());
+                                pf.setCorPele(coresPele.get(i));
+                                break;
+                            }
+                        }
+                        String idadeStr[] = request.getParameter("pidade").split(" - ");
+                        int[] idade = {Integer.parseInt(idadeStr[0]), Integer.parseInt(idadeStr[1])};
+                        pf.setIdade(idade);
+
+                        String alturaStr[] = request.getParameter("paltura").split(" - ");
+                        int[] altura = {Integer.parseInt(alturaStr[0]), Integer.parseInt(alturaStr[1])};
+                        pf.setAltura(altura);
+
+                        cliente.setPreferencias(pf);
                         try {
-                            System.out.println("View Cliente");
-                            request.setAttribute("form", "alterar");
-                            request.setAttribute("cliente", cf.getClienteById(login.getClienteId()));
-                            request.setAttribute("escolaridade", EscolaridadeFacade.getAllEscolaridade());
-                            coresPele = CorPeleFacade.getAllCoresPele();
-                            request.setAttribute("corPele", coresPele);
-                            coresCabelo = CorCabeloFacade.getAllCoresCabelo();
-                            request.setAttribute("corCabelo", coresCabelo);
-                            request.setAttribute("estados", EstadoFacade.getAllEstados());
-                            request.getRequestDispatcher("jsp/perfil.jsp").forward(request, response);
-                        } catch (ClienteException | EnderecoException | CorPeleException
-                                | CorCabeloException | EscolaridadeException | EstadoException ex) {
+                            cf.updateCliente(cliente);
+                            request.setAttribute("salvo", true);
+                            request.getRequestDispatcher("ClienteServlet?action=view").forward(request, response);
+                        } catch (ClienteException ex) {
                             request.setAttribute("msg", ex);
                             request.getRequestDispatcher("jsp/erro.jsp").forward(request, response);
                         }
-                        break;
-                    case "salva":
-                        // passar corCabelo(id), corPele(id), escolaridade(id), se houver Endereco(id), rua, cidade(id), descricao e dataNasc em string 
-                        ClienteBean cliente;
-                        try {
-                            cliente = cf.getClienteById(login.getClienteId());
-                            coresPele = CorPeleFacade.getAllCoresPele();
-                            coresCabelo = CorCabeloFacade.getAllCoresCabelo();
+                    } catch (ClienteException | EnderecoException | CorCabeloException | CorPeleException ex) {
+                        request.setAttribute("msg", ex);
+                        request.getRequestDispatcher("jsp/erro.jsp").forward(request, response);
+                    }
 
-                            cliente.setClienteId(login.getClienteId());
-                            cliente.setCorCabelo(new CorCabeloBean(request.getParameter("corCabelo") == null ? 0 : Integer.parseInt(request.getParameter("corCabelo"))));
-                            cliente.setCorPele(new CorPeleBean(request.getParameter("corPele") == null ? 0 : Integer.parseInt(request.getParameter("corPele"))));
-                            cliente.setEscolaridade(new EscolaridadeBean(request.getParameter("escolaridade") == null ? 0 : Integer.parseInt(request.getParameter("escolaridade"))));
-                            cliente.setEndereco(new EnderecoBean(request.getParameter("idEndereco") == null ? 0 : Integer.parseInt(request.getParameter("idEndereco")),
-                                    request.getParameter("rua"), new CidadeBean(request.getParameter("idCidade") == null ? 0 : Integer.parseInt(request.getParameter("idCidade")))));
-                            cliente.setDataNasc(request.getParameter("dataNasc"));
-                            cliente.setAltura(request.getParameter("altura") == null ? 0 : Integer.parseInt(request.getParameter("altura")));
-                            cliente.setDescricao(request.getParameter("descricao"));
-                            PreferenciaBean pf = cliente.getPreferencias();
-                            pf.setSexo(request.getParameter("psexo"));
-                            int corCabeloId = request.getParameter("pcorCabelo") == null ? 0 : Integer.parseInt(request.getParameter("pcorCabelo"));
-
-                            for (int i = 0; i < coresCabelo.size(); i++) {
-                                if (coresCabelo.get(i).getIdCorCabelo() == corCabeloId) {
-                                    pf.setCorCabelo(coresCabelo.get(i));
-                                    break;
-                                }
-                            }
-                            int corPeleId = request.getParameter("pcorPele") == null ? 0 : Integer.parseInt(request.getParameter("pcorPele"));
-                            for (int i = 0; i < coresPele.size(); i++) {
-                                if (coresPele.get(i).getIdCorPele() == corPeleId) {
-                                    System.out.println(coresPele.get(i).getCor());
-                                    pf.setCorPele(coresPele.get(i));
-                                    break;
-                                }
-                            }
-                            String idadeStr[] = request.getParameter("pidade").split(" - ");
-                            int[] idade = {Integer.parseInt(idadeStr[0]), Integer.parseInt(idadeStr[1])};
-                            pf.setIdade(idade);
-
-                            String alturaStr[] = request.getParameter("paltura").split(" - ");
-                            int[] altura = {Integer.parseInt(alturaStr[0]), Integer.parseInt(alturaStr[1])};
-                            pf.setAltura(altura);
-
-                            cliente.setPreferencias(pf);
-                            try {
-                                cf.updateCliente(cliente);
-                                request.setAttribute("salvo", true);
-                                request.getRequestDispatcher("ClienteServlet?action=view").forward(request, response);
-                            } catch (ClienteException ex) {
-                                request.setAttribute("msg", ex);
-                                request.getRequestDispatcher("jsp/erro.jsp").forward(request, response);
-                            }
-                        } catch (ClienteException | EnderecoException | CorCabeloException | CorPeleException ex) {
-                            request.setAttribute("msg", ex);
-                            request.getRequestDispatcher("jsp/erro.jsp").forward(request, response);
-                        }
-
-                        break;
-                    case "user":
-                        break;
-                }
-            } else {
-                String action = request.getParameter("action");
-                System.out.println("Funcionario");
-                switch (action) {
-                    case "form-new":
-                        request.setAttribute("cliente", null);
+                    break;
+                case "user":
+                    break;
+                case "form-new":
+                    if (!login.getFuncionario()) {
+                        request.setAttribute("msg", "Você não tem acesso a este conteúdo.");
+                        request.getRequestDispatcher("jsp/erro.jsp").forward(request, response);
+                        return;
+                    }
+                    request.getRequestDispatcher("jsp/form-cliente.jsp").forward(request, response);
+                    break;  
+                case "edit":
+                    if (!login.getFuncionario()) {
+                        request.setAttribute("msg", "Você não tem acesso a este conteúdo.");
+                        request.getRequestDispatcher("jsp/erro.jsp").forward(request, response);
+                        return;
+                    }
+                    try {
+                        request.setAttribute("form", "alterar");
+                        request.setAttribute("escolaridade", EscolaridadeFacade.getAllEscolaridade());
+                        coresPele = CorPeleFacade.getAllCoresPele();
+                        request.setAttribute("corPele", coresPele);
+                        coresCabelo = CorCabeloFacade.getAllCoresCabelo();
+                        request.setAttribute("corCabelo", coresCabelo);
+                        request.setAttribute("estados", EstadoFacade.getAllEstados());
+                        request.setAttribute("cliente", ClienteFacade.getClienteById(Integer.parseInt(request.getParameter("clienteId"))));
                         request.getRequestDispatcher("jsp/form-cliente.jsp").forward(request, response);
-                        break;
-                    case "edit":
-                        try {
-                            request.setAttribute("cliente", ClienteFacade.getClienteById(Integer.parseInt(request.getParameter("clienteId"))));
-                            request.getRequestDispatcher("jsp/form-cliente.jsp").forward(request, response);
-                        } catch (ClienteException ex) {
-                            request.setAttribute("msg", ex);
-                            request.getRequestDispatcher("jsp/erro.jsp").forward(request, response);
-                        } catch (EnderecoException ex) {
-                            request.setAttribute("msg", ex);
-                            request.getRequestDispatcher("jsp/erro.jsp").forward(request, response);
-                        }
-                        break;
-                    case "salva":
-                        try {
-                            ClienteFacade.setNovoCliente(new ClienteBean(request.getParameter("nome"), request.getParameter("cpf"), request.getParameter("sexo")), request.getParameter("email"));
-                        } catch (ClienteException ex) {
-                            request.setAttribute("msg", ex);
-                            request.getRequestDispatcher("jsp/erro.jsp").forward(request, response);
-                        }
-                        break;
-                    case "view":
-                        try {
-                            request.setAttribute("clientes", ClienteFacade.getAllClientes());
-                            request.getRequestDispatcher("jsp/lista-clientes.jsp").forward(request, response);
-                        } catch (ClienteException ex) {
-                            request.setAttribute("msg", ex);
-                            request.getRequestDispatcher("jsp/erro.jsp").forward(request, response);
-                        }
-                        break;
+                    } catch (ClienteException | EnderecoException | EstadoException | EscolaridadeException | CorCabeloException | CorPeleException ex) {
+                        request.setAttribute("msg", ex);
+                        request.getRequestDispatcher("jsp/erro.jsp").forward(request, response);
+                    }
+                    break;
+                case "salva-new":
+                    if (!login.getFuncionario()) {
+                        request.setAttribute("msg", "Você não tem acesso a este conteúdo.");
+                        request.getRequestDispatcher("jsp/erro.jsp").forward(request, response);
+                        return;
+                    }
+                    try {
+                        ClienteFacade.setNovoCliente(new ClienteBean(request.getParameter("nome"), request.getParameter("cpf"), request.getParameter("sexo")), request.getParameter("email"));
+                        request.getRequestDispatcher("ClienteServlet?action=list").forward(request, response);
+                    } catch (ClienteException ex) {
+                        request.setAttribute("msg", ex);
+                        request.getRequestDispatcher("jsp/erro.jsp").forward(request, response);
+                    }
+                    break;
 
-                    case "update":
-                        break;
-                    case "delete":
+                case "update":
+                    if (!login.getFuncionario()) {
+                        request.setAttribute("msg", "Você não tem acesso a este conteúdo.");
+                        request.getRequestDispatcher("jsp/erro.jsp").forward(request, response);
+                        return;
+                    }
+                    try {
+                        ClienteBean cc = new ClienteBean();
+
+                        cc.setClienteId(request.getParameter("clienteId") == null ? 0 : Integer.parseInt(request.getParameter("clienteId")));
+                        cc.setCorCabelo(new CorCabeloBean(request.getParameter("corCabelo") == null ? 0 : Integer.parseInt(request.getParameter("corCabelo"))));
+                        cc.setCorPele(new CorPeleBean(request.getParameter("corPele") == null ? 0 : Integer.parseInt(request.getParameter("corPele"))));
+                        cc.setEscolaridade(new EscolaridadeBean(request.getParameter("escolaridade") == null ? 0 : Integer.parseInt(request.getParameter("escolaridade"))));
+                        cc.setEndereco(new EnderecoBean(request.getParameter("idEndereco") == null ? 0 : Integer.parseInt(request.getParameter("idEndereco")),
+                                request.getParameter("rua"), new CidadeBean(request.getParameter("idCidade") == null ? 0 : Integer.parseInt(request.getParameter("idCidade")))));
+                        cc.setDataNasc(request.getParameter("dataNasc"));
+                        cc.setAltura(request.getParameter("altura") == null ? 0 : Integer.parseInt(request.getParameter("altura")));
+                        cc.setDescricao(request.getParameter("descricao"));
+                        cc.setCpf(request.getParameter("cpf"));
+                        cc.setSexo(request.getParameter("sexo"));
+                        cc.setNome(request.getParameter("nome"));
+
                         try {
-                            ClienteFacade.deleteClienteById(Integer.parseInt(request.getParameter("idCliente")));
-                            response.sendRedirect("/ClienteServlet?action=view");
+                            cf.updateCliente(cc);
+                            request.setAttribute("salvo", true);
+                            request.getRequestDispatcher("ClienteServlet?action=view").forward(request, response);
                         } catch (ClienteException ex) {
                             request.setAttribute("msg", ex);
                             request.getRequestDispatcher("jsp/erro.jsp").forward(request, response);
                         }
+                    } catch (Exception ex) {
+                        request.setAttribute("msg", ex);
+                        request.getRequestDispatcher("jsp/erro.jsp").forward(request, response);
+                    }
 
-                        break;
-                }
+                    break;
+                case "delete":
+                    if (!login.getFuncionario()) {
+                        request.setAttribute("msg", "Você não tem acesso a este conteúdo.");
+                        request.getRequestDispatcher("jsp/erro.jsp").forward(request, response);
+                        return;
+                    }
+                    try {
+                        ClienteFacade.deleteClienteById(Integer.parseInt(request.getParameter("clienteId")));
+                        response.sendRedirect("ClienteServlet?action=list");
+                    } catch (ClienteException ex) {
+                        request.setAttribute("msg", ex);
+                        request.getRequestDispatcher("jsp/erro.jsp").forward(request, response);
+                    }
+
+                    break;
             }
         }
     }
 
-    // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
+// <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
     /**
      * Handles the HTTP <code>GET</code> method.
      *

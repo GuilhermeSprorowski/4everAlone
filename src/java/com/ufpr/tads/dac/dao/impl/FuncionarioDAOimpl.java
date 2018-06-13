@@ -105,7 +105,7 @@ public class FuncionarioDAOimpl implements FuncionarioDAO {
             con = new ConnectionFactory().getConnection();
             pst = con.prepareStatement("SELECT funcionario.id, salario, funcionario.nome, cpf, dataNasc, dataCadastro FROM bd4everalone.funcionario\n"
                     + "INNER JOIN bd4everalone.usuario ON codUser = usuario.id\n"
-                    + "WHERE dataDemissao IS NULL AND funcionario.id = ?");
+                    + "WHERE dataDemissao IS NULL AND usuario.dataExcluido IS NULL AND funcionario.id = ?");
             pst.setInt(1, idFuncionario);
             rs = pst.executeQuery();
             while (rs.next()) {
@@ -136,7 +136,7 @@ public class FuncionarioDAOimpl implements FuncionarioDAO {
             con = new ConnectionFactory().getConnection();
             pst = con.prepareStatement("SELECT funcionario.id, salario, funcionario.nome, cpf, dataNasc, dataCadastro FROM bd4everalone.funcionario\n"
                     + "INNER JOIN bd4everalone.usuario ON codUser = usuario.id\n"
-                    + "WHERE dataDemissao IS NULL;");
+                    + "WHERE dataDemissao IS NULL AND usuario.dataExcluido IS NULL");
             rs = pst.executeQuery();
             while (rs.next()) {
                 al.add(new FuncionarioBean(rs.getInt("id"), rs.getString("nome"), rs.getDouble("salario"), rs.getDate("dataNasc"), rs.getDate("dataCadastro")));

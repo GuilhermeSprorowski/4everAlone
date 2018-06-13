@@ -15,7 +15,7 @@
             <a class="navbar-item is-active" href="HomeServlet">
                 Home
             </a>
-            <a class="navbar-item" href="ClienteServlet?action=view">
+            <a class="navbar-item" href="ClienteServlet?action=list">
                 Administrar clientes
             </a>
             <a class="navbar-item" href="FestaServlet?action=cadastrar">
