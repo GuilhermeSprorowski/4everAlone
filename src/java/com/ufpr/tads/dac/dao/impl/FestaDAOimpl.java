@@ -129,9 +129,6 @@ public class FestaDAOimpl implements FestaDAO {
                 EnderecoBean eb = new EnderecoBean(rs.getInt("codEndereco"),rs.getString("rua"),new CidadeBean(rs.getInt("codCidade"), rs.getString("cidade")), new EstadoBean(rs.getInt("codEstado"), rs.getString("sigla")), rs.getString("local"));
                 al.add(new FestaBean(rs.getInt("id"), rs.getInt("vagas"),rs.getString("descricao"),rs.getString("tema"), rs.getTimestamp("dataHora"), fb, eb));
             }
-            if (al.isEmpty()) {
-                throw new FestaException("Erro Festa: Falha ao procurar estas festas");
-            }
             return al;
         } catch (SQLException e) {
             System.out.println(e);

@@ -135,64 +135,93 @@ public class ClienteServlet extends HttpServlet {
                 System.out.println("Funcionario");
                 switch (action) {
                     case "form-new":
-                        request.getRequestDispatcher("jsp/form-new-cliente.jsp").forward(request, response);
+                        request.setAttribute("cliente", null);
+                        request.getRequestDispatcher("jsp/form-cliente.jsp").forward(request, response);
+                        break;
+                    case "edit":
+                        try {
+                            request.setAttribute("cliente", ClienteFacade.getClienteById(Integer.parseInt(request.getParameter("clienteId"))));
+                            request.getRequestDispatcher("jsp/form-cliente.jsp").forward(request, response);
+                        } catch (ClienteException ex) {
+                            request.setAttribute("msg", ex);
+                            request.getRequestDispatcher("jsp/erro.jsp").forward(request, response);
+                        } catch (EnderecoException ex) {
+                            request.setAttribute("msg", ex);
+                            request.getRequestDispatcher("jsp/erro.jsp").forward(request, response);
+                        }
                         break;
                     case "salva":
                         try {
-                            ClienteFacade.setNovoCliente(new ClienteBean(request.getParameter("nome"),request.getParameter("cpf"), request.getParameter("sexo")), request.getParameter("email"));
+                            ClienteFacade.setNovoCliente(new ClienteBean(request.getParameter("nome"), request.getParameter("cpf"), request.getParameter("sexo")), request.getParameter("email"));
+                        } catch (ClienteException ex) {
+                            request.setAttribute("msg", ex);
+                            request.getRequestDispatcher("jsp/erro.jsp").forward(request, response);
+                        }
+                        break;
+                    case "view":
+                        try {
+                            request.setAttribute("clientes", ClienteFacade.getAllClientes());
+                            request.getRequestDispatcher("jsp/lista-clientes.jsp").forward(request, response);
                         } catch (ClienteException ex) {
                             request.setAttribute("msg", ex);
                             request.getRequestDispatcher("jsp/erro.jsp").forward(request, response);
                         }
                         break;
 
+                    case "update":
+                        break;
+                    case "delete":
+                        try {
+                            ClienteFacade.deleteClienteById(Integer.parseInt(request.getParameter("idCliente")));
+                            response.sendRedirect("/ClienteServlet?action=view");
+                        } catch (ClienteException ex) {
+                            request.setAttribute("msg", ex);
+                            request.getRequestDispatcher("jsp/erro.jsp").forward(request, response);
+                        }
+
+                        break;
                 }
             }
         }
     }
 
-        // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
-        /**
-         * Handles the HTTP <code>GET</code> method.
-         *
-         * @param request servlet request
-         * @param response servlet response
-         * @throws ServletException if a servlet-specific error occurs
-         * @throws IOException if an I/O error occurs
-         */
-        @Override
-        protected void doGet
-        (HttpServletRequest request, HttpServletResponse response)
+    // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
+    /**
+     * Handles the HTTP <code>GET</code> method.
+     *
+     * @param request servlet request
+     * @param response servlet response
+     * @throws ServletException if a servlet-specific error occurs
+     * @throws IOException if an I/O error occurs
+     */
+    @Override
+    protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-            processRequest(request, response);
-        }
-
-        /**
-         * Handles the HTTP <code>POST</code> method.
-         *
-         * @param request servlet request
-         * @param response servlet response
-         * @throws ServletException if a servlet-specific error occurs
-         * @throws IOException if an I/O error occurs
-         */
-        @Override
-        protected void doPost
-        (HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-            processRequest(request, response);
-        }
-
-        /**
-         * Returns a short description of the servlet.
-         *
-         * @return a String containing servlet description
-         */
-        @Override
-        public String getServletInfo
-        
-        
-            () {
-        return "Short description";
-        }// </editor-fold>
-
+        processRequest(request, response);
     }
+
+    /**
+     * Handles the HTTP <code>POST</code> method.
+     *
+     * @param request servlet request
+     * @param response servlet response
+     * @throws ServletException if a servlet-specific error occurs
+     * @throws IOException if an I/O error occurs
+     */
+    @Override
+    protected void doPost(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        processRequest(request, response);
+    }
+
+    /**
+     * Returns a short description of the servlet.
+     *
+     * @return a String containing servlet description
+     */
+    @Override
+    public String getServletInfo() {
+        return "Short description";
+    }// </editor-fold>
+
+}

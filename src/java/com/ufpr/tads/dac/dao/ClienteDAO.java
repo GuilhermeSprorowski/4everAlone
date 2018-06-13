@@ -15,5 +15,6 @@ public interface ClienteDAO {
     public ClienteBean getClienteById(int clienteId) throws ClienteException, EnderecoException;
     public ArrayList<ClienteBean> getAllClientes() throws ClienteException, EnderecoException;
     public boolean isCpfDisponivel(String cpf) throws ClienteException;
+    public void deleteClienteById(int clienteId) throws ClienteException;
     public ArrayList<ClienteBean> getClientesCompativeis(PreferenciaBean p, int cidade, int idCliente)throws ClienteException;
 }

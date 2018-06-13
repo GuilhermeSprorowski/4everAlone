@@ -29,13 +29,13 @@
         </section>
         
         <div class="container margem">
+            <c:if test="${festaList.isEmpty()}"> <h1>Nenhuma Festa Registrada<h1></c:if>
             <c:forEach items="${festaList}" var="festa">
                 <div class="card">
                   <header class="card-header">
                     <p class="card-header-title title">
                       ${festa.tema}
                     </p>
-                    
                   </header>
                     <footer style="margin-left: 15px; margin-right: 15px;" class="card-footer flex-row">
                         <p><strong><i class="fas fa-calendar-alt"></i></strong> <fmt:formatDate type="date" value="${festa.datahora}"/></p>

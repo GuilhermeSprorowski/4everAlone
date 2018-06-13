@@ -26,7 +26,7 @@
             </a>
             <c:if test="${user.adm}">
                 <a class="navbar-item" href="FuncionarioServlet?action=list">
-                    Funcionários
+                  Administrar Funcionários
                 </a>
             </c:if>
             <a class="navbar-item" href="LogoutServlet">

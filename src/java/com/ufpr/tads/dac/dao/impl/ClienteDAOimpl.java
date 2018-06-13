@@ -158,13 +158,14 @@ public class ClienteDAOimpl implements ClienteDAO {
 
     @Override
     public ClienteBean getClienteById(int clienteId) throws ClienteException, EnderecoException {
+        System.out.println("getClienteById");
         PreparedStatement pst = null;
         ResultSet rs = null;
         try {
             con = new ConnectionFactory().getConnection();
             pst = con.prepareStatement("SELECT Cli.id as id, Cli.nome, cpf, dataNasc, Cli.sexo as sexoc, Cli.descricao as descricao,altura, codEscolaridade,  E.descricao as escolaridade,  \n"
                     + "c.descricao as corCabelo, c.id as idCabelo, estado.id as codEstado, p.descricao as corPele,p.id as idPele,pref.id as codPreferencia, pref.*,codEndereco,ende.*,cidade.nome as cidade, estado.sigla as uf,\n"
-                    + "(SELECT descricao FROM corPele WHERE pref.codPele = id) as prefCorPele, (SELECT descricao FROM corCabelo WHERE pref.codCabelo = id) as prefCorCabelo\n"
+                    + "(SELECT descricao FROM bd4everalone.corPele WHERE pref.codPele = id) as prefCorPele, (SELECT descricao FROM bd4everalone.corCabelo WHERE pref.codCabelo = id) as prefCorCabelo\n"
                     + "FROM bd4everalone.cliente Cli\n"
                     + "LEFT JOIN bd4everalone.escolaridade E ON codEscolaridade = E.id\n"
                     + "LEFT JOIN bd4everalone.corcabelo c ON Cli.codCabelo = c.id\n"
@@ -175,6 +176,7 @@ public class ClienteDAOimpl implements ClienteDAO {
                     + "LEFT JOIN bd4everalone.estado on codEstado = estado.id\n"
                     + "WHERE Cli.id = ?;");
             pst.setInt(1, clienteId);
+            System.out.println(pst);
             rs = pst.executeQuery();
             while (rs.next()) {
                 CorPeleBean cp = new CorPeleBean(rs.getInt("idPele"), rs.getString("corPele"));
@@ -185,6 +187,7 @@ public class ClienteDAOimpl implements ClienteDAO {
                 int[] pa = {rs.getInt("alturaMin"), rs.getInt("alturaMax")};
                 int[] pi = {rs.getInt("idadeMin"), rs.getInt("idadeMax")};
                 PreferenciaBean pb = new PreferenciaBean(rs.getInt("codPreferencia"), rs.getString("sexo"), pi, pa, new CorCabeloBean(rs.getInt("codCabelo"), rs.getString("prefCorCabelo")), new CorPeleBean(rs.getInt("codPele"), rs.getString("prefCorPele")));
+                System.out.println("chegou2!!");
                 return new ClienteBean(rs.getInt("id"), rs.getString("nome"), rs.getString("cpf"), rs.getDate("dataNasc"), rs.getString("sexoc"),
                         rs.getString("descricao"), cp, cc, eb, esco, pb, rs.getInt("altura"));
             }
@@ -290,7 +293,8 @@ public class ClienteDAOimpl implements ClienteDAO {
                     + " INNER JOIN bd4everalone.endereco ON codEndereco = endereco.id\n"
                     + " INNER JOIN bd4everalone.escolaridade esco ON cliente.codEscolaridade = esco.id \n"
                     + " LEFT JOIN bd4everalone.encontro ON codCSolicitado AND codCSolicitado = cliente.id\n"
-                    + "  WHERE ((altura BETWEEN ? AND ?) AND (YEAR(FROM_DAYS(TO_DAYS(NOW())-TO_DAYS(dataNasc))) BETWEEN ? AND ?)) AND sexo = ? AND codCidade = ? AND cliente.id != ? AND encontro.id IS NULL\n"
+                    + " LEFT JOIN bd4everalone.usuario ON codUser = usuario.id\n"
+                    + "  WHERE ((altura BETWEEN ? AND ?) AND (YEAR(FROM_DAYS(TO_DAYS(NOW())-TO_DAYS(dataNasc))) BETWEEN ? AND ?)) AND sexo = ? AND codCidade = ? AND cliente.id != ? AND encontro.id IS NULL AND dataExcluido IS NULL\n"
                     + " ORDER BY  codPele = ? desc, codCabelo = ? desc;");
             pst.setInt(1, p.getAltura()[0]);
             pst.setInt(2, p.getAltura()[1]);
@@ -302,6 +306,7 @@ public class ClienteDAOimpl implements ClienteDAO {
             pst.setInt(8, p.getCorCabelo().getIdCorCabelo());
             pst.setInt(9, p.getCorPele().getIdCorPele());
             rs = pst.executeQuery();
+            System.out.println(pst);
             final ArrayList<ClienteBean> al = new ArrayList<ClienteBean>();
             while (rs.next()) {
                 al.add(new ClienteBean(rs.getInt("id"), rs.getString("nome"), rs.getString("sexo"), rs.getDate("dataNasc"), rs.getInt("altura"),
@@ -339,6 +344,33 @@ public class ClienteDAOimpl implements ClienteDAO {
                 ret = rs.getString("email");
             }
             return ret;
+        } catch (SQLException e) {
+            throw new ClienteException("Erro cliente: comando sql invalido");
+        } finally {
+            if (pst != null) {
+                try {
+                    pst.close();
+                } catch (SQLException ex) {
+                    throw new ClienteException("Erro cliente: erro ao fechar conecxão");
+                }
+            }
+        }
+    }
+
+    @Override
+    public void deleteClienteById(int clienteId) throws ClienteException {
+        PreparedStatement pst = null;
+        try {
+            con = new ConnectionFactory().getConnection();
+            pst = con.prepareStatement("UPDATE bd4everalone.usuario SET dataExcluido = ? WHERE ID = (SELECT usuario.id FROM bd4everalone.cliente\n"
+                    + "INNER JOIN bd4everalone.usuario ON usuario.id = codUser\n"
+                    + "WHERE cliente.id = ?); ");
+            pst.setDate(1, new java.sql.Date(new java.util.Date().getTime()));
+            pst.setInt(2, clienteId);
+            int resp = pst.executeUpdate();
+            if (resp == 0) {
+                throw new ClienteException("Erro cliente: erro na tentativa de exclusão do cliente");
+            }
         } catch (SQLException e) {
             throw new ClienteException("Erro cliente: comando sql invalido");
         } finally {

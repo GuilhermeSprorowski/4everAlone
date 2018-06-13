@@ -21,9 +21,7 @@ public class ClienteFacade {
 
     public static void setNovoCliente(ClienteBean cb, String email) throws ClienteException{
         ClienteDAO.setCliente(cb, email);
-        
     }
-
     public static ArrayList<ClienteBean> getAllClientes() throws ClienteException {
         return ClienteDAO.getAllClientes();
     }
@@ -36,5 +34,8 @@ public class ClienteFacade {
     }
     public Boolean isCpfDisponivel(String cpf)throws ClienteException {
        return ClienteDAO.isCpfDisponivel(cpf);
+    }
+    public static void deleteClienteById(int clienteId) throws ClienteException{
+        ClienteDAO.deleteClienteById(clienteId);
     }
 }

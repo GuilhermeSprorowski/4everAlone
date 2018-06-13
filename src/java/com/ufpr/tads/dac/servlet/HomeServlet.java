@@ -40,10 +40,10 @@ public class HomeServlet extends HttpServlet {
                 try {
                     request.setAttribute("festaList", FestaFacade.getAllFesta());
                     request.setAttribute("login", login);
-                    request.getRequestDispatcher("/jsp/home-funcionario.jsp").forward(request, response);
+                    request.getRequestDispatcher("jsp/home-funcionario.jsp").forward(request, response);
                 } catch (FestaException ex) {
                     request.setAttribute("msg", ex);
-                    request.getRequestDispatcher("erro.jsp").forward(request, response);
+                    request.getRequestDispatcher("jsp/erro.jsp").forward(request, response);
                 }
             } else {
                 // usuarioCliente
@@ -54,7 +54,7 @@ public class HomeServlet extends HttpServlet {
                 } catch (EncontroException ex) {
                     System.out.println(ex);
                     request.setAttribute("msg", ex);
-                    request.getRequestDispatcher("erro.jsp").forward(request, response);
+                    request.getRequestDispatcher("jsp/erro.jsp").forward(request, response);
                     return;
                 }
                 ConviteFacade cf = new ConviteFacade();

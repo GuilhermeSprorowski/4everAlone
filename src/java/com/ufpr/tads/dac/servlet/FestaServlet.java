@@ -43,19 +43,20 @@ import javax.servlet.http.HttpSession;
 
 @WebServlet(name = "FestaServlet", urlPatterns = {"/FestaServlet"})
 public class FestaServlet extends HttpServlet {
+
     private void SendEmail(int cliId, FestaBean festa) {
         try {
             Email to = new Email(ClienteFacade.getEmailCliente(cliId));
 
             Email from = new Email("eliasdarruda@gmail.com");
             String subject = "4EverAlone - Convite para festa";
-            Content content = new Content("text/html", 
-                "<h1>Você foi convidado para a festa " + festa.getTema() + "!</h1><br>"
-                + "<p>Entre já no 4EverAlone e confirme a sua presença!</p>");
+            Content content = new Content("text/html",
+                    "<h1>Você foi convidado para a festa " + festa.getTema() + "!</h1><br>"
+                    + "<p>Entre já no 4EverAlone e confirme a sua presença!</p>");
             Mail mail = new Mail(from, subject, to, content);
 
             SendGrid sg = new SendGrid("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");
-            
+
             try {
                 Request request = new Request();
                 request.setMethod(Method.POST);
@@ -73,6 +74,7 @@ public class FestaServlet extends HttpServlet {
             Logger.getLogger(FestaServlet.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
+
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         HttpSession session = request.getSession();
@@ -115,7 +117,7 @@ public class FestaServlet extends HttpServlet {
                     }
                     request.getRequestDispatcher("HomeServlet").forward(request, response);
                 } else if (action.equals("cadastrar")) {
-                    
+
                     try {
                         request.setAttribute("clientesList", ClienteFacade.getAllClientes());
                         request.setAttribute("estados", EstadoFacade.getAllEstados());
@@ -124,7 +126,7 @@ public class FestaServlet extends HttpServlet {
                         request.setAttribute("msg", "Confirmação não informada");
                         request.getRequestDispatcher("jsp/erro.jsp").forward(request, response);
                     }
-                    
+
                 } else if (action.equals("new")) {
                     String descricao = request.getParameter("descricao");
                     String tema = request.getParameter("tema");
@@ -153,7 +155,7 @@ public class FestaServlet extends HttpServlet {
                         request.getRequestDispatcher("jsp/erro.jsp").forward(request, response);
                     }
                     festa.setIdFesta(idFesta);
-                    
+
                     clientes.forEach((c) -> {
                         try {
                             ConviteFacade.enviaConvite(Integer.parseInt(c), festa);
@@ -162,7 +164,7 @@ public class FestaServlet extends HttpServlet {
                             Logger.getLogger(FestaServlet.class.getName()).log(Level.SEVERE, null, ex);
                         }
                     });
-                    
+
                     System.out.println("Enviou convites");
                     String json = "{\"ok\": true}";
                     response.setContentType("application/json");
@@ -171,11 +173,21 @@ public class FestaServlet extends HttpServlet {
                 }
             } else {
                 //usuario Funcionario
-                
+                String action = request.getParameter("action");
+                switch (action) {
+                    case "form-new":
+                        request.getRequestDispatcher("jsp/form-festa.jsp").forward(request, response);
+                        break;
+                    case "salva":
+                        break;
+                    case "update":
+                        break;
+                }
             }
         }
     }
-    private Date formatDate(String data, String hora) {    
+
+    private Date formatDate(String data, String hora) {
         DateFormat format = new SimpleDateFormat("dd/MM/yyyy HH:mm");
         Date date = null;
         try {
@@ -183,7 +195,7 @@ public class FestaServlet extends HttpServlet {
         } catch (ParseException ex) {
             Logger.getLogger(FestaServlet.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
+
         return date;
     }
 
@@ -191,7 +203,8 @@ public class FestaServlet extends HttpServlet {
     /**
      * Handles the HTTP <code>GET</code> method.
      *
-/     * @param request servlet request
+     * / * @param request servlet request
+     *
      * @param response servlet response
      * @throws ServletException if a servlet-specific error occurs
      * @throws IOException if an I/O error occurs
