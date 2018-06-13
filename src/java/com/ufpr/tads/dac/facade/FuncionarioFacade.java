@@ -17,6 +17,10 @@ public class FuncionarioFacade {
         FuncionarioDAO.setFuncionario(f, email);
     }
     
+    public static void deleteFuncionario(int fId) throws FuncionarioException {
+        FuncionarioDAO.deleteFuncionario(fId);
+    }
+    
     public static void updateFuncionario(FuncionarioBean f) throws FuncionarioException {
         FuncionarioDAO.updateFuncionario(f);
     }

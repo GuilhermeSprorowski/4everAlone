@@ -94,7 +94,31 @@ public class FuncionarioDAOimpl implements FuncionarioDAO {
 
     @Override
     public void deleteFuncionario(int idFuncionario) throws FuncionarioException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        PreparedStatement pst = null;
+        try {
+            con = new ConnectionFactory().getConnection();
+            pst = con.prepareStatement("UPDATE bd4everalone.usuario u SET dataExcluido = ? WHERE id = "
+                    + "(select * from (SELECT usu.id FROM bd4everalone.funcionario\n"
+                    + "INNER JOIN bd4everalone.usuario usu ON usu.id = codUser\n"
+                    + "WHERE funcionario.id = ?) us)");
+            pst.setDate(1, new java.sql.Date(new java.util.Date().getTime()));
+            pst.setInt(2, idFuncionario);
+            int resp = pst.executeUpdate();
+            if (resp == 0) {
+                throw new FuncionarioException("Erro funcionario: erro na tentativa de exclusão do funcionario");
+            }
+        } catch (SQLException e) {
+            System.out.println(e);
+            throw new FuncionarioException("Erro funcionario: comando sql invalido");
+        } finally {
+            if (pst != null) {
+                try {
+                    pst.close();
+                } catch (SQLException ex) {
+                    throw new FuncionarioException("Erro funcionario: erro ao fechar conecxão");
+                }
+            }
+        }
     }
 
     @Override

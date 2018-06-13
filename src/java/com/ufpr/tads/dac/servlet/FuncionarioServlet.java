@@ -102,13 +102,13 @@ public class FuncionarioServlet extends HttpServlet {
                     request.getRequestDispatcher("jsp/erro.jsp").forward(request, response);
                 }
             } else if (action.equals("delete")) {
-//                try {
-//                    request.setAttribute("funcionarios", FuncionarioFacade.getAllFuncionario());
-//                    request.getRequestDispatcher("jsp/listar-funcionario.jsp").forward(request, response);
-//                } catch (FuncionarioException ex) {
-//                    request.setAttribute("msg", ex);
-//                    request.getRequestDispatcher("erro.jsp").forward(request, response);
-//                }
+                try {
+                    FuncionarioFacade.deleteFuncionario(Integer.parseInt(request.getParameter("idFuncionario")));
+                    response.sendRedirect("FuncionarioServlet?action=list");
+                } catch (FuncionarioException ex) {
+                    request.setAttribute("msg", ex);
+                    request.getRequestDispatcher("jsp/erro.jsp").forward(request, response);
+                }
             }
             
         }
