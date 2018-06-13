@@ -41,34 +41,37 @@
             </c:if>
 
             <!-- FOREACH AQUI -->
-            <div class="card">
-                <table width="100%" class="table">
-                    <thead>
-                        <tr>
-                            <th>Descrição</th>
-                            <th>Valor</th>
-                        </tr>
-                    </thead>
-                    <tfoot>
-                        <tr>
-                            <th>Valor total:</th>
-                            <th>1500 R$</th>
-                        </tr>
-                    </tfoot>
+            <c:forEach items="${pedidosList}" var="pedido">
 
-                    <tbody>
-                        <tr>
-                            <td>Bolo de casamento</td>
-                            <td>1500,00</td>
-                        </tr>
-                    </tbody>
 
-                </table>
-                <footer class="card-footer">
-                    <a href="#" class="card-footer-item">Aceitar orçamento</a>
-                    <a href="#" class="card-footer-item">Recusar</a>
-                </footer>
-            </div>
+                <div class="card">
+                    <table width="100%" class="table">
+                        <thead>
+                            <tr>
+                                <th>Descrição</th>
+                                <th>Valor</th>
+                            </tr>
+                        </thead>
+                        <tfoot>
+                            <tr>
+                                <th>Valor total:</th>
+                                <th>${pedido.vlrTotal}</th>
+                            </tr>
+                        </tfoot>
+                        <tbody>
+                            <tr>
+                                <th>${pedido.itensOrcamento}</th>
+                                <th>${pedido.vlrTotal}</th>
+                            </tr>
+                        </tbody>
+
+                    </table>
+                    <footer class="card-footer">
+                        <a href="CasamentoServlet?action=resp&aceio=true&idPedido=${pedido.idPedido}" class="card-footer-item">Aceitar orçamento</a>
+                        <a href="CasamentoServlet?action=resp&aceio=false&idPedido=${pedido.idPedido}" class="card-footer-item">Recusar</a>
+                    </footer>
+                </div>
+            </c:forEach>
         </div>
     </body>
 </html>

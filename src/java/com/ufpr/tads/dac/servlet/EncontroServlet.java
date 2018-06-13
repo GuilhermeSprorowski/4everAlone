@@ -75,7 +75,7 @@ public class EncontroServlet extends HttpServlet {
 
                     try {
                         ClienteBean cb = ClienteFacade.getClienteById(login.getClienteId());
-                        ArrayList<ClienteBean> listClientes = ClienteFacade.getClientesCompativeis(cb.getPreferencias(), cb.getEndereco().getCidade().getIdCidade());
+                        ArrayList<ClienteBean> listClientes = ClienteFacade.getClientesCompativeis(cb.getPreferencias(), cb.getEndereco().getCidade().getIdCidade(), login.getClienteId());
                         request.setAttribute("clienteList", listClientes);
                         request.setAttribute("locaisList", EnderecoFacade.getAllEndereco());
                         request.getRequestDispatcher("jsp/solicitar-encontro.jsp").forward(request, response);

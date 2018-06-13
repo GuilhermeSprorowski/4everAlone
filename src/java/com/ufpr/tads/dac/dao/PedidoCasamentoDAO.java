@@ -6,7 +6,7 @@ import java.util.ArrayList;
 
 public interface PedidoCasamentoDAO {
 
-    public void setPedidoCasamento(PedidoCasamentoBean pc) throws PedidoCasamentoException;
+    public int setPedidoCasamento(PedidoCasamentoBean pc) throws PedidoCasamentoException;
 
     public void updatePedidoCasamento(PedidoCasamentoBean pc) throws PedidoCasamentoException;
 

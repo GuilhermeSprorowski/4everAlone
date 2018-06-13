@@ -28,9 +28,9 @@
                     </h1>
                     <div class="field">
                         <div class="select">
-                            <select name="pessoa">
-                                <option>Ana maria</option>
-                                <option>Gabriela</option>
+                            <select name="cojungeId">
+                                <option value="1">Ana maria</option>
+                                <option value="2">Gabriela</option>
                             </select>
                         </div>
                     </div>
@@ -38,9 +38,8 @@
             </div>
         </section>
         <div class="container margem">
-            <form action="CasamentoServlet?action=solicitar" method="POST">
+            <form action="CasamentoServlet?action=orcar" method="POST">
                 <div class="columns">
-
                     <div class="field column">
                         <label class="label">Data do casamento</label>
                         <div class="control has-icons-left">

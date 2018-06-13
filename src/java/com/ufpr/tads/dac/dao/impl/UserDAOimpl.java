@@ -19,14 +19,15 @@ public class UserDAOimpl implements UserDAO {
         ResultSet rs = null;
         try {
             con = new ConnectionFactory().getConnection();
-            pst = con.prepareStatement("SELECT cliente.id as id, email, nome,\n"
+            pst = con.prepareStatement("SELECT cliente.id as id, email, ifnull(cliente.nome,funcionario.nome) as nome,\n"
                     + "(SELECT true FROM bd4everalone.cliente a WHERE a.codUser = bd4everalone.usuario.id) as isCliente,\n"
-                    + "ifnull((SELECT true FROM bd4everalone.funcionario F WHERE F.codUser = bd4everalone.usuario.id), false) as isFuncionario,"
-                    + "(SELECT id FROM bd4everalone.funcionario F WHERE F.codUser = bd4everalone.usuario.id) as idFuncionario,\n"
+                    + "ifnull((SELECT true FROM bd4everalone.funcionario F WHERE F.codUser = bd4everalone.usuario.id), false) as isFuncionario,\n"
+                    + "funcionario.id as idFuncionario,\n"
                     + "ifnull((SELECT true FROM bd4everalone.funcionario F WHERE F.codUser = bd4everalone.usuario.id AND adm), false) as isAdm\n"
                     + "FROM bd4everalone.usuario\n"
-                    + "INNER JOIN bd4everalone.cliente ON cliente.codUser = bd4everalone.usuario.id\n"
-                    + "WHERE (email = ?) AND (senha = ?)");      
+                    + "LEFT JOIN bd4everalone.cliente ON cliente.codUser = usuario.id\n"
+                    + "LEFT JOIN bd4everalone.funcionario ON funcionario.codUser = usuario.id\n"
+                    + "WHERE (email = ?) AND (senha = ?) AND dataExcluido IS NULL");
             pst.setString(1, email);
             pst.setString(2, senha);
             rs = pst.executeQuery();
@@ -42,8 +43,15 @@ public class UserDAOimpl implements UserDAO {
         } catch (SQLException e) {
             System.out.println(e);
             throw new UserException("Erro Usuario: comando sql invalido");
-        }finally {if (pst != null) {try { pst.close();} catch (SQLException ex) {throw new UserException("Erro user: erro ao fechar conecxão");}}
-        }  
+        } finally {
+            if (pst != null) {
+                try {
+                    pst.close();
+                } catch (SQLException ex) {
+                    throw new UserException("Erro user: erro ao fechar conecxão");
+                }
+            }
+        }
     }
 
     @Override
@@ -61,9 +69,9 @@ public class UserDAOimpl implements UserDAO {
                 idUsuario = rs.getInt("id");
             }
             if (idUsuario != 0) {
-                pst = con.prepareStatement("update");
-                pst.setInt(1, idUsuario);
-                pst.setString(2, novaSenha);
+                pst = con.prepareStatement("UPDATE bd4everalone.usuario SET senha = ? WHERE id = ?");
+                pst.setString(1, novaSenha);
+                pst.setInt(2, idUsuario);
                 int resp = 0;
                 resp = pst.executeUpdate();
                 if (resp == 0) {
@@ -72,8 +80,15 @@ public class UserDAOimpl implements UserDAO {
             }
         } catch (SQLException e) {
             throw new UserException("Erro cliente: comando sql invalido");
-        }finally {if (pst != null) {try { pst.close();} catch (SQLException ex) {throw new UserException("Erro user: erro ao fechar conecxão");}}
-        }  
+        } finally {
+            if (pst != null) {
+                try {
+                    pst.close();
+                } catch (SQLException ex) {
+                    throw new UserException("Erro user: erro ao fechar conecxão");
+                }
+            }
+        }
     }
 
     @Override
@@ -102,12 +117,19 @@ public class UserDAOimpl implements UserDAO {
             }
         } catch (SQLException e) {
             throw new UserException("Erro cliente: comando sql invalido");
-        }finally {if (pst != null) {try { pst.close();} catch (SQLException ex) {throw new UserException("Erro user: erro ao fechar conecxão");}}
-        }  
+        } finally {
+            if (pst != null) {
+                try {
+                    pst.close();
+                } catch (SQLException ex) {
+                    throw new UserException("Erro user: erro ao fechar conecxão");
+                }
+            }
+        }
     }
-    
+
     @Override
-    public boolean isEmailDisponivel(String email) throws UserException{
+    public boolean isEmailDisponivel(String email) throws UserException {
         PreparedStatement pst = null;
         ResultSet rs = null;
         try {
@@ -116,13 +138,20 @@ public class UserDAOimpl implements UserDAO {
             pst.setString(1, email);
             rs = pst.executeQuery();
             while (rs.next()) {
-               return rs.getBoolean("emailValido");
+                return rs.getBoolean("emailValido");
             }
             return true;
         } catch (SQLException e) {
             throw new UserException("Erro user: comando sql invalido");
-        }finally {if (pst != null) {try { pst.close();} catch (SQLException ex) {throw new UserException("Erro user: erro ao fechar conecxão");}}
-        }   
+        } finally {
+            if (pst != null) {
+                try {
+                    pst.close();
+                } catch (SQLException ex) {
+                    throw new UserException("Erro user: erro ao fechar conecxão");
+                }
+            }
+        }
     }
 
 }

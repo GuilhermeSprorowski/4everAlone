@@ -13,6 +13,9 @@ public class PedidoCasamentoBean implements Serializable{
     private Date dataSolicitacao;
     private Date dataCasamento;
     private int conjuge;
+    private float vlrTotal;
+    private String nomeConjuge;
+    private String nomeCliente;
     private int solicitante;
     private int nConvidados;
     private String padre;
@@ -23,6 +26,8 @@ public class PedidoCasamentoBean implements Serializable{
     private String madrinha1;
     private String madrinha2;
     private String itensOrcamento;
+    private String nomeFunc;
+    private boolean premium;
 
     public PedidoCasamentoBean() {
     }
@@ -47,6 +52,47 @@ public class PedidoCasamentoBean implements Serializable{
 
     public boolean isAceito() {
         return aceito;
+    }
+
+    public boolean ispremium() {
+        return premium;
+    }
+
+    public void setpremium(boolean premium) {
+        this.premium = premium;
+    }
+
+    
+    public float getVlrTotal() {
+        return vlrTotal;
+    }
+
+    public void setVlrTotal(float vlrTotal) {
+        this.vlrTotal = vlrTotal;
+    }
+
+    public String getNomeFunc() {
+        return nomeFunc;
+    }
+
+    public void setNomeFunc(String nomeFunc) {
+        this.nomeFunc = nomeFunc;
+    }
+
+    public String getNomeConjuge() {
+        return nomeConjuge;
+    }
+
+    public void setNomeConjuge(String nomeConjuge) {
+        this.nomeConjuge = nomeConjuge;
+    }
+
+    public String getNomeCliente() {
+        return nomeCliente;
+    }
+
+    public void setNomeCliente(String nomeCliente) {
+        this.nomeCliente = nomeCliente;
     }
 
     public void setAceito(boolean aceito) {

@@ -15,8 +15,8 @@ public class ClienteFacade {
         return ClienteDAO.getClienteById(clienteId);
     }
 
-    public static ArrayList<ClienteBean> getClientesCompativeis(PreferenciaBean p, int cidade)throws ClienteException {
-        return ClienteDAO.getClientesCompativeis(p, cidade);
+    public static ArrayList<ClienteBean> getClientesCompativeis(PreferenciaBean p, int cidade, int idCliente)throws ClienteException {
+        return ClienteDAO.getClientesCompativeis(p, cidade, idCliente);
     }
 
     public static void setNovoCliente(ClienteBean cb, String email) throws ClienteException{

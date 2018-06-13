@@ -35,8 +35,9 @@ public class EncontroDAOimpl implements EncontroDAO {
             pst.setString(1, dataEncontro);
             pst.setInt(2, clienteId);
             pst.setInt(3, encontro.getSolicitado().getClienteId());
+            System.out.println("asdiasdijasd: " + encontro.getEndereco().getEnderecoId());
             pst.setInt(4, encontro.getEndereco().getEnderecoId());
-
+            System.out.println(pst);
             int resp = pst.executeUpdate();
             if (resp == 0) {
                 throw new EncontroException("Erro encontro: não foi possivel fazer essa Solicitacao de encotro");

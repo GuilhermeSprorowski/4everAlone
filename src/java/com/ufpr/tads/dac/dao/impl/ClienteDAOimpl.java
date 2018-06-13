@@ -35,7 +35,8 @@ public class ClienteDAOimpl implements ClienteDAO {
             int resp = pst.executeUpdate();
             rs = pst.getGeneratedKeys();
             while (rs.next()) {
-                idGerado = rs.getInt(1);            }
+                idGerado = rs.getInt(1);
+            }
             resp = 0;
             if (idGerado == 0) {
                 throw new ClienteException("Erro cliente: não foi possivel gerar esse login");
@@ -43,7 +44,7 @@ public class ClienteDAOimpl implements ClienteDAO {
                 pst = con.prepareStatement("INSERT INTO bd4everalone.cliente(nome, cpf, sexo) VALUES(?,?,?);");
                 pst.setString(1, c.getNome());
                 pst.setString(2, c.getCpf());
-                pst.setString(3, c.getSexo());                
+                pst.setString(3, c.getSexo());
                 resp = pst.executeUpdate();
                 if (resp == 0) {
                     throw new ClienteException("Erro cliente: não foi possivel criar esse cliente");
@@ -276,33 +277,35 @@ public class ClienteDAOimpl implements ClienteDAO {
     }
 
     @Override
-    public ArrayList<ClienteBean> getClientesCompativeis(PreferenciaBean p, int cidade) throws ClienteException {
+    public ArrayList<ClienteBean> getClientesCompativeis(PreferenciaBean p, int cidade, int idCliente) throws ClienteException {
         PreparedStatement pst = null;
         ResultSet rs = null;
         try {
             con = new ConnectionFactory().getConnection();
-            pst = con.prepareStatement("SELECT cliente.id, nome, cliente.descricao, sexo,  dataNasc, altura, codPele, corpele.descricao AS corpele,"
-                    + " codCabelo, corcabelo.descricao as corcabelo, cliente.codEscolaridade, esco.descricao as escolaridade\n"
-                    + "FROM bd4everalone.cliente \n"
-                    + "INNER JOIN bd4everalone.corpele ON codPele = corpele.id\n"
-                    + "INNER JOIN bd4everalone.corcabelo ON codCabelo = corcabelo.id\n"
-                    + "INNER JOIN bd4everalone.endereco ON codEndereco = endereco.id\n"
-                    + "INNER JOIN bd4everalone.escolaridade esco ON cliente.codEscolaridade = esco.id\n"
-                    + "WHERE ((altura BETWEEN ? AND ?) AND (YEAR(FROM_DAYS(TO_DAYS(NOW())-TO_DAYS(dataNasc))) BETWEEN ? AND ?)) AND sexo = ? AND codCidade = ?\n"
-                    + "ORDER BY  codPele = ? desc, codCabelo = ? desc;");
+            pst = con.prepareStatement("SELECT cliente.id, nome, cliente.descricao, sexo,  dataNasc, altura, codPele, corpele.descricao AS corpele,\n"
+                    + " codCabelo, corcabelo.descricao as corcabelo, cliente.codEscolaridade, esco.descricao as escolaridade, encontro.*\n"
+                    + " FROM bd4everalone.cliente \n"
+                    + " INNER JOIN bd4everalone.corpele ON codPele = corpele.id\n"
+                    + " INNER JOIN bd4everalone.corcabelo ON codCabelo = corcabelo.id\n"
+                    + " INNER JOIN bd4everalone.endereco ON codEndereco = endereco.id\n"
+                    + " INNER JOIN bd4everalone.escolaridade esco ON cliente.codEscolaridade = esco.id \n"
+                    + " LEFT JOIN bd4everalone.encontro ON codCSolicitado AND codCSolicitado = cliente.id\n"
+                    + "  WHERE ((altura BETWEEN ? AND ?) AND (YEAR(FROM_DAYS(TO_DAYS(NOW())-TO_DAYS(dataNasc))) BETWEEN ? AND ?)) AND sexo = ? AND codCidade = ? AND cliente.id != ? AND encontro.id IS NULL\n"
+                    + " ORDER BY  codPele = ? desc, codCabelo = ? desc;");
             pst.setInt(1, p.getAltura()[0]);
             pst.setInt(2, p.getAltura()[1]);
             pst.setInt(3, p.getIdade()[0]);
             pst.setInt(4, p.getIdade()[1]);
             pst.setString(5, p.getSexo());
             pst.setInt(6, cidade);
-            pst.setInt(7, p.getCorCabelo().getIdCorCabelo());
-            pst.setInt(8, p.getCorPele().getIdCorPele());
+            pst.setInt(7, idCliente);
+            pst.setInt(8, p.getCorCabelo().getIdCorCabelo());
+            pst.setInt(9, p.getCorPele().getIdCorPele());
             rs = pst.executeQuery();
             final ArrayList<ClienteBean> al = new ArrayList<ClienteBean>();
             while (rs.next()) {
-                al.add(new ClienteBean(rs.getInt("id"),rs.getString("nome"),rs.getString("sexo"), rs.getDate("dataNasc"), rs.getInt("altura"), 
-                        new CorPeleBean(rs.getInt("codPele"), rs.getString("corpele")), 
+                al.add(new ClienteBean(rs.getInt("id"), rs.getString("nome"), rs.getString("sexo"), rs.getDate("dataNasc"), rs.getInt("altura"),
+                        new CorPeleBean(rs.getInt("codPele"), rs.getString("corpele")),
                         new CorCabeloBean(rs.getInt("codCabelo"), rs.getString("corcabelo")),
                         new EscolaridadeBean(rs.getInt("codEscolaridade"), rs.getString("escolaridade")))
                 );
