@@ -4,7 +4,7 @@
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <title>Perfil</title>
+        <title>Alterar Funcionarios</title>
 
         <link rel="stylesheet" href="lib/bulma-0.7.1/css/bulma.min.css"/>
         <link rel="stylesheet" href="lib/jquery-ui/jquery-ui.min.css"/>
