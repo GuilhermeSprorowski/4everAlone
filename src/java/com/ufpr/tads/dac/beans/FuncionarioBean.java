@@ -10,7 +10,6 @@ public class FuncionarioBean {
     private String nome;
     private String cpf;
     private Double salario;
-    private EnderecoBean endereco;
     private Date dataNasc;
     private Date dataCadastro;
 
@@ -25,13 +24,21 @@ public class FuncionarioBean {
     public FuncionarioBean() {
     }
 
-    public FuncionarioBean(int idFuncionario, String nome, Double salario, EnderecoBean endereco, Date dataNasc, Date dataCadastro) {
+    public FuncionarioBean(int idFuncionario, String nome, Double salario, Date dataNasc, Date dataCadastro) {
         this.idFuncionario = idFuncionario;
         this.nome = nome;
         this.salario = salario;
-        this.endereco = endereco;
         this.dataNasc = dataNasc;
         this.dataCadastro = dataCadastro;
+    }
+    
+    public FuncionarioBean(int idFuncionario, String nome, Double salario, Date dataNasc, Date dataCadastro, String cpf) {
+        this.idFuncionario = idFuncionario;
+        this.nome = nome;
+        this.salario = salario;
+        this.dataNasc = dataNasc;
+        this.dataCadastro = dataCadastro;
+        this.cpf = cpf;
     }
 
     public FuncionarioBean(int idFuncionario, String nome) {
@@ -45,14 +52,6 @@ public class FuncionarioBean {
 
     public void setNome(String nome) {
         this.nome = nome;
-    }
-
-    public EnderecoBean getEndereco() {
-        return endereco;
-    }
-
-    public void setEndereco(EnderecoBean endereco) {
-        this.endereco = endereco;
     }
 
     public Date getDataNasc() {

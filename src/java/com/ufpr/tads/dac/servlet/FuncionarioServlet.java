@@ -44,7 +44,6 @@ public class FuncionarioServlet extends HttpServlet {
             String action = request.getParameter("action");
             if (action.equals("create")) {
                 try {
-                    request.setAttribute("alterar", false);
                     request.setAttribute("estados", EstadoFacade.getAllEstados());
                     request.getRequestDispatcher("jsp/cadastrar-funcionario.jsp").forward(request, response);
                 } catch (EstadoException ex) {
@@ -53,13 +52,13 @@ public class FuncionarioServlet extends HttpServlet {
                 }
             } else if (action.equals("edit")) {
                 try {
-                    request.setAttribute("alterar", true);
+                    request.setAttribute("form", "alterar");
                     int funcId = Integer.parseInt(request.getParameter("idFuncionario"));
                     
                     request.setAttribute("estados", EstadoFacade.getAllEstados());
-                    // request.setAttribute("login", login);
+                    request.setAttribute("funcionario", FuncionarioFacade.getFuncionarioById(funcId));
                     request.getRequestDispatcher("jsp/cadastrar-funcionario.jsp").forward(request, response);
-                } catch (EstadoException ex) {
+                } catch (EstadoException | FuncionarioException ex) {
                     request.setAttribute("msg", ex);
                     request.getRequestDispatcher("jsp/erro.jsp").forward(request, response);
                 }
@@ -70,9 +69,7 @@ public class FuncionarioServlet extends HttpServlet {
                 func.setNome(request.getParameter("nome"));
                 func.setDataNasc(request.getParameter("dataNasc"));
                 func.setCpf(request.getParameter("cpf"));
-                func.setSalario(Double.parseDouble(request.getParameter("cpf")));
-                func.setEndereco(new EnderecoBean(request.getParameter("idEndereco") == null ? 0 : Integer.parseInt(request.getParameter("idEndereco")),
-                                    request.getParameter("rua"), new CidadeBean(request.getParameter("idCidade") == null ? 0 : Integer.parseInt(request.getParameter("idCidade")))));
+                func.setSalario(Double.parseDouble(request.getParameter("salario")));
                 try {
                     FuncionarioFacade.novoFuncionario(func, email);
                     request.getRequestDispatcher("HomeServlet").forward(request, response);
@@ -83,13 +80,11 @@ public class FuncionarioServlet extends HttpServlet {
             } else if (action.equals("alterar")) {
                 FuncionarioBean func = new FuncionarioBean();
                 
-                func.setIdFuncionario(request.getParameter("nome") == null ? 0 : Integer.parseInt(request.getParameter("nome")));
+                func.setIdFuncionario(request.getParameter("idFuncionario") == null ? 0 : Integer.parseInt(request.getParameter("idFuncionario")));
                 func.setNome(request.getParameter("nome"));
                 func.setDataNasc(request.getParameter("dataNasc"));
                 func.setCpf(request.getParameter("cpf"));
-                func.setSalario(Double.parseDouble(request.getParameter("cpf")));
-                func.setEndereco(new EnderecoBean(request.getParameter("idEndereco") == null ? 0 : Integer.parseInt(request.getParameter("idEndereco")),
-                                    request.getParameter("rua"), new CidadeBean(request.getParameter("idCidade") == null ? 0 : Integer.parseInt(request.getParameter("idCidade")))));
+                func.setSalario(Double.parseDouble(request.getParameter("salario")));
                 try {
                     FuncionarioFacade.updateFuncionario(func);
                     request.getRequestDispatcher("HomeServlet").forward(request, response);

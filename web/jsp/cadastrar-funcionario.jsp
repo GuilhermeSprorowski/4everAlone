@@ -109,40 +109,6 @@
 
                         <div class="columns">
                             <div class="column">
-                                <div class="field">
-                                    <label class="label" for="idEstado">Estado</label>
-                                    <div class="select">
-                                        <select id="estado" name="idEstado">
-                                            <c:forEach items="${estados}" var="es">
-                                                <option value="${es.idEstado}"
-                                                        <c:if test="${form == 'alterar' && funcionario.endereco.estado.idEstado == es.idEstado}">selected</c:if>
-                                                        >(${es.sigla}) ${es.nome}</option>
-                                            </c:forEach>
-                                        </select>
-                                    </div>
-                                </div>
-                            </div>
-                            <input type="hidden" name="idEndereco" value="${funcionario.endereco.enderecoId}"/>
-                            <div class="column">
-                                <div class="field">
-                                    <label class="label" for="cidadeId">Cidade</label>
-                                    <div class="select">
-                                        <select id="cidade" name="idCidade">
-                                        </select>
-                                    </div>
-                                </div>
-                            </div>
-
-                        </div>
-                        <div class="columns">
-                            <div class="column">
-                                <label class="label" for="rua">Endereço:</label>
-                                <input name="rua" class="input" type="text"
-                                       placeholder="Bairro, rua, numero" value="${funcionario.endereco.rua}">
-                            </div>
-                        </div>
-                        <div class="columns">
-                            <div class="column">
                                 <label class="label" for="cpf">CPF</label>
                                 <input name="cpf" class="input" type="text"
                                        placeholder="000.000.000-00" value="${funcionario.cpf}">

@@ -20,4 +20,8 @@ public class FuncionarioFacade {
     public static void updateFuncionario(FuncionarioBean f) throws FuncionarioException {
         FuncionarioDAO.updateFuncionario(f);
     }
+
+    public static FuncionarioBean getFuncionarioById(int funcId) throws FuncionarioException {
+        return FuncionarioDAO.getFuncionarioById(funcId);
+    }
 }

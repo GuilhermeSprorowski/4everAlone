@@ -2,6 +2,7 @@ package com.ufpr.tads.dac.dao.impl;
 
 import com.ufpr.tads.dac.beans.CidadeBean;
 import com.ufpr.tads.dac.beans.EnderecoBean;
+import com.ufpr.tads.dac.beans.EstadoBean;
 import com.ufpr.tads.dac.beans.FuncionarioBean;
 import com.ufpr.tads.dac.dao.ConnectionFactory;
 import com.ufpr.tads.dac.dao.FuncionarioDAO;
@@ -37,13 +38,12 @@ public class FuncionarioDAOimpl implements FuncionarioDAO {
             if (idGerado == 0) {
                 throw new FuncionarioException("Erro funcionario: não foi possivel gerar esse login");
             } else {
-                pst = con.prepareStatement("INSERT INTO bd4everalone.funcionario (nome, cpf, salario, codUser, dataNasc, codEndereco) VALUES(?,?,?,?,?,?);");
+                pst = con.prepareStatement("INSERT INTO bd4everalone.funcionario (nome, cpf, salario, codUser, dataNasc) VALUES(?,?,?,?,?);");
                 pst.setString(1, f.getNome());
                 pst.setString(2, f.getCpf());
                 pst.setDouble(3, f.getSalario());
                 pst.setInt(4, idGerado);               
                 pst.setTimestamp(5, new Timestamp(f.getDataNasc().getTime()));   
-                pst.setInt(6, f.getEndereco().getEnderecoId());
                 resp = pst.executeUpdate();
                 if (resp == 0) {
                     throw new FuncionarioException("Erro funcionario: não foi possivel criar esse funcionario");
@@ -69,13 +69,12 @@ public class FuncionarioDAOimpl implements FuncionarioDAO {
         try {
             con = new ConnectionFactory().getConnection();
             pst = con.prepareStatement("UPDATE bd4everalone.funcionario SET nome = ?, cpf = ?, salario = ?, "
-                        + "dataNasc = ?, codEndereco = ? WHERE id = ?");
+                        + "dataNasc = ? WHERE id = ?");
             pst.setString(1, f.getNome());
             pst.setString(2, f.getCpf());
             pst.setDouble(3, f.getSalario());       
             pst.setTimestamp(4, new Timestamp(f.getDataNasc().getTime()));   
-            pst.setInt(5, f.getEndereco().getEnderecoId());
-            pst.setInt(6, f.getIdFuncionario());
+            pst.setInt(5, f.getIdFuncionario());
             int resp = pst.executeUpdate();
             if (resp == 0) {
                 throw new FuncionarioException("Erro funcionario: não foi possivel criar esse funcionario");
@@ -100,7 +99,32 @@ public class FuncionarioDAOimpl implements FuncionarioDAO {
 
     @Override
     public FuncionarioBean getFuncionarioById(int idFuncionario) throws FuncionarioException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        PreparedStatement pst = null;
+        ResultSet rs = null;
+        try {
+            con = new ConnectionFactory().getConnection();
+            pst = con.prepareStatement("SELECT funcionario.id, salario, funcionario.nome, cpf, dataNasc, dataCadastro FROM bd4everalone.funcionario\n"
+                    + "INNER JOIN bd4everalone.usuario ON codUser = usuario.id\n"
+                    + "WHERE dataDemissao IS NULL AND funcionario.id = ?");
+            pst.setInt(1, idFuncionario);
+            rs = pst.executeQuery();
+            while (rs.next()) {
+                return new FuncionarioBean(rs.getInt("id"), rs.getString("nome"), rs.getDouble("salario"),
+                        rs.getDate("dataNasc"), rs.getDate("dataCadastro"), rs.getString("cpf"));
+            }
+            return null;
+        } catch (SQLException e) {
+            System.out.println(e);
+            throw new FuncionarioException("Erro Funcionario: Comando SQL invalido");
+        } finally {
+            if (pst != null) {
+                try {
+                    pst.close();
+                } catch (SQLException ex) {
+                    throw new FuncionarioException("Erro Funcionario: Falha ao tentar fechar conexão!");
+                }
+            }
+        }
     }
 
     @Override
@@ -110,14 +134,12 @@ public class FuncionarioDAOimpl implements FuncionarioDAO {
         final ArrayList<FuncionarioBean> al = new ArrayList<FuncionarioBean>();
         try {
             con = new ConnectionFactory().getConnection();
-            pst = con.prepareStatement("SELECT funcionario.id, salario, funcionario.nome, cpf, dataNasc, codEndereco, rua, codCidade, cidade.nome as cidade, dataCadastro FROM bd4everalone.funcionario\n"
-                    + "INNER JOIN bd4everalone.endereco ON codEndereco = endereco.id\n"
-                    + "INNER JOIN bd4everalone.cidade ON codCidade = cidade.id\n"
+            pst = con.prepareStatement("SELECT funcionario.id, salario, funcionario.nome, cpf, dataNasc, dataCadastro FROM bd4everalone.funcionario\n"
                     + "INNER JOIN bd4everalone.usuario ON codUser = usuario.id\n"
                     + "WHERE dataDemissao IS NULL;");
             rs = pst.executeQuery();
             while (rs.next()) {
-                al.add(new FuncionarioBean(rs.getInt("id"), rs.getString("nome"), rs.getDouble("salario"), new EnderecoBean(), rs.getDate("dataNasc"), rs.getDate("dataCadastro")));
+                al.add(new FuncionarioBean(rs.getInt("id"), rs.getString("nome"), rs.getDouble("salario"), rs.getDate("dataNasc"), rs.getDate("dataCadastro")));
             }
             if (al.isEmpty()) {
                 throw new FuncionarioException("Erro Funcionario: Falha ao procurar os funcionarios");
