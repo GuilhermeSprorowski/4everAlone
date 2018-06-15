@@ -26,6 +26,7 @@
                     <h1 class="title">
                         Lista de Funcionários
                     </h1>
+                    <button class="button"><a href="FuncionarioServlet?action=form-new">Cadastrar Funcionario</a></button>
                 </div>
             </div>
         </section>

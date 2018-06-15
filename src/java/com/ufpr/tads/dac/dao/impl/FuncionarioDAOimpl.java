@@ -27,7 +27,7 @@ public class FuncionarioDAOimpl implements FuncionarioDAO {
         int idGerado = 0;
         try {
             con = new ConnectionFactory().getConnection();
-            pst = con.prepareStatement("INSERT INTO bd4everalone.usuario (email) VALUES(?)");
+            pst = con.prepareStatement("INSERT INTO bd4everalone.usuario (email) VALUES(?)", Statement.RETURN_GENERATED_KEYS);
             pst.setString(1, email);
             int resp = pst.executeUpdate();
             rs = pst.getGeneratedKeys();
@@ -50,6 +50,7 @@ public class FuncionarioDAOimpl implements FuncionarioDAO {
                 }
             }
         } catch (SQLException e) {
+            System.out.println(e);
             throw new FuncionarioException("Erro funcionario: comando sql invalido");
         } finally {
             if (pst != null) {

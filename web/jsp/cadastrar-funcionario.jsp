@@ -46,7 +46,7 @@
                             <div class="field column">
                                 <label class="label">Nome completo</label>
                                 <div class="control">
-                                    <input name="nome" class="input" type="text"
+                                    <input required name="nome" class="input" type="text"
                                            placeholder="Nome Completo" value="${funcionario.nome}">
                                 </div>
                             </div>
@@ -62,7 +62,7 @@
                             <div class="field column is-3">
                                 <label class="label">Data de nascimento:</label>
                                 <div class="control has-icons-left">
-                                    <input name="dataNasc" class="input" type="text" id="datepicker"
+                                    <input required name="dataNasc" class="input" type="text" id="datepicker"
                                            placeholder="Data nascimento" value="${funcionario.dataNascS}">
                                     <span class="icon is-left">
                                         <i class="fas fa-calendar-alt"></i>
@@ -74,12 +74,12 @@
                         <div class="columns">
                             <div class="column">
                                 <label class="label" for="cpf">CPF</label>
-                                <input name="cpf" class="input" type="text"
+                                <input required name="cpf" id="cpf" class="input" type="text"
                                        placeholder="000.000.000-00" value="${funcionario.cpf}">
                             </div>
                             <div class="column">
                                 <label class="label" for="salario">Salário</label>
-                                <input id="salario" name="salario" class="input" type="text"
+                                <input required id="salario" name="salario" class="input" type="text"
                                        placeholder="R$0,00" value="${funcionario.salario}">
                             </div>
                         </div>

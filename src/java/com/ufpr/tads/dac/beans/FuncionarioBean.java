@@ -67,7 +67,7 @@ public class FuncionarioBean {
         this.dataNasc = dataNasc;
     }
 
-    public void setDataNasc(String dataNasc) {
+    public void setDataNasc(String dataNasc) {       
         SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
         Date data = null;
         try {

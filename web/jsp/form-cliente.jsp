@@ -94,7 +94,7 @@
                             <div class="field column">
                                 <label class="label">Nome:</label>
                                 <div class="control">
-                                    <input name="nome" class="input" type="text"
+                                    <input required name="nome" class="input" type="text"
                                            placeholder="Nome" value="${cliente.nome}">
                                 </div>
                             </div>
@@ -102,7 +102,7 @@
                                 <div class="field column">
                                     <label class="label">Email:</label>
                                     <div class="control">
-                                        <input name="email" class="input" type="email"
+                                        <input required name="email" class="input" type="email"
                                                placeholder="E-mail" value="">
                                     </div>
                                 </div>
@@ -112,7 +112,7 @@
                             <div class="field column">
                                 <label class="label">CPF:</label>
                                 <div class="control">
-                                    <input name="cpf" id="cpf" class="input" type="text"
+                                    <input required name="cpf" id="cpf" class="input" type="text"
                                            placeholder="CPF" value="${cliente.cpf}">
                                 </div>
                             </div>

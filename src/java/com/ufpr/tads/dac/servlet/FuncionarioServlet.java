@@ -109,6 +109,8 @@ public class FuncionarioServlet extends HttpServlet {
                     request.setAttribute("msg", ex);
                     request.getRequestDispatcher("jsp/erro.jsp").forward(request, response);
                 }
+            } else if (action.equals("form-new")) {
+                request.getRequestDispatcher("jsp/cadastrar-funcionario.jsp").forward(request, response);
             }
             
         }
