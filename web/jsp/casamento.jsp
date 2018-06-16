@@ -35,7 +35,9 @@
         </section>
         <div class="container margem">
             <h1 class="title">Orçamento solicitado</h1>
-            
+            <c:if test="${pedidosList[0].itensOrcamento == null}"> 
+                <p>Aguardando resposta do seu orçamento solicitado.</p>
+            </c:if>
             <c:if test="${empty pedidosList}">
                 <p>Nenhum orçamento feito.</p>
             </c:if>
@@ -68,12 +70,9 @@
                             <a href="CasamentoServlet?action=resp&aceio=false&idPedido=${pedido.idPedido}" class="card-footer-item">Recusar</a>
                         </footer>
                     </div>
-                    <continue>
-                </c:if>
-                <c:if test="${pedido.itensOrcamento == null}"> 
-                    <p>Aguardando resposta do seu orçamento solicitado.</p>
-                </c:if>
-            </c:forEach>
+                    <hr>
+                    </c:if>
+                </c:forEach>
         </div>
     </body>
 </html>
