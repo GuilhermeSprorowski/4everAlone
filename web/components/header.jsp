@@ -21,7 +21,7 @@
             <a class="navbar-item" href="FestaServlet?action=cadastrar">
                 Promover festa
             </a>
-            <a class="navbar-item" href="ClienteServlet?action=view">
+            <a class="navbar-item" href="RelatorioServlet">
                 Relatório
             </a>
             <c:if test="${user.adm}">

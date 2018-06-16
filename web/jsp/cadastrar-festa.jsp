@@ -19,6 +19,7 @@
         
         <script>
             var clientes = [];
+            var carregando = false;
             
             function getCidades(){
                 var estadoId = $("#estado").val();
@@ -107,6 +108,8 @@
             }
             
             function submitForm() {
+                if (carregando) return false;
+                
                 var jsonObj = getFormData($("#myForm"));
                 var cli = "";
                 for (var i = 0; i < clientes.length; i++) {
@@ -116,16 +119,26 @@
                     }
                 }
                 jsonObj.clientes = cli;
-                
+                carregando = true;
+                $("#loading").toggleClass("is-active");
+                $("#botoes").hide();
                 $.ajax({
                     url: 'FestaServlet?action=new',
                     type: 'post',
                     dataType: 'json',
                     data: jsonObj,
                     success: function(data) {
+                        carregando = false;
+                        $("#loading").toggleClass("is-active");
+                        $("#botoes").show();
                         if (data.ok) {
                             $("#success").toggleClass("is-active");
                         }
+                    },
+                    error: function() { 
+                        carregando = false;
+                        $("#loading").toggleClass("is-active");
+                        $("#botoes").show();
                     }
                });
             }
@@ -231,10 +244,12 @@
                                   placeholder="Descrição sobre a festa"></textarea>
                     </div>
                 </div>
-
-                <button type="button" onClick="submitForm()" class="button is-info">Cadastrar festa</button>
-                <button type="button" onClick="expandirClientes()" class="button is-info">Convidar clientes específicos</button>
                 
+                <div id="botoes">
+                    <button type="button" onClick="submitForm()" class="button is-info">Cadastrar festa</button>
+                    <button type="button" onClick="expandirClientes()" class="button is-info">Convidar clientes específicos</button>
+                </div>
+ 
                 <div id="expand" class="modal">
                     <div class="modal-background"></div>
                     <div class="modal-content cliente-modal">
@@ -288,6 +303,13 @@
                 </div>
             </form>
         </div>
+        <div id="loading" class="modal">
+            <div class="modal-background"></div>
+            <div style="text-align: center" class="modal-content">
+                <img src="images/loading.svg">
+            </div>
+        </div>
+        
         <div id="success" class="modal">
             <div class="modal-background"></div>
             <div class="modal-content cliente-modal">

@@ -59,8 +59,8 @@ public class GeradorRelatorio extends HttpServlet {
             Connection con = null;
             Date dataC = null, dataF = null;
             int idUsuario = 0, acao = 0;
-            DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-            String jasper = request.getContextPath() + "/Teste.jasper";
+            DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+            String jasper = request.getContextPath() + "/jasper/Teste.jasper";
             HashMap params = new HashMap();
             String host = "http://" + request.getServerName()
                     + ":" + request.getServerPort();
@@ -80,15 +80,15 @@ public class GeradorRelatorio extends HttpServlet {
             }
             if (acao == 1 || acao == 0) {
                 //url do report
-                jasper = request.getContextPath() + "/GerencialEncontro.jasper";
+                jasper = request.getContextPath() + "/jasper/GerencialEncontro.jasper";
                 // parametros de escolha do funcionario
                 params.put("frm_date", dataC);
                 params.put("to_date", dataF);
             } else if (acao == 2) {
                 //url do report
-                jasper = request.getContextPath() + "/GerencialEncontroPessoa.jasper";
+                jasper = request.getContextPath() + "/jasper/GerencialEncontroPessoa.jasper";
                 //url parametro dos subreport
-                String subreport = request.getContextPath() + "/nomereport.jasper";
+                String subreport = request.getContextPath() + "/jasper/nomereport.jasper";
                 params.put("nomereport", host + subreport);
                 // parametros de escolha do funcionario
                 params.put("frm_date", dataC);
@@ -96,33 +96,33 @@ public class GeradorRelatorio extends HttpServlet {
                 params.put("idPessoa", idUsuario);
             } else if (acao == 3) {
                 //url do report
-                jasper = request.getContextPath() + "/GerencialFesta.jasper";
+                jasper = request.getContextPath() + "/jasper/GerencialFesta.jasper";
                 // parametros de escolha do funcionario
                 params.put("frm_date", dataC);
                 params.put("to_date", dataF);
             } else if (acao == 4) {
                 //url do report
-                jasper = request.getContextPath() + "/GerencialFestaPessoa.jasper";
+                jasper = request.getContextPath() + "/jasper/GerencialFestaPessoa.jasper";
                 // parametros de escolha do funcionario
                 params.put("frm_date", dataC);
                 params.put("to_date", dataF);
                 params.put("idPessoa", idUsuario);
                 //url parametro dos subreport
-                String subreport = request.getContextPath() + "/nomereport.jasper";
+                String subreport = request.getContextPath() + "/jasper/nomereport.jasper";
                 params.put("nomereport", host + subreport);
-                subreport = request.getContextPath() + "/somareport.jasper";
+                subreport = request.getContextPath() + "/jasper/somareport.jasper";
                 params.put("somareport", host + subreport);
             } else if (acao == 5) {
                 //url do report
-                jasper = request.getContextPath() + "/GerencialProdutividade.jasper";
+                jasper = request.getContextPath() + "/jasper/GerencialProdutividade.jasper";
                 // parametros de escolha do funcionario
                 params.put("frm_date", dataC);
                 params.put("to_date", dataF);
                 params.put("idPessoa", idUsuario);
                 //url parametro dos subreport
-                String subreport = request.getContextPath() + "/casamentoanual.jasper";
+                String subreport = request.getContextPath() + "/jasper/casamentoanual.jasper";
                 params.put("casamentoanual", host + subreport);
-                subreport = request.getContextPath() + "/casamentomes.jasper";
+                subreport = request.getContextPath() + "/jasper/casamentomes.jasper";
                 params.put("casamentomes", host + subreport);
             }
             try {

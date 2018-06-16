@@ -86,103 +86,98 @@ public class FestaServlet extends HttpServlet {
             request.getRequestDispatcher("index.jsp").forward(request, response);
         } else {
             //usuario logado
-            if (login.isCliente()) {
-                String action = request.getParameter("action");
-                if (action.equals("view")) {
+            String action = (String) request.getParameter("action");
+            if (action.equals("view")) {
+                try {
+                    request.setAttribute("convites", ConviteFacade.getAllConvites(login.getClienteId()));
+                } catch (ConviteException ex) {
+                    request.setAttribute("msg", ex);
+                    request.getRequestDispatcher("jsp/erro.jsp").forward(request, response);
+                    return;
+                }
+                request.getRequestDispatcher("jsp/festas.jsp").forward(request, response);
+            } else if (action.equals("update")) {
+                if (request.getParameter("resp") != null) {
+                    boolean confirmou = Boolean.parseBoolean(request.getParameter("resp"));
+                    ConviteBean conv = new ConviteBean();
+                    conv.setIdConvite(request.getParameter("conviteId") == null ? 0 : Integer.parseInt(request.getParameter("conviteId")));
+                    conv.setConfirmado(confirmou);
                     try {
-                        request.setAttribute("convites", ConviteFacade.getAllConvites(login.getClienteId()));
+                        ConviteFacade.updateConvite(conv);
                     } catch (ConviteException ex) {
                         request.setAttribute("msg", ex);
                         request.getRequestDispatcher("jsp/erro.jsp").forward(request, response);
                         return;
                     }
-                    request.getRequestDispatcher("jsp/festas.jsp").forward(request, response);
-                } else if (action.equals("update")) {
-                    if (request.getParameter("resp") != null) {
-                        boolean confirmou = Boolean.parseBoolean(request.getParameter("resp"));
-                        ConviteBean conv = new ConviteBean();
-                        conv.setIdConvite(request.getParameter("conviteId") == null ? 0 : Integer.parseInt(request.getParameter("conviteId")));
-                        conv.setConfirmado(confirmou);
-                        try {
-                            ConviteFacade.updateConvite(conv);
-                        } catch (ConviteException ex) {
-                            request.setAttribute("msg", ex);
-                            request.getRequestDispatcher("jsp/erro.jsp").forward(request, response);
-                            return;
-                        }
-                    } else {
-                        request.setAttribute("msg", "Confirmação não informada");
-                        request.getRequestDispatcher("jsp/erro.jsp").forward(request, response);
-                        return;
-                    }
-                    request.getRequestDispatcher("HomeServlet").forward(request, response);
-                } else if (action.equals("cadastrar")) {
-
-                    try {
-                        request.setAttribute("clientesList", ClienteFacade.getAllClientes());
-                        request.setAttribute("estados", EstadoFacade.getAllEstados());
-                        request.getRequestDispatcher("jsp/cadastrar-festa.jsp").forward(request, response);
-                    } catch (ClienteException | EstadoException ex) {
-                        request.setAttribute("msg", "Confirmação não informada");
-                        request.getRequestDispatcher("jsp/erro.jsp").forward(request, response);
-                    }
-
-                } else if (action.equals("new")) {
-                    String descricao = request.getParameter("descricao");
-                    String tema = request.getParameter("tema");
-                    int vagas = request.getParameter("vagas") == null ? 0 : Integer.parseInt(request.getParameter("vagas"));
-                    int local = request.getParameter("localId") == null ? 0 : Integer.parseInt(request.getParameter("localId"));
-
-                    Date data = formatDate(request.getParameter("dataFesta"), request.getParameter("horario"));
-                    ArrayList<String> clientes = new ArrayList<>(Arrays.asList(request.getParameter("clientes").split(";")));
-
-                    FestaBean festa = new FestaBean();
-                    festa.setDescricao(descricao);
-                    festa.setTema(tema);
-                    festa.setVagas(vagas);
-                    festa.setDatahora(data);
-                    EnderecoBean end = new EnderecoBean();
-                    end.setEnderecoId(local);
-                    FuncionarioBean fn = new FuncionarioBean();
-                    fn.setIdFuncionario(login.getFuncionarioId());
-                    festa.setFuncionarioResponsavel(fn);
-                    festa.setEndereco(end);
-                    int idFesta = 0;
-                    try {
-                        idFesta = FestaFacade.novaFesta(festa);
-                    } catch (FestaException ex) {
-                        request.setAttribute("msg", "Confirmação não informada");
-                        request.getRequestDispatcher("jsp/erro.jsp").forward(request, response);
-                    }
-                    festa.setIdFesta(idFesta);
-
-                    clientes.forEach((c) -> {
-                        try {
-                            ConviteFacade.enviaConvite(Integer.parseInt(c), festa);
-                            SendEmail(Integer.parseInt(c), festa);
-                        } catch (ConviteException ex) {
-                            Logger.getLogger(FestaServlet.class.getName()).log(Level.SEVERE, null, ex);
-                        }
-                    });
-
-                    System.out.println("Enviou convites");
-                    String json = "{\"ok\": true}";
-                    response.setContentType("application/json");
-                    response.setCharacterEncoding("UTF-8");
-                    response.getWriter().write(json);
+                } else {
+                    request.setAttribute("msg", "Confirmação não informada");
+                    request.getRequestDispatcher("jsp/erro.jsp").forward(request, response);
+                    return;
                 }
-            } else {
-                //usuario Funcionario
-                String action = request.getParameter("action");
-                switch (action) {
-                    case "form-new":
-                        request.getRequestDispatcher("jsp/form-festa.jsp").forward(request, response);
-                        break;
-                    case "salva":
-                        break;
-                    case "update":
-                        break;
+                request.getRequestDispatcher("HomeServlet").forward(request, response);
+            } else if (action.equals("cadastrar")) {
+                if (login.isCliente()) {
+                    request.setAttribute("msg", "Você não tem acesso a este conteúdo");
+                    request.getRequestDispatcher("jsp/erro.jsp").forward(request, response);
+                    return;
                 }
+                try {
+                    request.setAttribute("clientesList", ClienteFacade.getAllClientes());
+                    request.setAttribute("estados", EstadoFacade.getAllEstados());
+                    request.getRequestDispatcher("jsp/cadastrar-festa.jsp").forward(request, response);
+                } catch (ClienteException | EstadoException ex) {
+                    request.setAttribute("msg", "Confirmação não informada");
+                    request.getRequestDispatcher("jsp/erro.jsp").forward(request, response);
+                }
+
+            } else if (action.equals("new")) {
+                if (login.isCliente()) {
+                    request.setAttribute("msg", "Você não tem acesso a este conteúdo");
+                    request.getRequestDispatcher("jsp/erro.jsp").forward(request, response);
+                    return;
+                }
+                String descricao = request.getParameter("descricao");
+                String tema = request.getParameter("tema");
+                int vagas = request.getParameter("vagas") == null ? 0 : Integer.parseInt(request.getParameter("vagas"));
+                int local = request.getParameter("localId") == null ? 0 : Integer.parseInt(request.getParameter("localId"));
+
+                Date data = formatDate(request.getParameter("dataFesta"), request.getParameter("horario"));
+                ArrayList<String> clientes = new ArrayList<>(Arrays.asList(request.getParameter("clientes").split(";")));
+
+                FestaBean festa = new FestaBean();
+                festa.setDescricao(descricao);
+                festa.setTema(tema);
+                festa.setVagas(vagas);
+                festa.setDatahora(data);
+                EnderecoBean end = new EnderecoBean();
+                end.setEnderecoId(local);
+                FuncionarioBean fn = new FuncionarioBean();
+                fn.setIdFuncionario(login.getFuncionarioId());
+                festa.setFuncionarioResponsavel(fn);
+                festa.setEndereco(end);
+                int idFesta = 0;
+                try {
+                    idFesta = FestaFacade.novaFesta(festa);
+                } catch (FestaException ex) {
+                    request.setAttribute("msg", "Confirmação não informada");
+                    request.getRequestDispatcher("jsp/erro.jsp").forward(request, response);
+                }
+                festa.setIdFesta(idFesta);
+
+                clientes.forEach((c) -> {
+                    try {
+                        ConviteFacade.enviaConvite(Integer.parseInt(c), festa);
+                        SendEmail(Integer.parseInt(c), festa);
+                    } catch (ConviteException ex) {
+                        Logger.getLogger(FestaServlet.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                });
+
+                System.out.println("Enviou convites");
+                String json = "{\"ok\": true}";
+                response.setContentType("application/json");
+                response.setCharacterEncoding("UTF-8");
+                response.getWriter().write(json);
             }
         }
     }
