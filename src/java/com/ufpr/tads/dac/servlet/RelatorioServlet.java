@@ -1,7 +1,11 @@
 package com.ufpr.tads.dac.servlet;
 
 import com.ufpr.tads.dac.beans.UserBean;
+import com.ufpr.tads.dac.exceptions.ClienteException;
+import com.ufpr.tads.dac.facade.ClienteFacade;
 import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -22,7 +26,14 @@ public class RelatorioServlet extends HttpServlet {
             request.setAttribute("msg", "É necessario esta logado para acessar essa pagina");
             request.getRequestDispatcher("index.jsp").forward(request, response);
         } else {
-            // usuario logado
+            try {
+                // usuario logado
+                request.setAttribute("clienteList", ClienteFacade.getAllClientes());
+                request.getRequestDispatcher("jsp/relatorios.jsp").forward(request, response);
+            } catch (ClienteException ex) {
+                request.setAttribute("msg", ex);
+                request.getRequestDispatcher("jsp/erro.jsp").forward(request, response);
+            }
         }
     }
 
