@@ -19,26 +19,27 @@
     </head>
     <body>
         <c:import url="../components/header.jsp" ></c:import>
-
-        <section class="hero is-info">
-            <div class="hero-body">
-                <div class="container">
-                    <h1 class="title">
-                        Escolha a pessoa com quem pretende se casar
-                    </h1>
-                    <div class="field">
-                        <div class="select">
-                            <select name="cojungeId">
-                                <option value="1">Ana maria</option>
-                                <option value="2">Gabriela</option>
-                            </select>
+            <form action="CasamentoServlet?action=orcar" method="POST">
+                <section class="hero is-info">
+                    <div class="hero-body">
+                        <div class="container">
+                            <h1 class="title">
+                                Escolha a pessoa com quem pretende se casar
+                            </h1>
+                            <div class="field">
+                                <div class="select">
+                                    <select name="conjugeId">
+                                    <c:forEach var="c" items="${encontros}">
+                                        <option value="${c.solicitado.clienteId}">${c.solicitado.nome}</option>
+                                    </c:forEach>
+                                </select>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
-        </section>
-        <div class="container margem">
-            <form action="CasamentoServlet?action=orcar" method="POST">
+            </section>
+            <div class="container margem">
+
                 <div class="columns">
                     <div class="field column">
                         <label class="label">Data do casamento</label>
@@ -72,6 +73,40 @@
                 </div>
                 <div class="columns">
                     <div class="field column">
+                        <label class="label">Padrinho:</label>
+                        <div class="control">
+                            <input name="padrinho1" class="input" type="text"
+                                   placeholder="Nome do padrinho">
+                        </div>
+                    </div>
+
+                    <div class="field column">
+                        <label class="label">Madrinha:</label>
+                        <div class="control">
+                            <input name="madrinha1" class="input" type="text"
+                                   placeholder="Nome da madrinha">
+                        </div>
+                    </div>
+                </div>
+                <div class="columns">
+                    <div class="field column">
+                        <label class="label">Padrinho:</label>
+                        <div class="control">
+                            <input name="padrinho2" class="input" type="text"
+                                   placeholder="Nome do segundo padrinho">
+                        </div>
+                    </div>
+
+                    <div class="field column">
+                        <label class="label">Madrinha:</label>
+                        <div class="control">
+                            <input name="madrinha2" class="input" type="text"
+                                   placeholder="Nome da segunda madrinha">
+                        </div>
+                    </div>
+                </div>
+                <div class="columns">
+                    <div class="field column">
                         <label class="label">Padre/pastor:</label>
                         <div class="control">
                             <input name="padre" class="input" type="text"
@@ -96,7 +131,8 @@
                     </div>
                 </div>
                 <button class="button is-info">Solicitar</button>
-            </form>
-        </div>
+            </div>
+        </form>
+
     </body>
 </html>

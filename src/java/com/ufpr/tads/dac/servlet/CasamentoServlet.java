@@ -2,13 +2,17 @@ package com.ufpr.tads.dac.servlet;
 
 import com.ufpr.tads.dac.beans.PedidoCasamentoBean;
 import com.ufpr.tads.dac.beans.UserBean;
+import com.ufpr.tads.dac.exceptions.EncontroException;
 import com.ufpr.tads.dac.exceptions.PedidoCasamentoException;
+import com.ufpr.tads.dac.facade.EncontroFacade;
 import com.ufpr.tads.dac.facade.PedidoCasamentoFacade;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -41,21 +45,30 @@ public class CasamentoServlet extends HttpServlet {
                     Client client = ClientBuilder.newClient();
                     Response resp =  client.target("http://localhost:8080/AlwaysTogether/webresources/casamento/orcamentoByClienteId/"+ login.getClienteId())
                             .request(MediaType.APPLICATION_JSON).get();
+                    
                     List<PedidoCasamentoBean> pcb = resp.readEntity(new GenericType<List<PedidoCasamentoBean>>() {} );
-                    System.out.println("asdasdas  " +pcb.size());
                     request.setAttribute("pedidosList", pcb);
                     request.getRequestDispatcher("jsp/casamento.jsp").forward(request, response);
                     break;
                 case "solicitar":
-                    request.getRequestDispatcher("jsp/solicitar-casamento.jsp").forward(request, response);
+            
+                    try {
+                        request.setAttribute("encontros", EncontroFacade.getEncontrosPendentes(login.getClienteId()));
+                        request.getRequestDispatcher("jsp/solicitar-casamento.jsp").forward(request, response);
+                    } catch (EncontroException ex) {
+                        request.setAttribute("msg", "Você precisa ter se encontrado com alguem para realizar essa ação" + ex);
+                        request.getRequestDispatcher("jsp/erro.jsp").forward(request, response);
+                    }
                     break;
                 case "orcar":
                     System.out.println("SolicitaOrcamento");
                     client = ClientBuilder.newClient();
                     if (request.getParameter("conjugeId") == null) {
                         request.setAttribute("msg", "Conjuge não encontrado");
-                        request.getRequestDispatcher("index.jsp").forward(request, response);
+                        request.getRequestDispatcher("jsp/erro.jsp").forward(request, response);
+                        return;
                     }
+                    System.out.println(request.getParameter("conjugeId"));
                     PedidoCasamentoBean pc = new PedidoCasamentoBean(Integer.parseInt(request.getParameter("conjugeId")), login.getClienteId(),
                             request.getParameter("convidados") == null ? 0 : Integer.parseInt(request.getParameter("conjugeId")),
                             request.getParameter("padre"), request.getParameter("igreja"), request.getParameter("lua"), request.getParameter("padrinho1"),
@@ -68,7 +81,7 @@ public class CasamentoServlet extends HttpServlet {
                         request.getRequestDispatcher("CasamentoServlet?action=visualizar").forward(request, response);
                     } catch (PedidoCasamentoException ex) {
                         request.setAttribute("msg", ex);
-                        request.getRequestDispatcher("index.jsp").forward(request, response);
+                        request.getRequestDispatcher("jsp/erro.jsp").forward(request, response);
                     }
                     
                     break;

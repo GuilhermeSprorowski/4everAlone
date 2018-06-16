@@ -35,42 +35,44 @@
         </section>
         <div class="container margem">
             <h1 class="title">Orçamento solicitado</h1>
-
-            <c:if test="empty orcamentos">
-                <p>Nenhum orçamento disponível</p>
+            
+            <c:if test="${empty pedidosList}">
+                <p>Nenhum orçamento feito.</p>
             </c:if>
-
-            <!-- FOREACH AQUI -->
             <c:forEach items="${pedidosList}" var="pedido">
+                <c:if test="${not empty pedido.itensOrcamento}">                          
+                    <div class="card">
+                        <table width="100%" class="table">
+                            <thead> 
+                                <tr>
+                                    <th>Descrição</th>
+                                    <th>Valor</th>
+                                </tr>
+                            </thead>
+                            <tfoot> 
+                                <tr>
+                                    <th>Valor total:</th>
+                                    <th>${pedido.vlrTotal}</th>
+                                </tr>
+                            </tfoot>
+                            <tbody>
+                                <tr>
+                                    <th>${pedido.itensOrcamento}</th>
+                                    <th>${pedido.vlrTotal}</th>
+                                </tr>
+                            </tbody>
 
-
-                <div class="card">
-                    <table width="100%" class="table">
-                        <thead>
-                            <tr>
-                                <th>Descrição</th>
-                                <th>Valor</th>
-                            </tr>
-                        </thead>
-                        <tfoot>
-                            <tr>
-                                <th>Valor total:</th>
-                                <th>${pedido.vlrTotal}</th>
-                            </tr>
-                        </tfoot>
-                        <tbody>
-                            <tr>
-                                <th>${pedido.itensOrcamento}</th>
-                                <th>${pedido.vlrTotal}</th>
-                            </tr>
-                        </tbody>
-
-                    </table>
-                    <footer class="card-footer">
-                        <a href="CasamentoServlet?action=resp&aceio=true&idPedido=${pedido.idPedido}" class="card-footer-item">Aceitar orçamento</a>
-                        <a href="CasamentoServlet?action=resp&aceio=false&idPedido=${pedido.idPedido}" class="card-footer-item">Recusar</a>
-                    </footer>
-                </div>
+                        </table>
+                        <footer class="card-footer">
+                            <a href="CasamentoServlet?action=resp&aceio=true&idPedido=${pedido.idPedido}" class="card-footer-item">Aceitar orçamento</a>
+                            <a href="CasamentoServlet?action=resp&aceio=false&idPedido=${pedido.idPedido}" class="card-footer-item">Recusar</a>
+                        </footer>
+                    </div>
+                    <continue>
+                </c:if>
+                <c:if test="${pedido.itensOrcamento == null}"> 
+                    <p>Aguardando resposta do seu orçamento solicitado.</p>
+                </c:if>
             </c:forEach>
         </div>
     </body>
