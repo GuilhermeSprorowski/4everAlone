@@ -21,9 +21,8 @@ public class RelatorioServlet extends HttpServlet {
         HttpSession session = request.getSession();
         UserBean login = (UserBean) session.getAttribute("user");
 
-        if (login == null) {
-            //envia para fazer login
-            request.setAttribute("msg", "É necessario esta logado para acessar essa pagina");
+        if (login == null || login.isCliente()) {
+            request.setAttribute("msg", "Você não pode acessar essa página");
             request.getRequestDispatcher("index.jsp").forward(request, response);
         } else {
             try {
