@@ -1,5 +1,7 @@
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
+<%@ taglib prefix = "fmt" uri = "http://java.sun.com/jsp/jstl/fmt" %>
 
 <!DOCTYPE html>
 <html>
@@ -41,6 +43,7 @@
             <c:if test="${empty pedidosList}">
                 <p>Nenhum orçamento feito.</p>
             </c:if>
+            <c:set var="newLine" value="\n"/>
             <c:forEach items="${pedidosList}" var="pedido">
                 <c:if test="${not empty pedido.itensOrcamento}">                          
                     <div class="card">
@@ -48,19 +51,16 @@
                             <thead> 
                                 <tr>
                                     <th>Descrição</th>
-                                    <th>Valor</th>
                                 </tr>
                             </thead>
                             <tfoot> 
                                 <tr>
-                                    <th>Valor total:</th>
-                                    <th>${pedido.vlrTotal}</th>
+                                    <th>Valor total: R$ <fmt:formatNumber value="${pedido.vlrTotal}" minFractionDigits="2"/></th>
                                 </tr>
                             </tfoot>
                             <tbody>
                                 <tr>
-                                    <th>${pedido.itensOrcamento}</th>
-                                    <th>${pedido.vlrTotal}</th>
+                                    <th>${fn:replace(pedido.itensOrcamento, newLine, "<br>")}</th>
                                 </tr>
                             </tbody>
 
