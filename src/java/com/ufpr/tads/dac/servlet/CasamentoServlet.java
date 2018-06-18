@@ -2,8 +2,11 @@ package com.ufpr.tads.dac.servlet;
 
 import com.ufpr.tads.dac.beans.PedidoCasamentoBean;
 import com.ufpr.tads.dac.beans.UserBean;
+import com.ufpr.tads.dac.exceptions.ClienteException;
 import com.ufpr.tads.dac.exceptions.EncontroException;
+import com.ufpr.tads.dac.exceptions.EnderecoException;
 import com.ufpr.tads.dac.exceptions.PedidoCasamentoException;
+import com.ufpr.tads.dac.facade.ClienteFacade;
 import com.ufpr.tads.dac.facade.EncontroFacade;
 import com.ufpr.tads.dac.facade.PedidoCasamentoFacade;
 import java.io.IOException;
@@ -68,12 +71,21 @@ public class CasamentoServlet extends HttpServlet {
                         request.getRequestDispatcher("jsp/erro.jsp").forward(request, response);
                         return;
                     }
-                    System.out.println(request.getParameter("conjugeId"));
-                    PedidoCasamentoBean pc = new PedidoCasamentoBean(Integer.parseInt(request.getParameter("conjugeId")), login.getClienteId(),
-                            request.getParameter("convidados") == null ? 0 : Integer.parseInt(request.getParameter("conjugeId")),
+                    String conj[] = request.getParameter("conjugeId").split(";");
+                    int idConjugue = Integer.parseInt(conj[0]);
+                    String nomeConjuge = conj[1];
+                    
+                    PedidoCasamentoBean pc = new PedidoCasamentoBean(idConjugue, login.getClienteId(),
+                            request.getParameter("convidados") == null ? 0 : Integer.parseInt(request.getParameter("convidados")),
                             request.getParameter("padre"), request.getParameter("igreja"), request.getParameter("lua"), request.getParameter("padrinho1"),
                             request.getParameter("padrinho2"), request.getParameter("madrinha1"), request.getParameter("madrinha2"));
                     pc.setDataCasamento(request.getParameter("dataCasamento"));
+                    pc.setNomeConjuge(nomeConjuge);
+                    try {
+                        pc.setNomeCliente(ClienteFacade.getClienteById(login.getClienteId()).getNome());
+                    } catch (ClienteException | EnderecoException ex) {
+                        Logger.getLogger(CasamentoServlet.class.getName()).log(Level.SEVERE, null, ex);
+                    }
                     try {
                         pc.setIdPedido(PedidoCasamentoFacade.setPedidoCasamento(pc));
                         client.target("http://localhost:8080/AlwaysTogether/webresources/casamento/orcamento")                                

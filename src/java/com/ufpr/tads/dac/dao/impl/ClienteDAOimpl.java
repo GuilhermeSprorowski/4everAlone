@@ -13,6 +13,7 @@ import com.ufpr.tads.dac.dao.ConnectionFactory;
 import com.ufpr.tads.dac.exceptions.ClienteException;
 import com.ufpr.tads.dac.exceptions.EnderecoException;
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -95,7 +96,7 @@ public class ClienteDAOimpl implements ClienteDAO {
                 }
             }
             con = new ConnectionFactory().getConnection();
-            pst = con.prepareStatement("UPDATE bd4everalone.cliente SET descricao = ?, codEscolaridade= ?, codPele = ?, codCabelo = ?, codEndereco = ?, altura=?, sexo = ?, cpf = ?, nome = ? WHERE id = ?;");
+            pst = con.prepareStatement("UPDATE bd4everalone.cliente SET descricao = ?, codEscolaridade= ?, codPele = ?, codCabelo = ?, codEndereco = ?, altura=?, sexo = ?, cpf = ?, nome = ?, dataNasc = ? WHERE id = ?;");
             pst.setString(1, c.getDescricao());
             pst.setInt(2, c.getEscolaridade().getIdEscolaridade());
             pst.setInt(3, c.getCorPele().getIdCorPele());
@@ -105,17 +106,8 @@ public class ClienteDAOimpl implements ClienteDAO {
             pst.setString(7, c.getSexo());
             pst.setString(8, c.getCpf());
             pst.setString(9, c.getNome());
-            pst.setInt(10, c.getClienteId());
-            System.out.println(c.getDescricao());
-            System.out.println(c.getEscolaridade().getIdEscolaridade());
-            System.out.println(c.getCorPele().getIdCorPele());
-            System.out.println(c.getCorCabelo().getIdCorCabelo());
-            System.out.println(idEndereco);
-            System.out.println(c.getAltura());
-            System.out.println(c.getSexo());
-            System.out.println( c.getCpf());
-            System.out.println(c.getNome());
-            System.out.println(c.getClienteId());
+            pst.setDate(10, new Date(c.getDataNasc().getTime()));
+            pst.setInt(11, c.getClienteId());
             int resp = pst.executeUpdate();
             if (resp == 0) {
                 throw new ClienteException("Erro cliente: não foi possivel salvar as informações do cliente.");

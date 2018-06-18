@@ -195,6 +195,7 @@ public class ClienteBean {
             System.out.println("Data no formato errado");
             e.printStackTrace();
         }
+        System.out.println(data);
         this.dataNasc = data;
     }
 

@@ -30,7 +30,7 @@
                                 <div class="select">
                                     <select name="conjugeId">
                                     <c:forEach var="c" items="${encontros}">
-                                        <option value="${c.solicitado.clienteId}">${c.solicitado.nome}</option>
+                                        <option value="${c.solicitado.clienteId};${c.solicitado.nome}">${c.solicitado.nome}</option>
                                     </c:forEach>
                                 </select>
                             </div>
