@@ -47,10 +47,11 @@ public class LoginServlet extends HttpServlet {
                 //USUARIO VALIDO
                 HttpSession session = request.getSession();
                 session.setAttribute("user", user);
-                if (senha.equals(new String( "123456"))) {
+                if (senha.equals("123456")) {
                     request.getRequestDispatcher("ClienteServlet?action=viewAltera").forward(request, response);
+                } else {
+                    request.getRequestDispatcher("/HomeServlet").forward(request, response);
                 }
-                request.getRequestDispatcher("/HomeServlet").forward(request, response);
             } else {
                 //USUARIO INVALIDO
                 System.out.println("ususario invalido");
