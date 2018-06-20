@@ -67,7 +67,6 @@
             </div>
         </div>
     </c:if>
-
 </nav>
 
 <script>
