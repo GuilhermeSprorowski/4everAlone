@@ -48,9 +48,12 @@
                 <c:if test="${not empty pedido.itensOrcamento}">                          
                     <div class="card">
                         <table width="100%" class="table">
+                        
                             <thead> 
                                 <tr>
-                                    <th>Descrição</th>
+                                    <th>
+                                        <c:if test="${pedido.aceito}">(PEDIDO ACEITO)</c:if> Descrição
+                                    </th>
                                 </tr>
                             </thead>
                             <tfoot> 
@@ -65,10 +68,12 @@
                             </tbody>
 
                         </table>
-                        <footer class="card-footer">
-                            <a href="CasamentoServlet?action=resp&aceio=true&idPedido=${pedido.idPedido}" class="card-footer-item">Aceitar orçamento</a>
-                            <a href="CasamentoServlet?action=resp&aceio=false&idPedido=${pedido.idPedido}" class="card-footer-item">Recusar</a>
-                        </footer>
+                        <c:if test="${!pedidosList[0].aceito && !pedidosList[1].aceito}">
+                            <footer class="card-footer">
+                                <a href="CasamentoServlet?action=resp&aceio=true&idPedido=${pedido.idPedido}" class="card-footer-item">Aceitar orçamento</a>
+                                <a href="CasamentoServlet?action=resp&aceio=false&idPedido=${pedido.idPedido}" class="card-footer-item">Recusar</a>
+                            </footer>
+                        </c:if>
                     </div>
                     <hr>
                     </c:if>
