@@ -55,7 +55,9 @@ public class FuncionarioDAOimpl implements FuncionarioDAO {
         } finally {
             if (pst != null) {
                 try {
+                    rs.close();
                     pst.close();
+                    con.close();
                 } catch (SQLException ex) {
                     throw new FuncionarioException("Erro funcionario: erro ao fechar conecxão");
                 }
@@ -85,7 +87,9 @@ public class FuncionarioDAOimpl implements FuncionarioDAO {
         } finally {
             if (pst != null) {
                 try {
+                    rs.close();
                     pst.close();
+                    con.close();
                 } catch (SQLException ex) {
                     throw new FuncionarioException("Erro funcionario: erro ao fechar conecxão");
                 }
@@ -115,6 +119,7 @@ public class FuncionarioDAOimpl implements FuncionarioDAO {
             if (pst != null) {
                 try {
                     pst.close();
+                    con.close();
                 } catch (SQLException ex) {
                     throw new FuncionarioException("Erro funcionario: erro ao fechar conecxão");
                 }
@@ -144,7 +149,9 @@ public class FuncionarioDAOimpl implements FuncionarioDAO {
         } finally {
             if (pst != null) {
                 try {
+                    rs.close();
                     pst.close();
+                    con.close();
                 } catch (SQLException ex) {
                     throw new FuncionarioException("Erro Funcionario: Falha ao tentar fechar conexão!");
                 }
@@ -176,7 +183,9 @@ public class FuncionarioDAOimpl implements FuncionarioDAO {
         } finally {
             if (pst != null) {
                 try {
+                    rs.close();
                     pst.close();
+                    con.close();
                 } catch (SQLException ex) {
                     throw new FuncionarioException("Erro Funcionario: Falha ao tentar fechar conexão!");
                 }

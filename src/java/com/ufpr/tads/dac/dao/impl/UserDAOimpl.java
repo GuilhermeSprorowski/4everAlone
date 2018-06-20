@@ -46,7 +46,9 @@ public class UserDAOimpl implements UserDAO {
         } finally {
             if (pst != null) {
                 try {
+                    rs.close();
                     pst.close();
+                    con.close();
                 } catch (SQLException ex) {
                     throw new UserException("Erro user: erro ao fechar conecxão");
                 }
@@ -88,7 +90,9 @@ public class UserDAOimpl implements UserDAO {
         } finally {
             if (pst != null) {
                 try {
+                    rs.close();
                     pst.close();
+                    con.close();
                 } catch (SQLException ex) {
                     throw new UserException("Erro user: erro ao fechar conecxão");
                 }
@@ -125,7 +129,9 @@ public class UserDAOimpl implements UserDAO {
         } finally {
             if (pst != null) {
                 try {
+                    rs.close();
                     pst.close();
+                    con.close();
                 } catch (SQLException ex) {
                     throw new UserException("Erro user: erro ao fechar conecxão");
                 }
@@ -151,7 +157,9 @@ public class UserDAOimpl implements UserDAO {
         } finally {
             if (pst != null) {
                 try {
+                    rs.close();
                     pst.close();
+                    con.close();
                 } catch (SQLException ex) {
                     throw new UserException("Erro user: erro ao fechar conecxão");
                 }

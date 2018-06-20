@@ -33,7 +33,11 @@ public class CorCabeloDAOimpl implements CorCabeloDAO{
             System.out.println(e);
             throw new CorCabeloException("Erro Cor Cabelos: Comando SQL invalido");
         }finally {
-            if (pst!= null) {try {pst.close(); } catch (SQLException ex) {throw new CorCabeloException("Erro Cor Cabelo: Falha ao tentar fechar conexão!");}}
+            if (pst!= null) {try {
+                    rs.close();
+                    pst.close();
+                    con.close();
+            } catch (SQLException ex) {throw new CorCabeloException("Erro Cor Cabelo: Falha ao tentar fechar conexão!");}}
         }
         
     }

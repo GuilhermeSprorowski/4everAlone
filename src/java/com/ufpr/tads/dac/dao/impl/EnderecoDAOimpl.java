@@ -38,7 +38,9 @@ public class EnderecoDAOimpl implements EnderecoDAO {
         } finally {
             if (pst != null) {
                 try {
+                    rs.close();
                     pst.close();
+                    con.close();
                 } catch (SQLException ex) {
                 }
             }
@@ -81,7 +83,9 @@ public class EnderecoDAOimpl implements EnderecoDAO {
         } finally {
             if (pst != null) {
                 try {
+                    rs.close();
                     pst.close();
+                    con.close();
                 } catch (SQLException ex) {
                     throw new EnderecoException("Erro endereco: Falha ao tentar fechar conexão!");
                 }
@@ -110,7 +114,9 @@ public class EnderecoDAOimpl implements EnderecoDAO {
         } finally {
             if (pst != null) {
                 try {
+                    rs.close();
                     pst.close();
+                    con.close();
                 } catch (SQLException ex) {
                 }
             }
@@ -139,7 +145,9 @@ public class EnderecoDAOimpl implements EnderecoDAO {
         } finally {
             if (pst != null) {
                 try {
+                    rs.close();
                     pst.close();
+                    con.close();
                 } catch (SQLException ex) {
                 }
             }

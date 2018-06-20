@@ -37,7 +37,10 @@ public class CorPeleDAOimpl implements CorPeleDAO{
             System.out.println(e);
             throw new CorPeleException("Erro Cor Pele: Comando SQL invalido");
         }finally {
-            if (pst!= null) {try {pst.close(); } catch (SQLException ex) {throw new CorPeleException("Erro Cor Pele: Falha ao tentar fechar conexão!");}}
+            if (pst!= null) {try {
+                    rs.close();
+                    pst.close();
+                    con.close(); } catch (SQLException ex) {throw new CorPeleException("Erro Cor Pele: Falha ao tentar fechar conexão!");}}
         }
     }
     

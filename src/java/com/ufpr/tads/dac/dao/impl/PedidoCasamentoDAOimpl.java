@@ -52,7 +52,9 @@ public class PedidoCasamentoDAOimpl implements PedidoCasamentoDAO {
         } finally {
             if (pst != null) {
                 try {
+                    rs.close();
                     pst.close();
+                    con.close();
                 } catch (SQLException ex) {
                     throw new PedidoCasamentoException("Erro Pedido Casamento: erro ao fechar conecxão");
                 }

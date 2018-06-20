@@ -35,7 +35,10 @@ public class EstadoDAOimpl implements EstadoDAO{
             System.out.println(e);
            throw new EstadoException("Erro Estado: Comando SQL invalido");
         } finally {
-            if (pst!= null) {try {pst.close(); } catch (SQLException ex) {throw new EstadoException("Erro Estado: Falha ao tentar fechar conexão!");}}
+            if (pst!= null) {try {
+                    rs.close();
+                    pst.close();
+                    con.close();} catch (SQLException ex) {throw new EstadoException("Erro Estado: Falha ao tentar fechar conexão!");}}
         }
     }
     

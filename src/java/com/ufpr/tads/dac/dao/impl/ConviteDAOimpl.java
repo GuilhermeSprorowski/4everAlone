@@ -56,6 +56,7 @@ public class ConviteDAOimpl implements ConviteDAO {
             if (pst != null) {
                 try {
                     pst.close();
+                    con.close();
                 } catch (SQLException ex) {
                     throw new ConviteException("Erro convite: erro ao fechar conexão");
                 }
@@ -101,7 +102,9 @@ public class ConviteDAOimpl implements ConviteDAO {
         } finally {
             if (pst != null) {
                 try {
+                    rs.close();
                     pst.close();
+                    con.close();
                 } catch (SQLException ex) {
                     throw new ConviteException("Erro convite: erro ao fechar conexão");
                 }
@@ -130,6 +133,7 @@ public class ConviteDAOimpl implements ConviteDAO {
             if (pst != null) {
                 try {
                     pst.close();
+                    con.close();
                 } catch (SQLException ex) {
                     throw new ConviteException("Erro convite: erro ao fechar conexão");
                 }

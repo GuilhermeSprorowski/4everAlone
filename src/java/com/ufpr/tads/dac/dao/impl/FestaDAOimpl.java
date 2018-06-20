@@ -49,7 +49,9 @@ public class FestaDAOimpl implements FestaDAO {
         } finally {
             if (pst != null) {
                 try {
+                    rs.close();
                     pst.close();
+                    con.close();
                 } catch (SQLException ex) {
                     throw new FestaException("Erro Festa: Falha ao tentar fechar conexão!");
                 }
@@ -103,7 +105,9 @@ public class FestaDAOimpl implements FestaDAO {
         } finally {
             if (pst != null) {
                 try {
+                    rs.close();
                     pst.close();
+                    con.close();
                 } catch (SQLException ex) {
                     throw new FestaException("Erro Festa: Falha ao tentar fechar conexão!");
                 }
@@ -136,7 +140,9 @@ public class FestaDAOimpl implements FestaDAO {
         } finally {
             if (pst != null) {
                 try {
+                    rs.close();
                     pst.close();
+                    con.close();
                 } catch (SQLException ex) {
                     throw new FestaException("Erro Festa: Falha ao tentar fechar conexão!");
                 }

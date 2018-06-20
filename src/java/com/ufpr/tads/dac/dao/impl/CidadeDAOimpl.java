@@ -35,7 +35,10 @@ public class CidadeDAOimpl implements CidadeDAO {
             System.out.println(e);
            throw new CidadeException("Erro Cidade: Comando SQL invalido");
         } finally {
-            if (pst!= null) {try {pst.close(); } catch (SQLException ex) {throw new CidadeException("Erro Cidade: Falha ao tentar fechar conexão!");}}
+            if (pst!= null) {try {
+                    rs.close();
+                    pst.close();
+                    con.close(); } catch (SQLException ex) {throw new CidadeException("Erro Cidade: Falha ao tentar fechar conexão!");}}
         }
     }
 }

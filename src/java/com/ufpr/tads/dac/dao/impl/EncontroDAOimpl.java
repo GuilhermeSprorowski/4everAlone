@@ -48,7 +48,9 @@ public class EncontroDAOimpl implements EncontroDAO {
         } finally {
             if (pst != null) {
                 try {
+                   
                     pst.close();
+                    con.close();
                 } catch (SQLException ex) {
                     throw new EncontroException("Erro encontro: erro ao fechar conexão");
                 }
@@ -81,6 +83,7 @@ public class EncontroDAOimpl implements EncontroDAO {
             if (pst != null) {
                 try {
                     pst.close();
+                    con.close();
                 } catch (SQLException ex) {
                     throw new EncontroException("Erro encontro: erro ao fechar conexão");
                 }
@@ -118,7 +121,9 @@ public class EncontroDAOimpl implements EncontroDAO {
         } finally {
             if (pst != null) {
                 try {
+                    rs.close();
                     pst.close();
+                    con.close();
                 } catch (SQLException ex) {
                     throw new EncontroException("Erro encontro: erro ao fechar conexão");
                 }
@@ -161,7 +166,9 @@ public class EncontroDAOimpl implements EncontroDAO {
         } finally {
             if (pst != null) {
                 try {
+                    rs.close();
                     pst.close();
+                    con.close();
                 } catch (SQLException ex) {
                     throw new EncontroException("Erro encontro: erro ao fechar conexão");
                 }
@@ -203,7 +210,9 @@ public class EncontroDAOimpl implements EncontroDAO {
         } finally {
             if (pst != null) {
                 try {
+                    rs.close();
                     pst.close();
+                    con.close();
                 } catch (SQLException ex) {
                     throw new EncontroException("Erro encontro: erro ao fechar conexão");
                 }

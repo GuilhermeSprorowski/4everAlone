@@ -34,7 +34,10 @@ public class EscolaridadeDAOimpl implements EscolaridadeDAO {
             System.out.println(e);
            throw new EscolaridadeException("Erro Escolaridade: Comando SQL invalido");
         } finally {
-            if (pst!= null) {try {pst.close(); } catch (SQLException ex) {throw new EscolaridadeException("Erro Escolaridade: Falha ao tentar fechar conexão!");}}
+            if (pst!= null) {try { 
+                    rs.close();
+                    pst.close();
+                    con.close(); } catch (SQLException ex) {throw new EscolaridadeException("Erro Escolaridade: Falha ao tentar fechar conexão!");}}
         }
     }
 

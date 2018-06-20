@@ -57,7 +57,9 @@ public class ClienteDAOimpl implements ClienteDAO {
         } finally {
             if (pst != null) {
                 try {
+                    rs.close();
                     pst.close();
+                    con.close();
                 } catch (SQLException ex) {
                     throw new ClienteException("Erro cliente: erro ao fechar conecxão");
                 }
@@ -154,7 +156,9 @@ public class ClienteDAOimpl implements ClienteDAO {
         } finally {
             if (pst != null) {
                 try {
+                    rs.close();
                     pst.close();
+                    con.close();
                 } catch (SQLException ex) {
                     throw new ClienteException("Erro cliente: erro ao fechar conecxão");
                 }
@@ -204,7 +208,9 @@ public class ClienteDAOimpl implements ClienteDAO {
         } finally {
             if (pst != null) {
                 try {
+                    rs.close();
                     pst.close();
+                    con.close();
                 } catch (SQLException ex) {
                     throw new ClienteException("Erro cliente: erro ao fechar conecxão");
                 }
@@ -253,7 +259,9 @@ public class ClienteDAOimpl implements ClienteDAO {
         } finally {
             if (pst != null) {
                 try {
+                    rs.close();
                     pst.close();
+                    con.close();
                 } catch (SQLException ex) {
                     throw new ClienteException("Erro cliente: erro ao fechar conecxão");
                 }
@@ -279,7 +287,9 @@ public class ClienteDAOimpl implements ClienteDAO {
         } finally {
             if (pst != null) {
                 try {
+                    rs.close();
                     pst.close();
+                    con.close();
                 } catch (SQLException ex) {
                     throw new ClienteException("Erro cliente: erro ao fechar conecxão");
                 }
@@ -329,7 +339,9 @@ public class ClienteDAOimpl implements ClienteDAO {
         } finally {
             if (pst != null) {
                 try {
+                    rs.close();
                     pst.close();
+                    con.close();
                 } catch (SQLException ex) {
                     throw new ClienteException("Erro cliente: erro ao fechar conecxão");
                 }
@@ -357,7 +369,9 @@ public class ClienteDAOimpl implements ClienteDAO {
         } finally {
             if (pst != null) {
                 try {
+                    rs.close();
                     pst.close();
+                    con.close();
                 } catch (SQLException ex) {
                     throw new ClienteException("Erro cliente: erro ao fechar conecxão");
                 }
@@ -387,6 +401,7 @@ public class ClienteDAOimpl implements ClienteDAO {
             if (pst != null) {
                 try {
                     pst.close();
+                    con.close();
                 } catch (SQLException ex) {
                     throw new ClienteException("Erro cliente: erro ao fechar conecxão");
                 }
