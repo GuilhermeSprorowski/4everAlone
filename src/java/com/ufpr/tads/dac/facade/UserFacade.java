@@ -15,4 +15,7 @@ public class UserFacade {
     public static boolean isEmailDisponivel(String email) throws UserException{
         return UserDAO.isEmailDisponivel(email);
     }
+    public static void setSenha(String login, String senhaAntiga, String novaSenha) throws UserException{
+        UserDAO.setSenha(login, senhaAntiga, novaSenha);
+    }
 }

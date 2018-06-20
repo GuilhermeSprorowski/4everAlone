@@ -65,10 +65,14 @@ public class UserDAOimpl implements UserDAO {
             pst.setString(2, senhaAntiga);
             rs = pst.executeQuery();
             int idUsuario = 0;
+            System.out.println(pst);
             while (rs.next()) {
                 idUsuario = rs.getInt("id");
             }
-            if (idUsuario != 0) {
+            if (idUsuario == 0) {
+                System.out.println("erroooo");
+                throw new UserException("Erro cliente: senha invalida");
+            }else{
                 pst = con.prepareStatement("UPDATE bd4everalone.usuario SET senha = ? WHERE id = ?");
                 pst.setString(1, novaSenha);
                 pst.setInt(2, idUsuario);
@@ -77,6 +81,7 @@ public class UserDAOimpl implements UserDAO {
                 if (resp == 0) {
                     throw new UserException("Erro cliente: não foi possivel trocar a senha");
                 }
+                
             }
         } catch (SQLException e) {
             throw new UserException("Erro cliente: comando sql invalido");

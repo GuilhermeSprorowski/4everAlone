@@ -14,12 +14,16 @@ import com.ufpr.tads.dac.exceptions.CorPeleException;
 import com.ufpr.tads.dac.exceptions.EnderecoException;
 import com.ufpr.tads.dac.exceptions.EscolaridadeException;
 import com.ufpr.tads.dac.exceptions.EstadoException;
+import com.ufpr.tads.dac.exceptions.UserException;
 import com.ufpr.tads.dac.facade.ClienteFacade;
 import com.ufpr.tads.dac.facade.CorCabeloFacade;
 import com.ufpr.tads.dac.facade.CorPeleFacade;
 import com.ufpr.tads.dac.facade.EscolaridadeFacade;
 import com.ufpr.tads.dac.facade.EstadoFacade;
+import com.ufpr.tads.dac.facade.UserFacade;
 import java.io.IOException;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -139,8 +143,6 @@ public class ClienteServlet extends HttpServlet {
                     }
 
                     break;
-                case "user":
-                    break;
                 case "form-new":
                     if (!login.getFuncionario()) {
                         request.setAttribute("msg", "Você não tem acesso a este conteúdo.");
@@ -148,7 +150,7 @@ public class ClienteServlet extends HttpServlet {
                         return;
                     }
                     request.getRequestDispatcher("jsp/form-cliente.jsp").forward(request, response);
-                    break;  
+                    break;
                 case "edit":
                     if (!login.getFuncionario()) {
                         request.setAttribute("msg", "Você não tem acesso a este conteúdo.");
@@ -235,6 +237,41 @@ public class ClienteServlet extends HttpServlet {
                         request.getRequestDispatcher("jsp/erro.jsp").forward(request, response);
                     }
 
+                    break;
+                case "viewAltera":
+                    System.out.println("Chegou ViewAltera");
+                    request.getRequestDispatcher("jsp/alterar-senha.jsp").forward(request, response);
+                    break;
+                case "salvaSenha":
+                    System.out.println("Chegou salvaSenha");
+                    try {
+                        String senha = request.getParameter("senhaAtual");
+                        String senhaNova = request.getParameter("senhaNova");
+                        MessageDigest md;
+                        String senhaMd5 = "";
+                        String senhaNovaMd5 = "";
+                        try {
+                            md = MessageDigest.getInstance("MD5");
+                            md.update(senha.getBytes("UTF8"));
+                            byte s[] = md.digest();
+                            for (int i = 0; i < s.length; i++) {
+                                senhaMd5 += Integer.toHexString((0x000000ff & s[i]) | 0xffffff00).substring(6);
+                            }
+                            md = MessageDigest.getInstance("MD5");
+                            md.update(senhaNova.getBytes("UTF8"));
+                            byte s1[] = md.digest();
+                            for (int i = 0; i < s1.length; i++) {
+                                senhaNovaMd5 += Integer.toHexString((0x000000ff & s1[i]) | 0xffffff00).substring(6);
+                            }
+                        } catch (NoSuchAlgorithmException ex) {
+                            Logger.getLogger(LoginServlet.class.getName()).log(Level.SEVERE, null, ex);
+                        }
+                        UserFacade.setSenha(login.getEmail(), senhaMd5 , senhaNovaMd5);
+                        response.sendRedirect("ClienteServlet?action=view");
+                    } catch (UserException ex) {
+                        request.setAttribute("msg", ex);
+                        request.getRequestDispatcher("jsp/erro.jsp").forward(request, response);
+                    }
                     break;
             }
         }

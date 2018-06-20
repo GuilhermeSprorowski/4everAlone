@@ -43,10 +43,13 @@ public class LoginServlet extends HttpServlet {
             //Confere Login
             UserBean user = userFacade.getUserByLogin(email, senhaMd5);
             if (user != null) {
-                System.out.println("usuario valido");
+                 System.out.println("usuario valido");
                 //USUARIO VALIDO
                 HttpSession session = request.getSession();
                 session.setAttribute("user", user);
+                if (senha.equals(new String( "123456"))) {
+                    request.getRequestDispatcher("ClienteServlet?action=viewAltera").forward(request, response);
+                }
                 request.getRequestDispatcher("/HomeServlet").forward(request, response);
             } else {
                 //USUARIO INVALIDO
